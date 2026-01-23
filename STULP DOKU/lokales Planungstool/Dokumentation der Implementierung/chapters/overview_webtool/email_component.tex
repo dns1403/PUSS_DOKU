@@ -1,0 +1,51 @@
+\section{Email Component}
+
+The Email sending feature is a part of the Web tool.The Email sending rights are given to the planner and the admin. The idea here is to generate Email automatically after the planning is done. The recipients of the Emails are also generated automatically but the planner is given an option to edit the Emails before sending them. This is done to give an opportunity to the Planner to add or remove any information he wishes.So the exactly number of Email generated and the recipients of the Emails cannot be predetermined . It depends on the planned courses of the concerned semester. Through this portal one can generate emails for the following receivers:-
+\begin{itemize}
+	\itemsep0em
+	\item Professor
+	\item Planner of other Studiengänge
+	\item Zentralraumvergabe
+\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{chapters/overview_webtool/images/email_welcome.JPG}
+	\caption{Welcome screen to Email portal}
+	\label{fig:EmailWelcome}
+\end{figure}
+
+\subsection{Email to the Planner of other Studiengänge}
+
+A Studiengang usually consists of Hauptfach and a nebenfach. So while planning a Studiengang, courses from both Hauptfach and the required courses from the Nebenfach has to be planned. Hence, it is important that there is no Studiengang conflict and the timings of a group with Nebenfach A does not overlap with the timings planned by the planner of A as Hauptfach. 
+
+Here we generate an Email with the Sperrzeiten of our planned courses of a particular course to the planner of the other Studiengang who is also dealing with the same courses. 
+
+\subsubsection{Frontend Architecture}
+
+
+
+\subsubsection{Backend Architecture}
+
+
+
+\subsection{Email to the Zentralraumvergabe}
+
+\subsubsection{Frontend Architecture}
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=1.0\textwidth]{chapters/overview_webtool/images/Zentral_Raumvergabe.JPG}
+	\caption{Filter by room size}
+	\label{fig:ZentralraumvergabeFilter}
+\end{figure}
+
+\subsubsection{Backend Architecture}
+
+\subsection{Email to the Professors}
+
+There are different Professors offering different Subjects at various time. So the idea here is that to send Email to each of the Professors offering courses with their course timings,location and duration. So the number of email generated is equal to the number of Professors offering at least 1 course in the concerned Semester. 
+
+\subsubsection{Frontend Architecture}
+
+\subsubsection{Backend Architecture}

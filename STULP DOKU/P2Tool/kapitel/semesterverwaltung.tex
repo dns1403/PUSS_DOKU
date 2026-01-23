@@ -1,0 +1,53 @@
+\section{Semesterverwaltung}
+\label{sec:semesterverwaltung}
+Die Seite \textit{Semesterverwaltung} ermöglicht das Erstellen von neuen Semestern.
+Generell sind alle Daten innerhalb dieses Tools in zwei Kategorien einzuteilen: semesterabhängige Daten und semesterübergreifende Daten.
+Benutzer werden in der USERDB.db gepeichert und bleiben über alle Semester erhalten.
+Genauso die Daten über Semester, die jedem Semester eine ID und einen Namen sowie einen Dateipfad zur zugehörigen VLPT.db Datenbank zuordnen.
+Alles andere ist für jedes Semester einzeln definiert.
+Wunschzeiten, Zeitfenser, Sperrzeiten, ... werden für jedes Semester einzeln gespeichert und können für einzelne Semester geändert werden.
+
+In der Semesterverwaltung werden alle aktuell schon vorhandenen Semester angezeigt und eine Möglichkeit gegeben neue Semester zu erstellen, indem der \textit{Neues Semester starten} Knopf gedrückt wird (siehe \figref{fig:semesterverwaltung}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/Semesterverwaltung.png}
+    \caption{Semesterverwaltung}
+    \label{fig:semesterverwaltung}
+\end{figure}
+
+Beim Erstellen eines neuen Semesters muss angegeben werden, ob es sich um ein Sommersemester oder Wintersemester handelt und das Jahr muss angegeben werden. Standardmäßig wird immer ein Halbjahr und Jahr angegeben, dass dem Semester nach dem aktuell neuesten entspricht (siehe \figref{fig:semesterverwaltung_new}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/Semesterverwaltung_new_semester.png}
+    \caption{Semesterverwaltung}
+    \label{fig:semesterverwaltung_new}
+\end{figure}
+
+\begin{warning}
+    Ein neues Semester sollte nur erstellt werden, wenn der Ersteller sich derzeit im aktuellsten Semester befindet. Andernfalls treten Inkonsistenzen auf und nicht alle Kurse, Professoren und Module werden übernommen.
+\end{warning}
+
+Beim Erstellen eines neuen Semesters werden die folgenden Daten aus dem aktuell ausgewählten Semester übernommen:
+\begin{itemize}
+    \item Druckrubriken
+    \item Module
+    \item Studiengänge
+    \item Kurse (der Name, PaulNr, Kürzel, Veranstaltungsteile und ihre Dauer, usw.)
+    \item Professoren
+    \item Zeitfenster
+\end{itemize}
+
+\textbf{Nicht} kopiert werden Eigenschaften von angebotenen Veranstaltungen (alles was bei \textit{Meine Veranstaltungen} eingestellt wird siehe Kapitel \ref{sec:meine_veranstaltungen}), da diese Eingaben jeweils nur für ein Semester gültig sind.
+Damit Benutzer nicht immer alles neu eingeben müssen, können sie Eigenschaften von angebotenen Veranstaltungen aber über Semester hinweg kopieren wie in Kapitel \ref{sec:meine_veranstaltungen_copy} beschrieben wird.
+Zu diesen Eigenschaften gehören:
+\begin{itemize}
+    \item Welcher Professor bietet welchen Kurs an
+    \item Übungsanzahlen für Übungen
+    \item Wunschzeiten
+    \item Bemerkungen für die Planung
+    \item Die Startwoche von Veranstaltungen
+    \item Ob eine LV zweiwöchentlich angeboten wird
+    \item Raumwünsche (Campus/FU)
+    \item Angaben, ob Beamer, Fenster, Tafel gewünscht sind
+    \item Hörerzahlen
+\end{itemize}

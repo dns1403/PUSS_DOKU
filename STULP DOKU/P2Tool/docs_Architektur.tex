@@ -1,0 +1,675 @@
+\documentclass{article}
+\usepackage[ngerman]{babel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{tabulary}
+\usepackage{booktabs}
+\usepackage[graphicx]{realboxes}
+\usepackage{pdflscape}
+\usepackage{soul}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+
+\input{./config}
+
+
+\title{P2Tool}
+\author{Projektgruppe STULP \\ Alessio, Alexander, Daniel, Daniel, Niklas, Paul}
+\date{\today}
+
+\geometry{
+  a4paper,
+  top=3cm,
+  bottom=3cm,
+  left=2.5cm,
+  right=2.5cm,
+}
+
+% Increase spacing between lines
+\linespread{1.2}
+
+% Remove indentations but increase line spacing between paragraphs
+\setlength\parindent{0pt}
+%\setlength\parskip{0.6 \baselineskip}
+
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+    Dieses Dokument dient als Hilfe zur Orientierung im Quellcode der P2Tool-Webanwendung.
+    Es ist primär gedacht für Personen, die die Software erweitern oder verbessern wollen.
+\end{abstract}
+
+\tableofcontents
+
+
+
+\section{Technologien}
+Die Webanwendung ist in Java geschrieben und verwendet JavaServer Pages (JSP) zur Darstellung der Webseite.
+Zur Darstellung der Webseite wurde das CSS-Framework Bootstrap in der Version 5.3.3 verwendet.
+
+
+\paragraph{Anleitung Inbetriebnahme das Tool in IntelliJ}
+Es folgt eine Schritt-für-Schritt-Anleitung, um das Tool in IntelliJ zum Laufen zu bringen. Theoretisch kann natürlich auch jede andere Entwicklungsumgebung verwendet werden. \\
+1. Installieren von Sie IntelliJ. \\
+2. Klonen des Git-Repositorys und Öffnen des Projekts in Intellj. \\
+3. In Intellj das Plugin Smart Tomcat Installieren.
+Dazu die Optionen öffnen und die Rubrik Plugins auswählen wie in \figref{fig:Plugin}  gezeigt. \\
+4. Öffnen Sie die Einstellungen und fügen Sie einen lokal vorhandenen Tomcat Server hinzu, wie z.B. die Version 9.0.17, die im Repository zur Verfügung gestellt wird, wie in \figref{fig:Plugin}. \\
+5. Erstellen einer Configuration, öffne dafür zuerst Current File und öffne dann Edit Configurations. Danach die Einstellungen wie in \figref{fig:Tomcat}  vornehmen. Hierbei ist besonders darauf zu achten die Catalina Base und Context path felder entsprechend anzupassen, da diese mit der Standard-Konfiguration nicht funktionieren. \\
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{./img/How_to_Install/Plug.png}
+    \caption{Tomcat Plugin}
+    \label{fig:Plugin}
+\end{figure}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{./img/How_to_Install/Tomcat.png}
+    \caption{Tomcat Plugin}
+    \label{fig:Tomcat}
+\end{figure}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{./img/How_to_Install/Catalina.png}
+    \caption{Tomcat Configuration}
+    \label{fig:Tomcat}
+\end{figure}
+
+
+
+\newpage
+\section{Quellcode}
+Als JSP-Anwendung ist der Inhalt der Anwendung aufgeteilt in Java- und JSP-Dateien.
+Verglichen mit der vorherigen Version des P2Tools, wurde in dieser Version eine striktere Trennung von Model, View und Controller (MVC) geschaffen.
+
+Der Java-Quellcode befinden sich wie bei einer klassischen Java-Anwendung im \path{src\main\java} Ordner beziehungsweise im \path{de.vlpt} Package in ebendiesem.
+Diese Dateien sind für einen Großteil der Anwendungslogik verantwortlich, z.B. das Verarbeiten von GET- oder POST-Anfragen.
+Im MVC-Modell entspräche dies dem Model und Controller.
+
+Die JSP-Dateien befinden sich im \path{src\main\webapp} Ordner.
+Diese Dateien entsprechen dem im Webbrowser dargestellten HTML-Quelltext und enthalten teils zusätzliche (Frontend)-Logik.
+Im MVC-Modell entspräche dies dem View.
+
+Die Inhalte der beiden verschiedenen Ordner werden im Folgenden in \secref{sec:java_files} bzw. \secref{sec:jsp_files} beschrieben.
+
+
+\subsection{Java-Dateien}
+\label{sec:java_files}
+
+\subsubsection{Datenbankverbindung}
+Das \path{de.vlpt.conn} Package enthält die Hauptklasse \texttt{SQLiteDB.java} für die Verbindung zu den Datenbanken der Anwendung.
+In dieser Datei sind viele Hilfsmethoden zum Abfragen, Erstellen, Aktualisieren, Löschen usw. von Datenbankeinträgen vorhanden.
+
+
+\subsubsection{Ausgabeschnittstelle}
+Das \path{de.vlpt.export} Package enthält den gesamten Quellcode für die Ausgabeschnittstelle der Anwendung.
+Die Ausgabeschnittstelle wird beispielsweise verwendet, um aus einem geplanten Semester das Modulhandbuch zu exportieren.
+Der in diesem Package vorhandene Code wurde während der Weiterentwicklung des P2Tools nur geringfügig angepasst, da er nachträglich und unabhängig von der restlichen Software bereits mit moderneren Technologien programmiert wurde.
+Das Package enthält auch eine eigene Datenbankverbindung.
+
+
+\subsubsection{Filter}
+Im \path{de.vlpt.filter} Package befinden sich die für das Rollensystem der Anwendung benötigten Filter.
+Diese stellen sicher, dass Benutzer ohne eine entsprechende Rolle keinen Zugriff auf Webseiten haben, die für diese Rolle nicht freigegeben ist.
+
+
+\subsubsection{Servlets}
+Servlets stellen den größten Teil der Software dar.
+Sie befinden sich im \path{de.vlpt.servlet} Package und sind für das Bearbeiten von GET- und POST-Anfragen verantwortlich.
+\texttt{LoginServlet.java} verwaltet dabei den Anmeldungsprozess der Benutzer befindet sich als Ausnahme direkt in diesem Package. 
+Alle anderen Servlets befinden sich in Sub-Packages.
+Unterschieden werden muss zwischen zwei verschiedenen Arten, wie die Servlets in diese Sub-Packages unterteilt werden: dem älteren Schema, welches weiterhin auf vielen bestehenden Seiten Anwendung findet, und dem neuen Schema, welches für einige der neuen Seiten verwendet wird.
+
+Das ältere Schema unterteilt Servlets nach Rollen.
+Jedes Servlet befindet sich in dem Sub-Package einer bestimmten Rolle und verarbeitet alle Anfragen für eine Webseite.
+Dies hat jedoch den Nachteil, dass wenn eine bestimmte Webseite für mehrere Rollen erreichbar ist, ihr Servlet trotzdem nur in einem Sub-Package liegen kann.
+Außerdem werden dieselben Servlets teilweise für mehrere Seiten verwendet, wordurch der Quellcode sehr unübersichtlich und komplex werden kann.
+Die Überprüfung, ob ein Nutzer die benötigten Rechte für eine bestimmte Aktion (z.B. das Anschauen einer Webseite oder das Erstellen eines Datensatzes) hat, muss auch dann noch in jedem Servlet erfolgen, obwohl die Dateien in dem Package liegen.
+Folgendes Beispiel zeigt, wie die Erstellung von Benutzern vor der Umstellung ausgesehen hat:
+\begin{lstlisting}[numbers=left, columns=flexible, language=Java, breaklines=true]
+@WebServlet(urlPatterns= { "/editBenutzer", "/addBenutzer" })
+public class EditBenutzer extends HttpServlet {
+    /**
+    * Laedt Benutzerdaten (ohne Passwort), falls eine ID angegeben ist (Edit Mode)
+    * sonst oeffne leeres Formular (Create Mode)
+    */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+                throws ServletException, IOException {
+        ... // Logik zum Abfragen von Daten
+    }
+
+    /**
+    * Lege einen Benutzer an oder ueberschreibe einen existierenden Benutzer
+    */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+                throws ServletException, IOException {
+        ... // Logik zum Erstellen/Bearbeiten von Daten
+    }
+}
+\end{lstlisting}
+
+Das neue Schema unterteilt Servlets nach Routing- und API-Funktionalität.
+Routing-Servlets befinden sich im \path{route} Sub-Package und sind einzig und allein für die Weiterleitung der Nutzer zu einer bestimmten Seite verantwortlich.
+Dabei laden sie bei Bedarf die zur Darstellung von Datensätzen benötigten Daten mit Hilfe der API-Servlets aus den Datenbanken.
+Diese API-Servlets befinden sich im \path{api} Sub-Package und stellen dabei Funktionen zur Abfrage, Erstellung, Aktualisierung und Löschung von Datensätzen zur Verfügung.
+Dadurch wird eine strengere Verteilung von Aufgaben erreicht, durch die der Quellcode übersichtlicher wird.
+Auch in diesen Servlets muss überprüft werden, ob ein Benutzer die für eine Aktion benötigten Rechte hat, jedoch lässt sich dies leicher anpassen, als das Servlet in ein neues Package verschieben zu müssen.
+Jede Webseite der Anwendung bekommt ein eigenes Routing-Servlet und jede Datenbankaktion für einen Datensatz bekommt ein eigenes API-Servlet.
+Da eine Umstellung des alten Modells auf das neue jedoch sehr zeitaufwendig und fehleranfällig ist, wurden im Rahmen der Projektgruppe nur Personen, Benutzer, Semester und Zeitfenster im neuen Modell implementiert.
+Folgendes Beispiel stellt dar, wie die Erstellung von Benutzern nach der Umstellung aussieht:
+\begin{lstlisting}[numbers=left, columns=flexible, language=Java, breaklines=true]
+@WebServlet(urlPatterns= { "/api/user/add" })
+public class AddUser extends HttpServlet {
+    /**
+    * Lege einen Benutzer an
+    */
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+                throws ServletException, IOException {
+        ... // Logik zum Erstellen von Daten
+    }
+}
+\end{lstlisting}
+\begin{lstlisting}[numbers=left, columns=flexible, language=Java, breaklines=true]
+@WebServlet(urlPatterns= { "/users/add" })
+public class AddUser extends HttpServlet {
+    /**
+    * Zeige das Formular zur Erstellung von Benutzern an
+    */
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+                throws ServletException, IOException {
+        ... // Logik zum Abfragen von Daten
+    }
+}
+\end{lstlisting}
+
+
+\subsubsection{Hilfsklassen}
+Das \path{de.vlpt.util} Package enthält lediglich einige kleinere Hilfsklassen.
+
+\subsection{Beschreibung der einzelnen Klassen}
+\begin{itemize}
+  \item \textbf{de.vlpt.conn}
+  \begin{itemize}
+    \item \textbf{SQLiteDB}: Diese Klasse stellt die Verbindung zu der SQLite Database her und verwaltet alle Funktionen über die DB
+  \end{itemize}
+  \item \textbf{de.vlpt.export.beans}
+  \begin{itemize}
+    \item \textbf{PlanState}: Bei der Ausgabe Website werden alle hochgeladenen Planungsstände für das aktuelle Semester des Benutzers angezeigt. Diese Klasse berechnet den Inhalt der Liste.
+  \end{itemize}
+  \item \textbf{de.vlpt.export.database} 
+  \begin{itemize}
+    \item \textbf{Database}: Verwaltet die Verbindung zu hochgeladenen lokalen Datenbanken im Ausgabebereich. Hat schon bei Nils existiert.
+  \end{itemize}
+  \item \textbf{de.vlpt.export.model}: Java beans für die Tabellen der lokalen Planungsdatenbank. Enthalten Hilfsmethoden für alle möglichen Attribute der jeweiligen Daten.
+  \begin{itemize}
+    \item \textbf{ARBSEntry}: Bean für das Abrufen von Raumbelegungs-Informationen.
+    \item \textbf{Course}: Bean für das Abrufen von grundlegenden Kursdaten (Name, Fachbereich, ...). 
+    \item \textbf{CourseDate}: Ergänzender Bean welcher Daten zur Art des Kurses übermittelt (VL, Übung, Seminar, ...) .
+    \item \textbf{LectureIndex}: Bean für die Modulhandbücher.
+    \item \textbf{PlanEntry}: Bean für das Setzen von Informationen bezüglich der Startwoche und dem Wochenzyklus einer Veranstaltung.
+    \item \textbf{PrintCategory}: Bean für Druckrubrikbezeichnungen. Enthält auch Methoden zum Abrufen der Unterdruckrubriken .
+    \item \textbf{PrintCategoryLeaf}: Bean für Druckrubriken. Enthält Methoden zum Abrufen der Unterdruckrubriken.
+    \item \textbf{Professor}: Bean für Professoren. Enthält Methoden zum Abruf der Kurse und dem Abruf und Setzen der Email-Vorlagen.
+    \item \textbf{Room}: Bean für die Räume inklusive der belegten Zeiten.
+    \item \textbf{StudyModule}: Bean zum Abruf eines einzelnen Moduls. Enthält nur Methoden zum Abruf des Namens und der Credits.
+    \item \textbf{StudyPath}: Bean für den Abruf der Studiengänge. Enthält Methoden für die ID, das Hauptfach und einen geordneten String mit allen Informationen.
+  \end{itemize}
+  \item \textbf{de.vlpt.export.servlet}
+  \begin{itemize}
+    \item \textbf{CentralRoomPlanServlet}: Servlet für den Abruf und das Speichern von Informationen für die Zentrale Raumplanung des Ausgabebereichs. JSPs: /ausgabe/rooms/central.jsp
+    \item \textbf{ExportServlet}: Servlet für den Abruf von Informationen für die Übersichtsseite des Ausgabebereichs. JSPs: /ausgabe/index.jsp
+    \item \textbf{LectureIndexServlet}: Servlet für den Abruf von Informationen für die Latex-Druckseite JSPs: /ausgabe/vvz/vvz\_latex.jsp, vvz.jsp
+    \item \textbf{LocalRoomPlanServlet}: Servlet für das Abrufen und Setzen von Informationen für die Lokale Raumplanungsseite des Ausgabebereichs. JSPs: /ausgabe/rooms/local.jsp
+    \item \textbf{LocktimeServlet}: Servlet für das Abrufen und Setzen von Informationen für die Sperrzeiten-Seite des Ausgabebereichs. JSPs: /ausgabe/locktimes/index.jsp
+    \item \textbf{ProfessorEditServlet}: /ausgabe/emails/edit Servlet, um Email Vorlagen für Professoren zu ändern
+  \end{itemize}
+  \item \textbf{de.vlpt.export.util}
+  \begin{itemize}
+    \item \textbf{PaulNummerGenerator}: Generiert eine neue Paul Nummer anhand der gegebenen ersten Ziffern der Nummer und passt auf, dass die Nummer möglichst lange nicht benutzt wurde.
+    \item \textbf{Util}: Hat eine Methode, um eine Datei in einen einzigen String zu lesen.
+  \end{itemize}
+  \item \textbf{de.vlpt.filter}
+  \begin{itemize}
+    \item \textbf{BeobachterFilter}: Diese Klasse überprüft, ob die Rolle \textit{Beobachter} in der Sitzung vorhanden ist. Falls nicht, gibt es eine Weiterleitung zu /home
+    \item \textbf{LoginFilter}: Diese Klasse überprüft, ob ein Benutzerkonto in der Sitzung vorhanden ist. Falls nicht, gibt es eine Weiterleitung zu /Login. Filtert alle Adressen, bis auf /Login und das Uni Logo
+    \item \textbf{ModulhandbuchFilter}: Diese Klasse überprüft ob die Rolle \textit{Modulhandbuchbeauftragter} in der Sitzung vorhanden ist. Falls nicht, gibt es eine Weiterleitung zu /home
+    \item \textbf{PlanerFilter}: Diese Klasse überprüft ob die Rolle \textit{Planer} in der Sitzung vorhanden ist. Falls nicht, gibt es eine Weiterleitung zu /home
+    \item \textbf{RoleFilter}: Diese Klasse überprüft, ob die Rolle \textit{Administrator} oder eine bestimmte angegebene Rolle von einer Unterklasse (andere Rollenfilter) in der Sitzung vorhanden ist. Falls nicht, gibt es eine Weiterleitung zu /home
+    \item \textbf{VeranstalterFilter}: Diese Klasse überprüft, ob die Rolle \textit{Veranstalter} in der Sitzung vorhanden ist. Falls nicht, gibt es eine Weiterleitung zu /home
+    \item \textbf{VeranstaltungsbeauftragterFilter}: Diese Klasse überprüft, ob die Rolle \textit{Veranstaltungsbeauftragter} in der Sitzung vorhanden ist. Falls nicht, gibt es eine Weiterleitung zu /home
+  \end{itemize}
+  \item \textbf{de.vlpt.servlet}
+  \begin{itemize}
+    \item \textbf{LoginServlet}: Servlet für die Anmeldung eines Benutzers. JSPs: login.jsp
+    \item \textbf{home}: Servlet für die Startseite des Planungstools. JSPs: home.jsp
+  \end{itemize}
+  \item \textbf{de.vlpt.servlet.administrator.benutzer} (nicht in Verwendung)
+  \begin{itemize}
+    \item \textbf{benutzerManagement}: Lädt die angelegten Personen im Planungstool aus der Datenbank (GET) oder löscht Personen mit Benutzern aus der Datenbank (POST). JSPs: benutzerManagement.jsp
+    \item \textbf{editBenutzer}: Lädt oder speichert Benutzerdaten. JSPs: editBenutzer.jsp
+    \item \textbf{editPerson}: Lädt oder speichert Personendaten (mit zugeordneten Benutzern). JSPs: editPerson.jsp
+  \end{itemize}
+  \item \textbf{de.vlpt.servlet.administrator.semester}
+  \begin{itemize}
+    \item \textbf{SemesterManagement}: JSPs: semesterManagement.jsp
+    \item \textbf{SetNewSemester}: Generiert Vorschläge für das Formular zu der Semesterarchivierung (GET). Archiviert das aktuelle Semester und startet ein neues Semester (POST). JSPs: setNewSemester.jsp
+  \end{itemize}
+  \item \textbf{de.vlpt.servlet.api.person}
+  \begin{itemize}
+    \item \textbf{AddPerson}: POST, um eine Person hinzuzufügen (/api/person/add).
+    \item \textbf{DeletePerson}: POST, um eine Person zu löschen (/api/person/delete).
+    \item \textbf{EditPerson}: POST, um eine Person zu bearbeiten (/api/person/edit).
+    \item \textbf{GetPerson}: GET, um eine Person aus der Datenbank zu lesen (/api/person/get).
+    \item \textbf{Person}: Java bean für eine Person.
+  \end{itemize}
+  \item \textbf{de.vlpt.servlet.api.semester}
+  \begin{itemize}
+    \item \textbf{GetSemesters}: GET für eine Liste mit allen existierenden Semestern
+    \item \textbf{Semester}: Java bean für ein Semester.
+  \end{itemize}
+  \item \textbf{de.vlpt.servlet.api.timeslot}
+  \begin{itemize}
+    \item \textbf{AddTimeSlots}: POST, um einen Timeslot hinzuzufügen (/api/timeslot/add).
+    \item \textbf{DeleteTimeSlot}: POST, um einen Timeslot zu löschen (/api/timeslot/delete).
+    \item \textbf{GetTimeSlot}: GET, um eine Liste mit allen Timeslots zu bekommen (/api/timeslot/get).
+    \item \textbf{TimeSlot}: Java bean für einen Zeitslot.
+  \end{itemize}
+  \item \textbf{de.vlpt.servlet.api.user}
+  \begin{itemize}
+    \item \textbf{AddUser}: POST, um einen Benutzer hinzuzufügen (/api/user/add).
+    \item \textbf{DeleteUser}: POST, um einen Benutzer zu löschen (/api/user/delete).
+    \item \textbf{EditPassword}: POST, um das Passwort von einem Benutzer zu ändern (/api/user/editPassword).
+    \item \textbf{EditUser}: POST, um einen Benutzer zu bearbeiten (/api/user/edit)
+    \item \textbf{GetUser}: GET, um einen Benutzer mit einer personenId und einer userId zu bekommen (/api/user/get).
+    \item \textbf{User}: Java bean für einen User.
+  \end{itemize}
+  \item \textbf{de.vlpt.servlet.modulhandbuch}
+  \begin{itemize}
+    \item \textbf{copyModulhandbuch}: Kopiert Modulhandbücher eines Benutzers. JSPs: - (Weiterleitung /meineModulhandbuecher)
+    \item \textbf{editDruckrubriken}: Lädt und speichert Druckrubriken. JSPs: editDruckrubriken.jsp
+    \item \textbf{editModul}: Lädt oder löscht Module zu Studiengängen/Modulhandbüchern JSPs: editModul.jsp
+    \item \textbf{editModulhandbuch}: Lädt die Grunddaten und die Übersicht der Module eines Modulhandbuchs / Studiengangs (GET). Speichert Modulhandbücher (POST). JSPs: editModulhandbuch.jsp
+    \item \textbf{editVTandDRtoModul}: Lädt die Veranstaltungsteile-Zuordnungen für ein Modul eines Modulhandbuchs (GET). Lädt die Druckrubrik-Zuordnungen für ein Modul eines Modulhandbuchs (GET). Speichert die Veranstaltungsteile-Zuordnungen für ein Modul eines Modulhandbuchs (POST). Speichert die Druckrubrik-Zuordnungen für ein Modul eines Modulhandbuchs (POST). JSPs: editVTandDRtoModul.jsp
+    \item \textbf{meineModulhandbuecherServlet}: Lädt die Übersicht der Modulhandbücher / Studiengänge eines Modulhandbuchbeauftragten (GET). LÖSCHT Modulhandbücher (POST). JSPs: meineModulhandbuecher.jsp
+    \item \textbf{undoDelModulhandbuch}: Macht eine Löschung von Modulhandbüchern rückgängig. JSPs: - (Weiterleitung zu /meineModulhandbuecher)
+  \end{itemize}
+  \item \textbf{de.vlpt.servlet.planer.exportDB}
+  \begin{itemize}
+    \item \textbf{download}: Servlet zum Download von Datenbanken (nur Planer/Admin). JSPs: - (Weiterleitungen)
+    \item \textbf{exportDaten}: JSPs: exportDaten.jsp
+  \end{itemize}
+  \item \textbf{de.vlpt.servlet.planer.importPlan}
+  \begin{itemize}
+    \item \textbf{ImportPlan}: Servlet zum Hochladen von Planungsständen und zur Anzeige der hochgeladenen Planungsständen. JSPs: importPlan.jsp
+  \end{itemize}
+  \item \textbf{de.vlpt.servlet.route.profile}
+  \begin{itemize}
+    \item \textbf{Password}: Servlet zum Ändern des eigenen Passworts eines Nutzers
+  \end{itemize}
+  \item \textbf{de.vlpt.servlet.route.timeslots}
+  \begin{itemize}
+    \item \textbf{TimeSlots}: Servlet zum Ändern der Zeitblöcke für ein Semester
+  \end{itemize}
+  \item \textbf{de.vlpt.servlet.route.users}
+  \begin{itemize}
+    \item \textbf{AddPerson}: Servlet zum Hinzufügen eines Person-Datensatzes.
+    \item \textbf{AddUser}: Servlet zum Hinzufügen eines Benutzer-Datensatzes.
+    \item \textbf{EditPerson}: Servlet zum Bearbeiten eines Person-Datensatzes.
+    \item \textbf{EditUser}: Servlet zum Bearbeiten eines Benutzer-Datensatzes.
+    \item \textbf{Users}: Servlet zum Darstellen der Übersicht aller Person-Datensatzes.
+  \end{itemize}
+  \item \textbf{de.vlpt.servlet.semesterWechseln}
+  \begin{itemize}
+    \item \textbf{semesterWechseln}: JSPs: semesterWechseln.jsp
+  \end{itemize}
+  \item \textbf{de.vlpt.servlet.veranstalter}
+  \begin{itemize}
+    \item \textbf{editVPlan}: Servlet zum Bearbeiten / Erstellen eines Vorlesungsplans zu einem Kurs. JSPs: editVPlan.jsp
+    \item \textbf{editWunschzeiten}  Wunschzeiten bearbeiten
+    \item \textbf{meinVPlan}: Servlet für die Übersichtsliste der Vorlesungspläne (Veranstalter + Planer). JSPs: meinVeranstaltungsplan.jsp
+    \item \textbf{sperrzeiten}: Servlet zum Bearbeiten von Sperrzeiten (Veranstalter + Planer). JSPs: sperrzeiten.jsp
+    \item \textbf{undoDelPlan}: Macht Löschungen von Kursen in Vorlesungsplänen rückgängig. JSPs: - (Weiterleitung /meinVPlan)
+  \end{itemize}
+  \item \textbf{de.vlpt.servlet.veranstaltungen}
+  \begin{itemize}
+    \item \textbf{addVeranstaltungServlet}: Servlet fur die Anlage einer neuen Veranstaltung. JSPs: addVeranstaltung.jsp
+    \item \textbf{delVeranstaltung}: Servlet fur die Löschung einer Veranstaltung. JSPs: - (Weiterleitung /meineVeranstaltungen)
+    \item \textbf{editVeranstaltung}: Servlet für die Bearbeitung einer Veranstaltung. JSPs: addVeranstaltung.jsp
+    \item \textbf{meineVeranstaltungenServlet}: Servlet für die Übersicht von Kursen eines Lehrveranstaltungsbeauftragten (Phase 1). JSPs: meineVeranstaltungen.jsp
+    \item \textbf{undoDelVeranstaltung}: Servlet für Wiederherstellung von gelöschten Kursen. JSPs: - (Weiterleitung /meineVeranstaltungen)
+  \end{itemize}
+  \item \textbf{de.vlpt.utils}
+  \begin{itemize}
+    \item \textbf{Helper}: Diese Klasse beinhaltet Hilfsfunktionen für alle moglichen anderen Klassen
+    \item \textbf{ServletHelper}: Stellt eine Methode bereit, die bei Weiterleitungen hilft und zu der vorherigen Seite zurückleitet, falls es eine Fehlermeldung gibt.
+    \item \textbf{TextDateiAusleser}: Diese Klasse liest Testdateien zeilenweise aus.
+    \item \textbf{VorlesungsplanBemerkungenParser}: Diese Datei wurde benutzt, um alte VLPT Datenbanken zu dem neuen Schema umzuformen: Neue Spalten wie (Tafel, Beamer, StartWoche, ...).
+  \end{itemize}
+\end{itemize}
+
+
+\subsection{JSP-Dateien}
+\label{sec:jsp_files}
+
+\subsubsection{Datenbanken}
+Im \path{src\main\webapp\WEB-INF} Ordner befinden sich alle Datenbanken der Anwendung.
+Dies beinhaltet die Nutzerdatenbank (USERDB.db) sowie die Datenbanken zur Planung der einzelnen Semester (VLPTDB\_SommersemesterXXXX.db bzw. VLPTDB\_WintersemesterXXXXXXXX.db).
+
+
+\subsubsection{Webseiten}
+Die einzelnen Webseiten der Anwendung befinden in sich im \path{src\main\webapp} Ordner.
+Insbesondere Seiten, die das ältere Servlet-Modell verwenden, befinden sich direkt in diesem Ordner.
+Seiten des neueren Modells befinden sich in Unterordnern, z.B. \path{src\main\webapp\users} für alle Seiten, die zum Erstellen, Bearbeiten oder Löschen von Benutzern bzw. Personen verwendet werden.
+
+
+\subsubsection{Layout}
+Das Layout aller Seiten der Webanwendung wurde vereinheitlicht.
+Auf diese Weise wird eine konsistente Benutzererfahrung gewährleistet und viel mehrfach vorhandener Quellcode konnte entfernt werden.
+Die Datei \path{src\main\webapp\WEB-INF\tags\layout\main.tag} implementiert das vereinheitlichte Layout als Tag, damit es in JSP-Dateien eingebunden werden kann.
+
+Um die Vereinheitlichung der Webanwendung zu vereinfachen, wurde das CSS-Framework Bootstrap in der Version 5.3.3 verwendet.
+Dies beinhaltet sowohl Styles als auch von Bootstrap bereitgestellte Funktionalitäten für beispielsweise responsive Elemente wie die Navigationsleiste.
+Eingebunden wird Bootstrap in der Layout-Tag-Datei.
+
+Das Layout wird in drei verschiedene Bereiche unterteilt, die im folgenden detailliert erläutert werden: Den Kopfbereich, die Navigationsleiste und den Seiteninhalt.
+
+
+\paragraph{Kopfbereich}
+Der Kopfbereich ist für alle Seiten identisch.
+Hier wird das Logo der Universität, das ausgewählte Semester sowie das Profilmenü angezeigt.
+Der Kopfbereich ist in der Layout-Tag-Datei eingebunden, da er responsiv ist und somit teilweise das Layout der Seite anpasst.
+
+
+\paragraph{Navigationsleiste}
+Die Navigationsleiste ist für alle Seiten identisch.
+Sie bietet eine schnelle Möglichkeit, um zu den Hauptseiten der Webanwendung zu navigieren.
+Die Navigationsleiste ist unabhängig vom restlichen Layout der Seite und ist deshalb in der Datei \path{src\main\webapp\WEB-INF\tags\components\sidenav.tag} implementiert.
+
+Die Navigationsleiste zeigt abhängig von den Rollen des aktiven Nutzers verschiedene Links an.
+Da jede Rolle als eigenes Session-Attribut implementiert wurde, wird überprüft, ob ein solches Attribut vorhanden ist, und abhängig davon wird ein Link ein- oder ausgeblendet.
+
+
+\paragraph{Seiteninhalt}
+Der Seiteninhalt unterscheidet sich für jede Seite.
+Hier werden eine Breadcrumb-Navigation, der Titel sowie der Hauptinhalt einer Seite mitsamt ihrer Funktionalitäten angezeigt.
+
+Auch Fehler- bzw. Erfolgsmeldungen werden (zwischen Breadcrumbs und Titel) in diesem Bereich angezeigt.
+Diese Meldungen werden aus den Session-Attributen \texttt{errorMessage} bzw. \texttt{successMessage} ausgelesen und anschließend gelöscht, damit die Meldungen nicht seitenübergreifend bestehen bleiben.
+Die Umsetzung über Session-Attribute war notwendig, da bei einer Fehlermeldung oft auf eine andere Seite umgeleitet wird, wodurch Request-Attribute verloren gehen.
+
+Um das Layout auf einer Seite zu verwenden, muss es auf folgende Weise in einer JSP-Datei eingebunden werden:
+\begin{lstlisting}[numbers=left, columns=flexible, breaklines=true]
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib tagdir="/WEB-INF/tags/layouts" prefix="layout" %>
+
+<layout:main title="SEITENTITEL">
+    <jsp:attribute name="breadcrumb">
+        BREADCRUMB-INHALT
+    </jsp:attribute>
+    <jsp:body>
+        SEITENINHALT
+    </jsp:body>
+</layout:main>
+\end{lstlisting}
+
+
+
+\section{Zugriff auf Datenbanken}
+In der Klasse \texttt{SQLiteDB} werden viele Hilfsmethoden zur Verfügung gestellt, die zur Kommunikation mit den Datenbanken des Tools verwendet werden können.
+Diese Hilfsmethoden sollten in den \texttt{doGet}- bzw. \texttt{doPost}-Methoden von Servlets verwendet werden, um Daten abzufragen (GET), zu erstellen, bearbeiten oder löschen (POST).
+Da Änderungen per POST-Anfragen an den Server übermittelt werden, werden sie typischerweise nicht automatisch, sondern bei einem manuellen Absenden per Klick gespeichert.
+
+Die einfachste Möglichkeit auf die Datenbank eines Semestes zuzugreifen bietet sich durch
+\begin{align*}
+    \texttt{SQLiteDB.getDBFromUsersSemester(HttpServletRequest request)}
+\end{align*}
+und
+\begin{align*}
+    \texttt{SQLiteDB.getDBFromUsersSemester(HttpSession session)}.
+\end{align*}
+Eine Liste aller Timeslots aus dem aktuellen Semester kann man zum Beispiel wie folgt bekommen:
+\begin{lstlisting}[language=Java, columns=flexible, breaklines=true]
+@WebServlet(description = "Get a list of existing time slots", urlPatterns = { "/api/timeslots/get" })
+public class GetTimeSlot extends HttpServlet {
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        SQLiteDB database = SQLiteDB.getDBFromUsersSemester(request);
+        List<TimeSlot> timeslots = new ArrayList<>();
+        try {
+            ResultSet resultSet = database.executeSQLQuery("SELECT * FROM Timeslots ORDER BY Time ASC");
+
+            while (resultSet.next()){
+                timeslots.add(new TimeSlot(resultSet.getString("Weekday"), resultSet.getInt("Time"), resultSet.getInt("Duration")));
+            }
+
+            request.setAttribute("timeslots", timeslots);
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        database.closeConnection();
+    }
+}
+\end{lstlisting}
+
+\section{Datenbankschema}
+Im folgenden wird das Datenbankschema beschrieben. Zuerst die Tabellen aus der Userdb.db, in der Login Informationen und Informationen über die aktuell vorhandenen Semester gespeichert wird und dann die VLPTDB\_SemesterXXXX.db Tabellen, in der die Planungsdaten aus einzelnen Semestern gespeichert werden.
+Alle Foreign Keys sind nur theoretischer Natur und nicht im Datenbankschema enthalten.
+\begin{table}[h]
+	\centering
+	\begin{tabular}{|c|c|}
+		\hline
+		Abkürzung & Bedeutung \\\hline\hline
+		PK & Primary Key\\
+		FK & Foreign Key \\
+		NN & Not Null\\
+		U & Unique \\
+		AI & Auto Incrementing \\\hline
+	\end{tabular}
+	\caption{Abkürzungen und ihre Bedeutungen}
+\end{table}
+
+
+
+\begin{landscape}
+\subsection{Userdb.db}
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        & SemesterID & Name & IsWinterSemester & DatabaseFileName \\ \hline\hline
+        Data Type & INTEGER & TEXT & BOOLEAN & TEXT \\ \hline
+        Constraints & PK, AUTOINCREMENT & - & - & - \\ \hline
+         & 0 & Sommersemester 2019 & false & VLPTDB\_Sommersemester2019.db \\ 
+         & 4 & Wintersemester 2021/2022 & true & VLPTDB\_Wintersemester20212022.db \\ \hline
+    \end{tabular}
+    \caption{Schema der Semester Tabelle}
+    \label{schema:semester}
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+        & PersonID & Name & Rolle & Fakultaet \\ \hline\hline
+        Data Type & TEXT & TEXT & TEXT & TEXT \\ \hline
+        Constraints & PK, UNIQUE & NN & NN & NN \\ \hline
+        & Dr.RitHar & Dr. Rita Hartel & Veranstalter & EIM \\
+        & Dr.HarSel &Dr. Harald Selke & Veranstalter,Modulhandbuchbeauftragter,Veranstaltungsbeauftragter & EIM \\ \hline
+    \end{tabular}
+    \caption{Schema der Personen Tabelle}
+    \label{schema:personen}
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        & Benutzername & PersonID & Passwort & Benutzerbezeichnung & SemesterID \\ \hline\hline
+        Data Type & TEXT & TEXT & TEXT & TEXT & INTEGER \\ \hline
+        Constraints & PK, UNIQUE & NN, FK(Person) & NN & NN & NN,FK(Semester) \\ \hline
+         & rst & Dr.RitHar & \textit{Passwort Hash} & Veranstalter & 17 \\ \hline
+    \end{tabular}
+    \caption{Schema der Benutzer Tabelle}
+    \label{schema:benutzer}
+\end{table}
+
+\end{landscape}
+    
+\subsection{VLPTDB\_SemesterXXXX.db}
+\begin{landscape}
+
+	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			             & ProfID & Name & Fakultaet \\\hline\hline
+			Data Type & TEXT & TEXT & TEXT \\
+			Constraints & NN, PK, FK(Personen.PersonID) & NN & NN \\
+   \hline
+			& ProDr.SteBöt & Prof. Dr. Stefan Böttcher & EIM \\
+			& ProDr.ChrSch & Prof. Dr. Christian Scheideler & EIM \\\hline
+		\end{tabular}
+		\caption{Schema der Professor Tabelle}
+		\label{schema:professor}
+	\end{table}
+ %
+ 	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			             & ProfID & Sperrtag & Sperrzeit & Dauer (in Stunden) \\\hline\hline
+			Data Type & TEXT & TEXT & TEXT & INTEGER \\
+			Constraints & NN, PK, FK(Professor) & NN, PK & NN, PK & NN \\
+   \hline
+			& ProDr.SteBöt & Freitag & 8:00 & 12 \\
+   \hline
+		\end{tabular}
+		\caption{Schema der Sperrzeiten Tabelle}
+		\label{schema:sperrzeiten}
+	\end{table}
+
+	%
+	\begin{table}
+		\centering
+     \small
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			& KursID & Kursname & KursnameEN & Sprache & Fachbereich & BeauftragterID & PaulNr & VeranstalterGeneriert\\\hline\hline
+			Data Type & TEXT & TEXT & TEXT & TEXT & TEXT & TEXT & TEXT & TEXT \\
+			Constraints & NN, PK, U & NN & NN & NN  & NN  & NN, FK(Personen)  & NN & NN \\
+   \hline
+			& DBS-2 & Datenbanksysteme & Databases & Deutsch & Informatik & LVBInfo & L.079.05203 & 0 \\
+   \hline
+		\end{tabular}
+		\caption{Schema der Kursnamen Tabelle. VeranstalterGeneriert ist nur $1$, wenn vom PaulTool generiert, sonst $0$.}
+		\label{schema:kurs}
+	\end{table}
+	%
+	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|c|c|}
+			\hline
+			& StudiengangsID & Hauptfach & Nebenfach & Pruefungsordnung & Semester & Aktiv & BeauftragterID \\\hline\hline
+			Data Type & TEXT & TEXT & TEXT & Text & INTEGER & &\\
+			Constraints & NN, PK, U & NN & NN & NN & NN & NN& NN, FK(Personen.PersonID)\\
+   \hline
+			& InfM-1BPO4 & Informatik Bachelor & Mathematik & 4 & 1 & Nein & Dr.HarSel \\
+			& InfoOhne-2MPO3 & Informatik Master & Ohne & 3 & 2 & Ja & Dr.HarSel \\\hline
+		\end{tabular}
+		\caption{Schema der Studiengänge Tabelle}
+		\label{schema:studiengänge}
+	\end{table}
+	%
+     \begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			& Timeslot & Weekday & Time (Startstunde) & Duration (Dauer in Stunden) \\\hline\hline
+			Data Type & INTEGER & TEXT & INTEGER & INTEGER \\
+			Constraints & NN, PK, U & NN & NN & NN \\
+   \hline
+			& 1 & Montag & 8 & 3 \\
+			& 2 & Montag & 11 & 2 \\\hline
+		\end{tabular}
+		\caption{Schema der Timeslots Tabelle}
+		\label{schema:timeslots}
+	\end{table}
+%
+      \begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\hline
+			& KursID & Veranstaltungsteil & Veranstaltungsart & Dauer & BemerkungPlanung \\\hline\hline
+			Data Type & TEXT & INTEGER &TEXT & INTEGER & TEXT \\
+			Constraints & NN, PK, FK(Kursnamen) & NN, PK & NN & NN & \\
+   \hline
+			& DBS-2 & 1 & Vorlesung & 2 & \\
+			& SSSP-1 & 5 & Übung & 2 & Praktikumsteil \\\hline
+		\end{tabular}
+		\caption{Schema der Veranstaltungen Tabelle}
+		\label{schema:veranstaltungen}
+	\end{table}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+        \hline
+        & ProfID & KursID & Veranstaltungsteil & Veranstaltungsart & Uebungsanzahl & Wunschzeit & Sprache \\ \hline\hline
+        Data Type & TEXT & TEXT & TEXT & TEXT & INTEGER & TEXT & TEXT \\
+        Constraints & NN, PK, FK(Professor) & NN, PK, FK(Kursnamen) & NN, PK & NN & NN & NN, FK(Array von Timeslots) &  \\ \hline
+         & Dr.RitHar & DBS-2 & 1 & Vorlesung & 0 & [7] & Deutsch   \\ 
+         & Dr.RitHar & DBS-2 & 2 & Übung & 1 & [1,9,6,3,11,8] & Deutsch   \\ \hline
+    \end{tabular}
+    \caption{Schema der Vorlesungsplan Tabelle (Part 1). Falls Übungen teilweise selber und teilweise von Mitarbeitern gehalten werden, existieren hier zwei Einträge. Übungszahl ist dabei jeweils entweder die Anzahl der selbst gehaltenen Übungen oder die gesamtzahl der Übungen abzüglich der selbst gehaltenen Übungen.}
+    \label{schema:vorlesungsplan_part1}
+\end{table}
+\begin{table}[ht]
+    \centering
+    \resizebox{\linewidth}{!}{
+    \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+        \hline
+        &  Startwoche & Zweiwoechentlich & Einstuendig & Hoerer & Tafel & Beamer & Fenster & Campus & Fuerstenallee & BemerkungPlanung & BemerkungAnkuendigung \\ \hline\hline
+        Data Type &  INTEGER & INTEGER & BOOLEAN & INTEGER & BOOLEAN & BOOLEAN & BOOLEAN & BOOLEAN & BOOLEAN & TEXT & TEXT \\ \hline
+        Constraints  & NN & NN & NN & NN & NN & NN & NN & NN & NN & &\\ \hline
+         &1 & false & false & 250 & true & true & false & true & false & <Bemerkung></Bemerkung> &<Bemerkung></Bemerkung> \\
+         &3 & false & false & 30 & true & true & false & true & false &<Bemerkung></Bemerkung> & <Bemerkung></Bemerkung>\\ \hline
+    \end{tabular}}
+    \caption{Schema der Vorlesungsplan Tabelle (Part 2)}
+    \label{schema:vorlesungsplan_part2}
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        & StudiengangsID & KursID & Druckrubrik \\ \hline\hline
+        Data Type & TEXT & TEXT & TEXT \\ \hline
+        Constraints & NN, PK, FK(Studiengaenge) & NN, PK, FK(Kursnamen) & NN, PK, FK(Druckrubrikbezeichnungen) \\ \hline
+         & InfoOhne-1BPO4 & GP-1 & Informatik Bachelor - Pflichtteil (POv4) \\ \hline
+    \end{tabular}
+    \caption{Schema der Druckrubriken Tabelle}
+    \label{schema:druckrubriken}
+\end{table}
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        & Bezeichnung & Parent & Reihenfolge \\ \hline\hline
+        Data Type & TEXT & TEXT & INTEGER \\ \hline
+        Constraints & NN, PK, FK(Druckrubriken) & NN, PK & NN \\ \hline
+         & Informatik Bachelor - Pflichtteil (POv4) & Informatik Bachelor (POv4) & 1 \\ \hline
+    \end{tabular}
+    \caption{Schema der Druckrubrikbezeichnungen Tabelle}
+    \label{schema:druckrubriken}
+\end{table}
+
+
+\end{landscape}
+
+\end{document}

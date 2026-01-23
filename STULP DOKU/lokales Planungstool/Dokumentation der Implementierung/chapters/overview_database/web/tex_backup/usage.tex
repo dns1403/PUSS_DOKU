@@ -1,0 +1,20 @@
+\subsubsection{Usage}
+Usage (without try/catch for exception handling to support readability):
+
+\begin{lstlisting}[language=Java]
+/**Instantiation**/
+//exchange SQLiteTeXPdfBackupDatabase with your 
+//custom implementation if needed
+TeXPdfBackupDatabase db = 
+			new SQLiteTeXPdfBackupDatabase(
+					"path/to/tex_pdf_backup.db"
+			);
+/**Create a record**/
+TeXPdf texPdf = db.getRecordFactory().createTeXPdf();
+/**Query for all TeXPdf backups in the database**/
+List<TeXPdf> allTeXPdfs = db.getRecords(texPdf);
+/**Insert texPdf backup into database**/
+texPdf = db.getRecordFactory()
+					.createTeXPdf(/*plan data here*/);
+db.insert(teXPdf);
+\end{lstlisting}

@@ -1,0 +1,87 @@
+\section{Veranstaltungen unserer Fakultät}
+\label{sec:vfak}
+
+\subsection{Lehrveranstaltung anlegen}
+
+\begin{warning}
+    Alle in diesem Kapitel beschrieben Aktionen werden im aktuell ausgewählten und in allen neueren Semestern ausgeführt.
+\end{warning}
+
+\label{sec:lv_anlegen}
+Bevor eine Lehrveranstaltung von einem Lehrenden gehalten werden kann, muss diese Lehrveranstaltung angelegt werden.
+Es müssen zum Beispiel der Name, die Paulnummer und die Lehrveranstaltungsteile spezifiziert werden.
+Dafür muss auf die Seite \textit{Veranstaltungen unserer Fakultät} gewechselt werden, wo eine Liste mit allen bereits angelegten Veranstaltungen angelegt wird und auf den \textit{Hinzufügen} Knopf gedrückt werden (siehe \figref{fig:veranstaltung_anlegen1}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img//VeranstaltungenDerFak//VeranstaltungAnlegen1.png}
+    \caption{Veranstaltungen anlegen}
+    \label{fig:veranstaltung_anlegen1}
+\end{figure}
+Danach öffnet sich die Seite \textit{Veranstaltung hinzufügen} (siehe \figref{fig:veranstaltung_anlegen2}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img//VeranstaltungenDerFak//VeranstaltungAnlegen2.png}
+    \caption{Veranstaltungen anlegen}
+    \label{fig:veranstaltung_anlegen2}
+\end{figure}
+Hier müssen für den neuen Kurs der Kursname auf Deutsch (mindestens 3 Zeichen lang), der Kursname auf Englisch (mindestens 3 Zeichen lang), ein Kürzel, ein Fachbereich und eine Paulnummer angegeben werden (genauer beschrieben in Kapitel \ref{sec:lv_anlegen_paul}).
+Unter dem Punkt \textit{Veranstaltungsteile} können die einzelnen Teile der Veranstaltung konfiguriert werden.
+Hier können durch einen Klick auf den Knopf \textit{Hinzufügen} neue Veranstaltungsteile hinzugefügt werden, wenn diese gewünscht sind.
+Es können die Art des Veranstaltungsteils (Vorlesung, Übung, Zentralübung, Praktikum, ...) festgelegt werden und wie viele Stunden dieser Teil dauern soll.
+Außerdem können auch hier Bemerkungen für die Planung eingegeben werden.
+Um einen Veranstaltungsteil zu entfernen, muss auf den Knopf \textit{Veranstaltungsteil entfernen} unter dem jeweiligen Veranstaltungsteil gedrückt werden.
+Um die Änderungen zu speichern, muss unten auf den blauen Knopf \textit{Absenden} gedrückt werden.
+
+Anschließend kann die angelegte Veranstaltung auf der Seite \textit{Veranstaltungen unserer Fakultät} in der Liste mit Veranstaltungen gesehen werden (siehe \figref{fig:veranstaltung_anlegen3}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img//VeranstaltungenDerFak//VeranstaltungAnlegen3.png}
+    \caption{Angelegte Veranstaltungen ansehen}
+    \label{fig:veranstaltung_anlegen3}
+\end{figure}
+
+\subsubsection{Paulnummern}
+\label{sec:lv_anlegen_paul}
+Paulnummern bestehen aus einer Zeichenfolge mit dem Schema \texttt{L.XXX.XXXXX}, wobei X jeweils eine Ziffer von 0 bis 9 ist.
+Für die Informatik fangen Paulnummern immer mit \texttt{L.079.} an.
+Das WebTool ist eigenständig in der Lage, eine freie Paulnummer innerhalb eines bestimmten Bereichs zu finden, wenn eine freie Paulnummer existiert.
+Die Eingabe in das Feld stellt einen Präfix dar, den das Tool auf jeden Fall einhält.
+Eine genaue Paulnummer kann festgelegt werden, indem eine Nummmer mit dem Schema \texttt{L.XXX.XXXXX} eingegeben wird.
+Falls die genaue Paulnummer nicht schon festgelegt ist, sondern nur mit einem bestimmten Präfix anfangen soll, zum Beispiel \texttt{L.079.05}, erkennt das Tool automatisch, dass die letzten drei Ziffern noch offen sind und sucht eine freie Nummer, die mit dem gegebenen Präfix startet.
+In diesem Fall sind noch 1000 Paulnummern mit dem Präfix offen \texttt{L.079.05000} - \texttt{L.079.05999}.
+Das Tool sucht eine freie Nummer mit dem gegebenen Präfix nach dem folgenden Algorithmus aus:
+\begin{itemize}
+    \item Nummern, die noch nie benutzt wurden
+    \item Die Nummer, die am längsten nicht benutzt wurde (für eine \textbf{angelegte} Veranstaltung)
+\end{itemize}
+Falls keine Nummer gefunden wurde, die benutzt werden kann (Paulnummern können nicht zweimal pro Semester verwendet werden), wird ein Fehler angezeigt (siehe \figref{fig:veranstaltung_anlegen4}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img//VeranstaltungenDerFak//VeranstaltungAnlegen4.png}
+    \caption{Fehlermeldung, wenn es keine freie Paulnummer gibt}
+    \label{fig:veranstaltung_anlegen4}
+\end{figure}
+Sie beinhaltet den Namen der Veranstaltung, die eine Nummer mit dem gegebenen Präfix enthält und möglichst lange nicht \textbf{angeboten} wurde.
+Der Name der anderen Veranstaltung kann angeklickt werden, um diese Veranstaltung direkt zu bearbeiten und die Nummer dieser Veranstaltung ändern zu können, um sie für neue Veranstaltungen frei zu machen.
+Das Ändern von Veranstaltungen funktioniert genauso wie das Anlegen von Veranstaltungen.
+
+\subsection{Lehrveranstaltung bearbeiten}
+Um eine bereits angelegte Veranstaltung zu bearbeiten, muss vom Ersteller der Lehrveranstaltung auf die Seite \textit{Veranstaltungen unserer Fakultät} gewechselt werden und dort auf die zu bearbeitende Lehrveranstaltung geklickt werden (siehe \figref{fig:veranstaltung_anlegen6}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img//VeranstaltungenDerFak//VeranstaltungAnlegen6.png}
+    \caption{Angelegte Veranstaltungen bearbeiten}
+    \label{fig:veranstaltung_anlegen6}
+\end{figure}
+
+Danach läuft alles so wie beim ersten Anlegen einer Lehrveranstaltung, wie in Kapitel \ref{sec:lv_anlegen} beschrieben.
+
+\subsection{Lehrveranstaltung löschen}
+Um eine bereits angelegte Veranstaltung zu bearbeiten, muss vom Ersteller der Lehrveranstaltung auf die Seite \textit{Veranstaltungen unserer Fakultät} gewechselt werden und dort auf den Knopf \textit{Löschen} neben der zu bearbeitenden Lehrveranstaltung geklickt werden (siehe \figref{fig:veranstaltung_anlegen5}).
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img//VeranstaltungenDerFak//VeranstaltungAnlegen5.png}
+    \caption{Lehrveranstaltung löschen}
+    \label{fig:veranstaltung_anlegen5}
+\end{figure}

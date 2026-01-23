@@ -1,0 +1,89 @@
+\documentclass{article}
+\usepackage[ngerman]{babel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{xcolor}
+
+\input{./config}
+
+
+\title{Paul Tool-Nutzerhandbuch}
+\author{Projektgruppe STULP \\ Alessio, Alexander, Daniel, Daniel, Niklas, Paul}
+\date{\today}
+
+\geometry{
+  a4paper,
+  top=3cm,
+  bottom=3cm,
+  left=2.5cm,
+  right=2.5cm,
+}
+
+% Increase spacing between lines
+\linespread{1.2}
+
+% Remove indentations but increase line spacing between paragraphs
+\setlength\parindent{0pt}
+%\setlength\parskip{0.6 \baselineskip}
+
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\paragraph{Laden einer Datenbank}
+Damit das Tool richtig funktioniert, muss zuerst eine Datenbank geladen werden. Das Tool benötigt eine Datenbank im Schema des Local Planning Tool. Dies kann über die Schaltflächen Importieren/p2-Datenbank laden im entsprechenden Standard-Dialog des Betriebssystems erfolgen. Wie in \figref{fig:Import} zu sehen ist, ist die Schaltfläche Import/p2-Datenbank laden ausgegraut und das Tool kann erst nach dem Einlesen einer geeigneten Datenbank betrieben werden.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{../img/Import.PNG}
+    \caption{Datenbank Import}
+    \label{fig:Import}
+\end{figure}
+
+\newpage
+
+\paragraph{Veranstaltungssuche}
+Über die Schaltfläche Lehrveranstaltungen/p2-Lehrveranstaltungen gelangt man zum Dialog für den Import von Lehrveranstaltungen. In diesem Dialog wählt man zunächst den eigenen Fachbereich und das Semester aus, aus dem die Veranstaltungen importiert werden sollen (siehe \figref{fig:Semester}).\newline
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{../img/Semster.PNG}
+    \caption{Semester Auswahl}
+    \label{fig:Semester}
+\end{figure}
+Das Tool bietet 3 Modi für den Umgang mit Übungen.\\
+1: Alle Übungen in dieser Einstellung importiert das Tool alle Übungen für die gesuchte Veranstaltungen, die es finden kann.\\ 
+2: Einzelne Übungen in dieser Einstellung importiert das Tool nur die Übungen, die die einzigen Übungen für die entsprechende Veranstaltung sind. \\
+3: Keine Übungen in diesem Modus ignoriert das Tool alle Übungen.
+\newpage
+Das Tool ist in der Lage, sowohl nach Veranstaltungen anderer Fachbereiche als auch nach Veranstaltungen des eigenen Fachbereichs zu suchen, dies kann über das entsprechende Auswahlfeld eingestellt werden(siehe \figref{fig:FremdEigen}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{../img/FremdEigen.PNG}
+    \caption{Auswahl des Types der Veranstaltungssuche}
+    \label{fig:FremdEigen}
+\end{figure}
+
+Bei der Suche nach Veranstaltungen des eigenen Fachbereichs erhält man eine Liste aller Veranstaltungen und kann für jede Veranstaltung auswählen, ob sie in die Suche einbezogen werden soll oder nicht. Bei der Suche nach fremden Lehrveranstaltungen kann dies für jeden Studiengang entschieden werden. Innerhalb eines Studiengangs ist dann eine Unterscheidung nach Nebenfach und Semester möglich, eine mögliche Einstellung wäre z.B. \textit{finde alle Veranstaltungen des Lehramts für Berufskollegs im 3. Semester}.
+Wird eine feinere Unterscheidung auf Veranstaltungsebene für Veranstaltungen eines fremden Fachbereichs benötigt, so besteht die Möglichkeit, diesen Fachbereich im Fachbereichsauswahldialog auszuwählen und die eigenen Veranstaltungen zu importieren. Sind alle diese Einstellungen vorgenommen, kann die Suche über den Button Veranstaltungen suchen gestartet werden.
+\newpage
+\paragraph{Ergebnisse Exportieren}
+Nach Abschluss der Suche werden Veranstaltungen, die gar nicht gefunden wurden, rot markiert, Veranstaltungen, bei denen alle Veranstaltungsteile gefunden wurden, grün und Veranstaltungen, bei denen nur manche (aber nicht alle) Veranstaltungsteile gefunden wurden, gelb. Über die in \figref{fig:fertig} hervorgehobenen Auswahlfelder kann eine gefundene Veranstaltung ignoriert werden. Die verbleibenden Veranstaltungen können über das Feld Veranstaltungen übernehmen gespeichert werden.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{../img/fertig.PNG}
+    \caption{Übersicht über abgeschlossene Suche}
+    \label{fig:fertig}
+\end{figure}
+\newpage
+Anschließend erhält man eine detaillierte Übersicht über die gefundenen Kurse und Veranstaltungen. Diese enthält für den Dozenten die Studiengänge, die eine Veranstaltung besuchen müssen und den Termin, an dem die Veranstaltung stattfindet. In dieser Ansicht können die Angaben noch manuell korrigiert werden, diese Änderungen werden mit dem Button Änderungen übernehmen gespeichert und sind ansonsten nicht persistent. Anschließend kann man, wie in \figref{fig:export} hervorgehoben, über die Schaltfläche Export die so gefundenen Daten in eine Datenbank exportieren. Dadurch wird eine Datenbank erzeugt, die vom lokalen Planungstool akzeptiert wird. 
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{../img/export.PNG}
+    \caption{Veranstaltungsexport}
+    \label{fig:export}
+\end{figure}
+\end{document} 
+
+

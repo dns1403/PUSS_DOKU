@@ -1,0 +1,43 @@
+\subsubsection{Schema}
+\begin{landscape}
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|c|}
+			\hline
+			& userID & firstname & lastname & username & password & email \\\hline\hline
+			Data Type & TEXT & TEXT & TEXT & TEXT & BLOB & TEXT\\
+			Constraints & PK & NN & NN & NN, U & NN & NN \\\hline
+			& Böttcher & Stefan & Böttcher & stb & 98bb0d74349906a24aa0eb0894ff51f57ff32a830908471f1a21140e & stb@upb.de \\
+			& hase & Harald & Selke & hase & bfaf1bffbf76819f6daa83afe670688e31808a0d589fc8dc9081a952 & hase@upb.de  \\\hline
+		\end{tabular}
+		\caption{Schema of User relation with sample records}
+		\label{schema:user}
+	\end{table}
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			& id & roleName & description \\\hline\hline
+			Data Type & TEXT & TEXT & TEXT \\
+			Constraints & PK & NN &  \\\hline
+			& admin & Adminstrator & Role for the administrator users \\
+			& professor & Professor & Role for the professor user\\\hline
+		\end{tabular}
+		\caption{Schema of Role relation with sample records}
+		\label{schema:role}
+	\end{table}
+	\begin{table}[H]
+		\centering
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			& id & userID & roleID \\\hline\hline
+			Data Type & INTEGER & TEXT & TEXT \\
+			Constraints & PK & NN, FK(Role) & NN, FK(User) \\\hline
+			& 1 & Böttcher & professor \\
+			& 2 & hase & admin \\
+			& 3 & Böttcher & admin \\\hline
+		\end{tabular}
+		\caption{Schema of UserRole relation with sample records}
+		\label{schema:userrole}
+	\end{table}
+\end{landscape}

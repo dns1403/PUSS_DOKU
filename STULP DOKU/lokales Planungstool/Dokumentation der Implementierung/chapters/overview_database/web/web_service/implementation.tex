@@ -1,0 +1,133 @@
+\subsubsection{Implementing the interface}
+The main interface for the Web Service is the
+\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/main/java/de/upb/stulp/database/webService/WebServiceDatabase.java}{WebServiceDatabase}.
+To implement this main interface simply do the following and implement
+the methods you need to overwrite:
+
+\begin{lstlisting}[language=Java]
+public class MyWebServiceDatabase 
+				implements WebServiceDatabase {
+...
+}
+\end{lstlisting}
+
+An instance of this class will then be used in the Web Service to query
+the database. Keep in mind that you also need to adjust the Web Service
+to use your custom class.
+
+When implementing MyWebServiceDatabase you will notice that you also
+have to return an instance of a class implementing the
+\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/main/java/de/upb/stulp/database/webService/WebServiceRecordFactory.java}{WebServiceRecordFactory}
+interface as this is the only option for users of your interface to
+create objects relating to tables of the database. This is needed
+because the user uses these objects to pass filter information to the
+queries. Thus, you will need to create the following class:
+
+\begin{lstlisting}[language=Java]
+public class MyWebServiceRecordFactory 
+				implements WebServiceRecordFactory {
+...
+}
+\end{lstlisting}
+
+You will also notice that the database interface only offers one insert,
+update, delete and getRecords operation, yet there are different tables
+in your database. This is due to the fact that these methods simply
+delegate the operation to the different table implementations. To take
+adavantage of this the
+\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/main/java/de/upb/stulp/database/Record.java}{Record}
+interface has been introduced. This interface enables you to simply call
+the corresponding method of the record interface for delegation.
+
+\subsubsection{How are Records of database relations implemented in the
+		interface}
+
+Every relation in your database has a corresponding entity class that
+stores exactly one record of a relation,
+e.g.~\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/main/java/de/upb/stulp/database/webService/Professor.java}{Professor}.
+Thus, when querying the database, you wrap every record into its
+corresponding interface class and return this.
+
+\subsubsection{How to implement a record class}
+
+To implement a record class, you simply inherit from the corresponding
+interface class and override the missing methods. For example:
+
+\begin{lstlisting}[language=Java]
+public class MyProfessor extends Professor {
+//make sure to make the constructors protected 
+//such that the user is forced to use the 
+//RecordFactory for instantiation
+...
+}
+\end{lstlisting}
+
+The interface will force you to implement how such a record should be
+inserted, updated, deleted and retrieved from the database. However, it
+will not force you to implement the creation of a possibly necessary
+table since different databases use different concepts. Keep that in
+mind and consult your database manual to see what you need. You also
+need to overwrite the factory methods in MyWebServiceRecordFactory to be
+able to instantiate your class from outside this package.
+
+\subsubsection{How to extend the database interface}
+
+There are two ways of extending the database interface that are quite
+different in implementation effort. 1. You need to provide new
+functionality that is not yet covered by the interface but the database
+schema has not changed. 2. You need to change the database schema.
+
+\subsubsection{Change the schema}
+
+When changing the schema you have to differentiate between updating
+already existent relations and adding new relations.
+
+When updating existent relations you only need to update the interface
+class that implements the Record interface, e.g.~Professor, and your
+implementation, e.g.~MyProfessor, depending on what you need to change.
+When using the
+\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/main/java/de/upb/stulp/database/impl/webService/SQLiteProfessor.java}{SQLiteProfessor}
+implementation that is provided in this repository, you will also need
+to update the
+\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/test/resources/server_schema.db}{server\_schema.db}
+as this implementation is using JOOQ and uses automatic code generation
+to create the corresponding classes to enable type safe SQL queries.
+
+When adding a new relation to the database you need to create the
+following two classes that represent a record of the new relation:
+
+\begin{lstlisting}[language=Java]
+public abstract class NewRelation implements Record {
+//private nullable field for every field of the relation. 
+//protected constructors
+//getter and setter
+//overwrite equals and hashCode methods
+}
+\end{lstlisting}
+
+\begin{lstlisting}[language=Java]
+public class MyNewRelation extends NewRelation {
+//implement methods
+}
+\end{lstlisting}
+
+After creating these classes, you need to add the factory methods for
+the relation records to
+\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/main/java/de/upb/stulp/database/webService/WebServiceRecordFactory.java}{WebServiceRecordFactory}.
+This will look like this:
+
+\begin{lstlisting}[language=Java]
+public interface WebServiceRecordFactory {
+//place holder for old interface methods
+NewRelation createNewRelation();
+NewRelation createNewRelation(/*list of all fields to set*/);
+}
+\end{lstlisting}
+
+Then add the implementation again to MyWebServiceRecordFactory. After
+that you have successfully added a relation to you database due to
+delegation in the WebServiceDatabase. There is however one exception. If
+you are using the SQLite interface provided by this repository, you will
+again need to create a demo table in
+\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/test/resources/server_schema.db}{server\_schema.db}
+to define the schema for JOOQ.

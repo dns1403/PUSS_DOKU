@@ -1,0 +1,36 @@
+\section{User interfaces of the web tool}
+
+The web tool provides different user interfaces. In an Angular application, a user interface is represented by \textit{Component(s)}. The implementation of different user interfaces is explained below.
+
+\subsection{Login}
+
+The login interface is used by a user for logging into the system.
+
+ \begin{figure}[H]
+	\includegraphics[width=.8\textwidth]{chapters/overview_webtool/images/login_interface.png}
+	\caption{Login user interface}
+	\label{fig:LoginInterface}
+\end{figure}
+
+
+The component representing the login user interface is the \textit{Login} component and can be found at the path \textit{src/app/components/login}. The form displaying the input fields for login e.g username and password is written as an HTML in login.component.html. The submit handler of the form is in login.component.ts file in class \textit{LoginComponent} which extracts the data from the login form and pass it to the \textit{AuthenticationService} at the path \textit{src/app/services/authentication.service.ts}.
+
+\subsection{Base Component}
+
+When the user is logged into the system, the following user interface can be seen as shown in the figure below.
+
+  \begin{figure}[H]
+	\includegraphics[width=1\textwidth]{chapters/overview_webtool/images/application_interface.png}
+	\caption{Application user interface}
+	\label{fig:ApplicationInterface}
+\end{figure}
+
+The \textit{Base} component as shown in the figure above is a reusable component which is reused for every entity/model. The entities/models can be seen in the left navigation bar e.g Benutzer, Kurse, and Veranstaltungen etc. For all these entities/models we have a common user interface with just different data. For example the user interface for Kurse displays a list of courses where as the user interface for Veranstaltungen displays a list of Veranstaltungen. For both of these entities, its just the data that is different where as the user interface is the same i.e a table displaying a list of records. The base view is created as a generic reusable view so that there is no need to develop a separate user interface for each of these entities/models, but to reuse the common generic user interface (and event handling) which is metadata driven and display the relevant entity's user interface as per its metadata defined in src/app/metadata/metdata.ts. Please refer to the section 2.1.5 for the details on metadata.
+
+All the entities (which can be seen in the left navigation bar) have their own component which inherit \textit{BaseComponent} class. The \textit{BaseComponent} class provides functions to create/edit a record and all the necessary event handling.
+
+The \textit{Base} component is a container for \textit{BaseList} component. The create and edit record user interfaces are also represented by \textit{Base} component which will be explained below.
+
+\subsubsection{Create and edit record user interface}
+\subsubsection{BaseList Component}
+\subsection{Sidebar and header}

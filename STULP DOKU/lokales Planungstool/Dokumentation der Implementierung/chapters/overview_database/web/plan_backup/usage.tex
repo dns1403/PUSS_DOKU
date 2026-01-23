@@ -1,0 +1,17 @@
+\subsubsection{Usage}
+Usage (without try/catch for exception handling to support readability):
+
+\begin{lstlisting}[language=Java]
+/**Instantiation**/
+//exchange SQLitePlanBackupDatabase with your 
+//custom implementation if needed
+PlanBackupDatabase db = 
+		new SQLitePlanBackupDatabase("path/to/plan_backup.db");
+/**Create a record**/
+Plan plan = db.getRecordFactory().createPlan();
+/**Query for all plan backups in the database**/
+List<Plan> allPlans = db.getRecords(plan);
+/**Insert plan backup into database**/
+plan = db.getRecordFactory().createPlan(/*plan data here*/);
+db.insert(plan);
+\end{lstlisting}

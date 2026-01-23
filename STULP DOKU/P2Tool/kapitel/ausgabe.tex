@@ -1,0 +1,180 @@
+\section{Ausgabe}
+\label{sec:ausgabe}
+Die Seite \textit{Ausgabe} ermöglicht eine Ausgabe der Daten aus dem WebTool in mehreren Dateiformaten.
+Zuerst muss dafür der Dateiname des lokalen Planungsstands im Dropdown Menu ausgewählt werden, für den eine Ausgabe erzeugt werden soll und anschließend auf den blauen Knopf \textit{Auswählen} geklickt werden (siehe \figref{fig:a1}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/ausgabe/A1.png}
+    \caption{Ausgabe}
+    \label{fig:a1}
+\end{figure}
+Anschließend kann der aktuell ausgewählte Planungsstand durch ein erneutes auswählen im Dropdown Menu und anschließendes Klicken auf den blauen Knopf \textit{Auswählen} geändert werden (siehe \figref{fig:a2}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/ausgabe/A2.png}
+    \caption{Ausgabe}
+    \label{fig:a2}
+\end{figure}
+Jetzt können verschiedene Ausgaben durch die Wahl des Ausgabeformats ausgewählt werden.
+Die Möglichkeiten sind:
+\begin{itemize}
+    \item Planungsstand: Um den aktuellen Planungsstand online einzusehen
+    \item Vorlesungsverzeichnis: Um eine tex Vorlage für das Vorlesungsverzeichnis zu erzeugen
+    \item Professor*innen-Emails: Um automatisch generierte Emails für alle Lehrenden mit ihren jeweiligen Veranstaltungen zu generieren
+    \item Sperrzeiten für andere Studiengänge: Um eine Liste mit Sperrzeiten für andere Studiengänge zu erstellen, die Veranstaltungen der Informatik beinhalten und überschneidungsfrei geplant werden sollen
+    \item Zentrale Raumplanung: Um einen Raumplan für die zentrale Raumplanung am Campus zu erstellen
+    \item Lokale Raumplanung: Um ein SQL-Installations-Skript für das ARBS der Fürstenallee zu erstellen
+\end{itemize}
+
+\subsection{Planungsstand}
+Auf der Seite \textit{Planungsstand} kann der aktuelle Planungsstand angesehen werden.
+Oben auf der Seite werden alle angebotenen Module und Druckrubriken aufgelistet (siehe \figref{fig:a3}).
+Wenn alle Teile einer Druckrubrik komplett geplant sind, steht neben dem Namen der Druckrubrik ein grünes \textit{Vollständig}, während bei unvollständig geplanten Druckrubriken ein gelbes \textit{Unvollständig} steht.
+Durch einen Klick auf den Namen einer Druckrubrik springt man zu den Modulen der geklickten Druckrubrik.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/ausgabe/A3.png}
+    \caption{Planungsstand}
+    \label{fig:a3}
+\end{figure}
+In den Ansichten der einzelnen Module werden alle Veranstaltungsteile mit ihrer zugehörigen Art, Tag, Zeit, Raum und Veranstalter aufgelistet (siehe \figref{fig:a4}).
+Falls eine Zelle in der Tabelle leer ist, gilt der Wert in der Spalte darüber.
+In \figref{fig:a4} wird Veranstaltungsteil 2 also auch von Dr. Rita Hartel veranstaltet und die Übungen 3.2 - 3.8 werden von Mitarbeitern veranstaltet.
+Dieses Modul ist vollständig geplant.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/ausgabe/A4.png}
+    \caption{Planungsstand}
+    \label{fig:a4}
+\end{figure}
+Falls einem Veranstaltungsteil noch kein Raum zugewiesen ist, wird die Raumzelle rot hinterlegt und der Inhalt der Zelle lautet \textit{kein Raum} (siehe \figref{fig:a5}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/ausgabe/A5.png}
+    \caption{Planungsstand}
+    \label{fig:a5}
+\end{figure}
+Falls ein Veranstaltungsteil noch überhaupt nicht geplant wurde, also noch kein Tag und eine Zeit zugewiesen wurde, erscheint sowohl der Tag als auch die Zeit rot hinterlegt (siehe \figref{fig:a6}).
+Für den Tag wird ein \textit{-} als Inhalt gesetzt und die Zeit startet mit $00-$.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/ausgabe/A6.png}
+    \caption{Planungsstand}
+    \label{fig:a6}
+\end{figure}
+Falls der Name eines Veranstalters im WebTool und in der lokalen Planungsdatenbank nicht exakt übereinstimmt, etwa wenn der Name des Veranstalters geändert wurde, nachdem die WebTool Datenbank heruntergeladen wurde, um eine lokale Planung zu starten, wird der ähnlichste Name in der WebTool Datenbank gesucht und die betreffenden Zellen werden gelb markiert (siehe \figref{fig:a7}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/ausgabe/A7.png}
+    \caption{Planungsstand}
+    \label{fig:a7}
+\end{figure}
+
+\subsection{Vorlesungsverzeichnis}
+Auf der Seite \textit{Vorlesungsverzeichnis} kann ein tex file für das Vorlesungsverzeichnis generiert werden.
+Dafür muss der Titel für das Vorlesungsverzeichnis und der Untertitel für das Vorlesungsverzeichnis festgelegt werden und danach der blaue Knopf \textit{Erstellen} gedrückt werden (siehe \figref{fig:a8}).
+Danach öffnet sich der Dialog des Betriebsystems, um den Speicherort der Datei festzulegen.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/ausgabe/A8.png}
+    \caption{Vorlesungsverzeichnis}
+    \label{fig:a8}
+\end{figure}
+
+\subsection{Professor*innen-Emails}
+Auf der Seite \textit{Professor*innen-Emails} können automatisch Emails generiert werden, die für jeden Veranstalter personalisiert die Räume und Zeiten der eigenen Veranstaltungen beinhalten (siehe \figref{fig:a9} und (siehe \figref{fig:a10})).
+Der Inhalt des Textfeldes kann durch einen Klick auf \textit{Email-Inhalt Kopieren} in die Zwischenablage kopiert werden.
+Durch einen Klick auf \textit{Vorlage Bearbeiten} kann die Vorlage bearbeitet werden (siehe \figref{fig:a11})). 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/ausgabe/A9.png}
+    \caption{Professor*innen-Emails}
+    \label{fig:a9}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/ausgabe/A10.png}
+    \caption{Professor*innen-Emails}
+    \label{fig:a10}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/ausgabe/A11.png}
+    \caption{Professor*innen-Emails}
+    \label{fig:a11}
+\end{figure}
+
+\subsection{Sperrzeiten für andere Studiengänge}
+Auf der Seite \textit{Sperrzeiten für andere Studiengänge} kann automatisch eine Textdatei mit Sperrzeiten für andere Studiengänge erstellt werden (siehe \figref{fig:a12}).
+Diese Textdatei beinhaltet alle Zeiten für Veranstaltungen der Informatik, die auch in den ausgewählten Studiengängen gewählt werden können.
+Durch Strg+Klick können mehrere Studiengänge auf einmal ausgewählt werden.
+Nach einem Klick auf den blauen Knopf \textit{Sperrzeitenliste erstellen} öffnet sich der Betriebsystem Dialog um den Speicherort für die Sperrzeitenliste festzulegen.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/ausgabe/A12.png}
+    \caption{Sperrzeiten für andere Studiengänge}
+    \label{fig:a12}
+\end{figure}
+
+
+
+
+\subsection{Zentrale Raumplanung}
+Auf der Seite \textit{Zentrale Raumplanung} kann automatisch eine Textdatei mit Raumbelegungen für die Zentrale Raumplanung erstellt werden.
+Man kann auswählen für welche Räume der Plan erstellt werden soll. 
+Man kann ganze Gebäude abwählen, aber auch einzelne Räume aus den Gebäuden einzeln abwählen, indem man auf den Pfeil bei einem Gebäude drückt (siehe \figref{fig:r1}).
+Danach kann man für das entsprechende Gebäude sehen, welche Räume existieren und durch einen Klick auf die jeweilige Checkbox neben einem Raum auswählen, ob er in der Textdatei auftauchen soll (siehe \figref{fig:r2}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/ausgabe/R1.png}
+    \caption{Ausgabe}
+    \label{fig:r1}
+\end{figure}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/ausgabe/R2.png}
+    \caption{Ausgabe}
+    \label{fig:r2}
+\end{figure}
+Falls kein Raum aus einem Gebäude ausgewählt wurde, erscheint die Checkbox neben dem Gebäude grau, falls alle Räume ausgewählt wurden, einscheint in der Checkbox ein grüner Haken und falls nur manche Räume aus einem Gebäude ausgewählt wurde, erscheint ein grünes Viereck in der Checkbox (siehe \figref{fig:r3}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/ausgabe/R3.png}
+    \caption{Ausgabe}
+    \label{fig:r3}
+\end{figure}
+Um Zeit zu sparen, wenn nur die Belegungen der großen oder nur die Belegungen der kleinen Räume exportiert werden sollen, kann oben auf \textit{Große Räume} oder \textit{Kleine Räume} geklickt werden.
+Nach der Auswahl kann der Raumplan durch einen Klick auf den blauen Knopf \textit{Raumplan erstellen} erstellt werden (siehe \figref{fig:r4}).
+Danach öffnet sich der Dialog vom Betriebsystem, um den Speicherort für den Raumplan festzulegen.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/ausgabe/R4.png}
+    \caption{Ausgabe}
+    \label{fig:r4}
+\end{figure}
+
+
+\subsection{Lokale Raumplanung}
+Die Seite \textit{Lokale Raumplanung} kann benutzt werden, um ein SQL Skript zu erstellen, das die geplanten Räume für die Fürstenallee automatisch in das ARBS einträgt.
+Zunächst muss die \textit{Skript-Art} ausgewählt werden, indem auf das Dropdown Menu geklickt wird (siehe \figref{fig:lokal1}).
+Hier kann entweder \textit{Erstellen} oder \textit{Löschen} ausgewählt werden (siehe \figref{fig:lokal2}).
+Wenn das Skript nur für einzelne Räume eingesetzt werden soll, können die übrigen Räume durch die Checkboxen abgewählt werden.
+Um das Skript zu erstellen muss nun auf den blauen Knopf \textit{Skript erstellen} gedrückt werden.
+Anschließend öffnet sich ein Dialog des Betriebssystems, in dem der Speicherort für das Skript festgelegt werden muss.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/ausgabe/Lokal1.png}
+    \caption{Lokale Raumplanung}
+    \label{fig:lokal1}
+\end{figure}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/ausgabe/Lokal2.png}
+    \caption{Lokale Raumplanung}
+    \label{fig:lokal2}
+\end{figure}
+

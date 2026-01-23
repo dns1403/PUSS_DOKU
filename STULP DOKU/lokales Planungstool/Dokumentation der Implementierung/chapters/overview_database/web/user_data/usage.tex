@@ -1,0 +1,19 @@
+\subsubsection{Usage}
+Usage (without try/catch for exception handling to support readability):
+
+\begin{lstlisting}[language=Java]
+/**Instantiation**/
+//exchange SQLiteUserDatabase with you custom implementation
+//if needed
+UserDatabase db = 
+		new SQLiteUserDatabase("path/to/user_database.db"); 
+/**Create a record**/
+User user = db.getRecordFactory().createUser();
+/**Query for all users in the database**/
+List<User> allUsers = db.getRecords(user);
+//alternatively
+allUsers = db.getUserList(user);
+/**Insert user into database**/
+user = db.getRecordFactory.createUser(/*user data here*/);
+db.insert(user);
+\end{lstlisting}

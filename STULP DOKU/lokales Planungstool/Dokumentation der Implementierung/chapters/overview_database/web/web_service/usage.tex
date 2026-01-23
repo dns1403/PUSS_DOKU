@@ -1,0 +1,20 @@
+\subsubsection{Usage of the interface}
+Usage (without try/catch for exception handling to support readability):
+
+\begin{lstlisting}[language=Java]
+/**Instantiation**/
+//exchange SQLiteWebServiceDatabase with you custom 
+//implementation if needed
+WebServiceDatabase db = 
+			new SQLiteWebServiceDatabase(
+							"path/to/database.db"); 
+/**Create a record**/
+Professor prof = db.getRecordFactory()
+							.createProfessor();
+/**Query for all professors in the database**/
+List<Professor> allProfs = db.getRecords(prof);
+/**Insert professor into database**/
+prof = db.getRecordFactory()
+			.createProfessor(/*professor data here*/);
+db.insert(prof);
+\end{lstlisting}

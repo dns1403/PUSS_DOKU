@@ -1,0 +1,174 @@
+\section{Architecture of the web tool back end}
+This section is dedicated to the architecture of the back end that is based on Spring boot framework. Spring Boot is a microservice-based framework. Microservice means a module/service which focuses on a single type of feature.
+\subsection{Spring Boot Architecture}
+The architecture of the back end can be found on Figure 2.6.
+ \begin{figure}[H]
+     \centering
+     \includegraphics[width=.7\textwidth]{chapters/overview_webtool/images/spring_boo_shema.png}
+     \caption{Architecture of the web tool back end}
+     \label{fig:SBarchitecture}
+ \end{figure}
+ 
+ According to flow above, the logic can be determined. In spring’s approach to build a RESTful web services, HTTPS requests are handled by a controller layer. Service layer is observed to make use of business logic of the application. When the user does a request, it is handled by Controller. After that the Controller calls the corresponding Service to execute a particular operation (create/edit/update/delete) using a particular Model and Database interface. Before executing any operation the Security layer is applied to check User role and permissions.
+ 
+ \subsection{Structure of the project}
+ The current structure of the project can be found on Figure 2.7.
+  \begin{figure}[H]
+     \centering
+     \includegraphics[width=.7\textwidth]{chapters/overview_webtool/images/structure_backend.png}
+     \caption{Structure of the project of the web tool back end}
+     \label{fig:StructureBackend}
+ \end{figure}
+ 
+ The project consists of two folders:
+ \begin{itemize}
+     \item src/main/java - contains the main logic of the back end.
+     \item src/main/resources - contains additional information for the back end.
+ \end{itemize} 
+ 
+ The folder src/main/java includes different packages. There is a certain package for each layer according to architecture such as Controller, Security, Service. Each of these packages contains the following:
+ \begin{itemize}
+     \item de.upb.STULP - contains a Spring Boot main class. A Spring Boot REST application loads through this class.
+     \item de.upb.STULP.controller - contains classes of controllers for each Model.
+     \item de.upb.STULP.security - contains classes for applying authentication, authorization and checking roles and permissions
+     \item de.upb.STULP.service - contains classes of services for each controller.
+     \item de.upb.STULP.service.defaultData - contains classes of services for creating the initial data in the tool.
+     \item de.upb.STULP.utils - contains class for error message handling.
+ \end{itemize}
+ 
+ \subsection{Controller implementation}
+ The typical controller is written as follows:
+ \begin{lstlisting}
+@RestController
+@RequestMapping("/Kursname")
+public class KursnameController {
+
+	@Autowired
+	KursnameService service;
+
+	/**
+	 * @brief : Endpoint for retrieving {@link Kursname}
+	 * @param id of the record to be fetched
+	 * @return {@link Kursname}
+	 * @throws Exception
+	 */
+	@RequestMapping
+	(value = "{id}", method = RequestMethod.GET)
+	public ResponseEntity<Object> getRecord
+	(@PathVariable("id") String id) throws Exception {
+		return service.getRecord(id);
+	}
+
+	/**
+	 * @brief : Endpoint for retrieving a list of 
+	 {@link Kursname}
+	 * @return List of {@link Kursname}
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "", method = RequestMethod.GET)
+	public ResponseEntity<Object> 
+	getRecords() throws Exception {
+		try {
+			return service.getRecords();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+
+	/**
+	 * @brief : Endpoint for creating a Kursname
+	 * @param json Request body JSON object
+	 * @return {@link ResponseEntity}
+	 */
+	@RequestMapping(value = "", method = RequestMethod.POST)
+	public ResponseEntity<Object> creteRecord
+	(@RequestBody ObjectNode json) {
+			return service.createRecord(json);
+	}
+    ...
+}
+ \end{lstlisting}
+ Each Controller uses its corresponding Service. Controller classes/components are easily identified by the @RestController annotation and @RequestMapping(/endPoint).
+ All controllers have the similar structure and logic.
+ 
+ \subsection{Service implementation}
+  The typical service is written as follows:
+ \begin{lstlisting}
+@Service
+public class KursnameService extends BaseService {
+	public KursnameService() throws Exception {
+        ...
+	}
+
+	/**
+	 * @brief : Return a Kursname record.
+	 * @return sperrzeitList
+	 * @throws DatabaseException
+	 * 
+	 */
+	public ResponseEntity<Object> 
+	getRecord(String id) throws DatabaseException {
+	    ...
+	}
+
+	/**
+	 * @brief : Return a list of Kursname.
+	 * @return kursnameList
+	 * @throws DatabaseException
+	 * 
+	 */
+	public ResponseEntity<Object> getRecords() {
+		...
+	}
+
+	/**
+	 * @brief : Create a new Kursname.
+	 * @return boolean
+	 * @throws DatabaseException
+	 */
+	public ResponseEntity<Object> createRecord
+	(ObjectNode json) {
+		...
+	}
+
+	/**
+	 * @brief : Update a Kursname Record.
+	 * @return sperrzeitList
+	 * @throws DatabaseException
+	 */
+	public ResponseEntity<Object> updateRecord
+	(String id, ObjectNode json) {
+	    ...
+	}
+
+	/**
+	 * @brief : Update a Kursname Record.
+	 * @return sperrzeitList
+	 * @throws DatabaseException
+	 */
+	public ResponseEntity<Object> deleteRecord
+	(String id) {
+        ...
+	}
+}	
+ \end{lstlisting} 
+ Service classes/components are identified by the @Service annotation. All services are also implemented similarly. 
+ 
+ \subsection{Security}
+ The following security technologies have been selected:
+ \begin{itemize}
+     \item Spring Boot. Security mechanisms. Spring Security has an architecture that is designed to separate authentication from authorization, and has strategies and extension points for both.
+    \item OAuth2. OAuth2 is an authorization framework that enables the application Web Security to access the resources from the client. To build an OAuth2 application, we need to focus on the Grant Type (Authorization code), Client ID and Client secret.
+ \end{itemize}
+ 
+ To login there is an endpoint: https://URL/oauth/token with the following headers:
+ \begin{itemize}
+     \item Key: Authorization, value: Basic XXXX (XXXX - used Base64Encoder for client\_id and client\_secret written in format 'client\_id:client\_secret')
+     \item Key: Content-Type, value: application/x-www-form-urlencoded and body with grunt\_type, username, password (password should be stored in the format of Bcrypt Encoder in the database table). 
+ \end{itemize}
+
+After that the access\_token can be gained, which will be related to this user for further actions in the web site (for example, using GET request https://URL/users).
+
+
+ 

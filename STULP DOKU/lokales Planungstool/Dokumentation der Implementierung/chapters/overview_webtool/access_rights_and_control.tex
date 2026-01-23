@@ -1,0 +1,105 @@
+\section{Granting of access rights and enforcement of access control}
+In this section the implementation of access permissions is introduced. The roles and permissions can be read from a predefined configuration. The main information about current roles and permissions is stored in the file permissions.json in the /resources folder. In this file all actual rules are presented as follows:
+\begin{lstlisting}
+{
+  "admin": {
+      "Kursname": {
+        "edit": "admin",
+        "delete": "admin",
+        "read": "admin"
+      },
+      ...
+   },
+  "phase1": {
+    "Kursname": {
+      "edit": "owner",
+      "delete": "owner",
+      "read": "owner"
+    },
+    ...
+  },
+  "phase2": {
+    "Kursname": {
+      "edit": "owner",
+      "delete": "owner",
+      "read": "all"
+    },
+    ...
+  },
+  "phase3": {
+    "Kursname": {
+      "read": "all"
+    },
+    ...
+  },
+  "phase4" : {
+    "getPlanDataFile" : {
+      "read" : "all"
+    },
+    ...
+    "Vorlesung": {
+      "edit": "team",
+      "delete": "team",
+      "read": "team"
+    },
+    ...
+  },
+  "phase5": {
+    "Vorlesungsplan": {
+      "read": "all"
+    },
+    ...
+  }
+}
+\end{lstlisting}
+The current implementation of Access Control based on five roles, which are used in the file above: admin, phase1, phase2, phase3, phase4, phase5. Moreover, for each model (endpoint) such as "Kursname", there are three action types: edit, delete, read. For each type the permission is assigned. The permission definition includes the following access levels:
+\begin{itemize}
+    \item admin - User can perform this operation on all records for this model without any filters
+	\item all - User can perform this operation on all records for this model
+	\item team -  User can perform operations (create/edit/update/delete) for other users in his team. By default, it is defined that a team of a User contains all the Users of his Fachbereich
+	\item owner - User can perform this operation only on his own records (where record creator id is user's own id)
+	\item none - User is not allowed any operation on this model. This permission is not specifically defined in the configuration for such roles and permissions. It should be noted that any permission that is not defined in the above configuration is considered as "none"
+\end{itemize}
+
+ Enforcement of access control is carried out by the following class:
+ \begin{lstlisting}[language=Java]
+ public class PermissionsConfiguration extends BaseService {
+	public PermissionsConfiguration() throws Exception {
+	    ...
+	}
+	...
+	public static boolean isPermitted(String model, String
+	action, String access, String AssignedUserID) {
+	    ...
+	}
+	public static boolean hasAccess(String model, String 
+	access, String AssignedUserID) {
+	    ...
+	}
+}	
+ \end{lstlisting}
+ 
+ There are two crucial methods of this class:
+ \begin{itemize}
+    \item isPermitted - to check the permission of user performing certain action on certain model with certain access level
+    \item hasAccess - to check the permission of user performing certain action on certain model with one of all possible access levels.
+ \end{itemize}
+ 
+ In order to apply access rules, one of these two methods is called from each method of each service, which is related to request. For example, the following condition is applied in order to check whether the current user has a permission to read records from the table Kursname: 
+\begin{lstlisting}[language=Java]
+if(PermissionsConfiguration.isPermitted("Kursname", 
+read","owner", getCurrentUser().getUserID()))
+{
+ 	...
+} 
+\end{lstlisting}
+Another example, using method hasAccess, checks the permission of the current user to perform edit action on model Kursname with one of all possible access levels:
+\begin{lstlisting}[language=Java]
+if (PermissionsConfiguration.hasAccess("Kursname",
+"edit", kursname.getBeauftragterID())) {
+	...
+}
+\end{lstlisting}
+ 
+
+

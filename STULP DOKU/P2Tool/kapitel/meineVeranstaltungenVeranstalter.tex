@@ -1,0 +1,188 @@
+\section{Meine Veranstaltungen}
+\label{sec:meine_veranstaltungen}
+Auf der Seite \textit{Meine Veranstaltungen} können Veranstaltungen des Veranstaltungskatalogs angeboten werden.
+Sie wird genutzt, um angebotene Veranstaltungen konfigurieren zu können und dafür die Anzahl der maximalen Hörer einzugeben, sowie Wünsche bezüglich des Raumes zu äußern und Wunschzeiten anzugeben.
+Am Anfang, wenn Sie noch keine Kurse angeboten haben, sieht die Seite noch leer aus und bietet oben unter dem Punkt \textit{Aktuelle Veranstaltungen} die Möglichkeit, eine Veranstaltung anzubieten (siehe \figref{fig:meine_veranstaltungen_vplan}).
+Diese Seite zeigt immer die Veranstaltungen an, die Sie in Ihrem ausgewählten Semester anbieten.
+Bevor Sie Veranstaltungen hinzufügen oder löschen, vergewissern Sie sich, dass Sie sich im richtigen Semester befinden.
+Lehrende können nur Veranstaltungen im Semester des aktuellen Planungszyklus Änderungen vornehmen.
+Falls kurzfristige Änderungen für das vorherige Semester vorgenommen werden sollen, muss dies über den aktuellen Planer geschehen.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/MeineVeranstaltungen//MeinVeranstaltungsplan.png}
+    \caption{Meine Veranstaltungen}
+    \label{fig:meine_veranstaltungen_vplan}
+\end{figure}
+
+\subsection{Veranstaltung anbieten}
+\label{sec:meine_veranstaltungen_add}
+
+Um eine Veranstaltung für das aktuell ausgwählte Semester anzubieten, muss der \textit{Hinzufügen} Knopf unter \textit{Aktuelle Veranstaltungen} gedrückt werden.
+Dadurch wird die Seite \textit{Veranstaltungsplan bearbeiten} geöffnet (siehe \figref{fig:meine_veranstaltungen_vplan_add}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/MeineVeranstaltungen//MeinVeranstaltungsplan_AddVPlan.png}
+    \caption{Meine Veranstaltungen - Veranstaltungsplan bearbeiten}
+    \label{fig:meine_veranstaltungen_vplan_add}
+\end{figure}
+Hier muss zuerst der Fachbereich ausgewählt werden, von dem die Veranstaltung angeboten werden soll.
+Für Veranstaltungen wie Analysis, Algebra und Stochastik muss hier \textit{Mathematik} ausgewählt werden, für Veranstaltungen wie Grundlagen der Elektrotechnik, Signalverarbeitung und Nachrichtentechnik muss hier \textit{Elektrotechnik} ausgewählt werden.
+Danach kann durch einen Klick auf das Dropdown Menu in der Reihe Kurs ein Kurs ausgewählt werden.
+Hier werden alle Kurse des vorher ausgewählten Fachbereichs angezeigt und können durch einen Klick ausgewählt werden (siehe \figref{fig:meine_veranstaltungen_vplan_add_kursliste}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/MeineVeranstaltungen//MeinVeranstaltungsplan_AddVPlan_Kursliste.png}
+    \caption{Meine Veranstaltungen - Veranstaltungsplan bearbeiten - Kursauswahl}
+    \label{fig:meine_veranstaltungen_vplan_add_kursliste}
+\end{figure}
+Anschließend muss noch die Sprache, in der die Lehrveranstaltung gehalten wird, durch einen Klick auf Deutsch oder Englisch ausgewählt werden.
+Danach muss auf den Knopf \textit{Nächster Schritt} gedrückt werden, um die Veranstaltung weiter zu konfigurieren.
+
+Nun öffnet sich die Seite \textit{Veranstaltungsplan bearbeiten - Wunschzeiten auswählen} (siehe \figref{fig:meine_veranstaltungen_vplan_add_wunschzeiten}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/MeineVeranstaltungen//MeinVeranstaltungsplan_Add_Wunschzeiten.png}
+    \caption{Meine Veranstaltungen - Wunschzeiten konfigurieren}
+    \label{fig:meine_veranstaltungen_vplan_add_wunschzeiten}
+\end{figure}
+Hier sollte zunächst überprüft werden, dass unter \textit{Ausgewählte Veranstaltung} die Veranstaltung steht, die angeboten werden soll.
+Darunter befinden sich die Veranstaltungsteile der Veranstaltung mit weiteren Konfigurationsmöglichkeiten aufgelistet.
+Wenn Sie den Namen der Veranstaltung oder die Art oder Dauer der Teile ändern möchten (zum Beispiel statt 3 Stunden Vorlesung nur 2 Stunden Vorlesung anbieten wollen), kann dies wie in Kapitel \ref{sec:meine_veranstaltungen_teile} beschrieben geändert werden.
+Im folgenden wird der Konfigurationsprozess am Beispiel von Vorlesungen, Übungen und Zentralübungen beschrieben.
+
+\subsubsection{Vorlesungen konfigurieren}
+Für den Veranstaltungsteil \textit{Vorlesung} können Wunschzeiten ausgewählt werden (siehe \figref{fig:meine_veranstaltungen_vplan_add_wunschzeiten_v}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/MeineVeranstaltungen//MeinVeranstaltungsplan_Add_Wunschzeiten_Vorlesung.png}
+    \caption{Vorlesungen konfigurieren}
+    \label{fig:meine_veranstaltungen_vplan_add_wunschzeiten_v}
+\end{figure}
+Dabei können die vom Planer definierten Zeitblöcke mit einem Klick ausgewählt und abgewählt werden.
+Ausgewählte Wunschzeiten werden durch einen blauen Haken in der entsprechenden Checkbox angezeigt.
+Es können beliebig viele Wunschzeiten ausgewählt werden.
+Diese werden bei der Planung beachtet, wenn dies möglich ist.
+Es kann jedoch vorkommen, dass es nicht möglich ist, den Wunschzeiten zu entsprechen.
+Außerdem muss die \textit{Erwartete Hörerzahl} angegeben werden, damit die Vorlesung einen Raum zugewiesen bekommen kann, der groß genug ist.
+Bitte schätzen Sie die Hörerzahl, z.B. anhand der Teilnehmer der letzten Durchführung dieser Veranstaltung.
+Darunter können weitere \textit{Raumanforderungen} definiert werden. 
+Es kann ausgewählt werden, ob eine Tafel, ein Beamer und Fenster vorhanden sein sollen und ob die Vorlesung in der Fürstenallee oder am Campus stattfinden soll.
+Falls weitere Raumanforderungen bestehen, können diese in das Textfeld \textit{Sonstige Raumanforderungen} eingetragen werden.
+Dies kann zum Beispiel benutzt werden, um zu sagen, dass der Raum möglichst 6 oder mehr Tafeln haben soll, weil in der Vorlesung viel an die Tafel geschrieben wird.
+Danach muss im Feld \textit{Beginnt in Semesterwoche} die Semesterwoche angegeben werden, in der die Vorlesung zum ersten Mal stattfindet.
+Im Feld \textit{Sonstige Bemerkung zur Veranstaltungsplanung} können weitere Wüsche und Informationen für die Planung angegeben werden.
+Dies kann benutzt werden, falls die Veranstaltung in besonderen Räumen stattfinden soll (zum Beispiel die eigenen Räume einer Fachgruppe) oder wenn die Vorlesung möglichst mindestens 2 Tage vor der Übung stattfinden soll oder falls diese Vorlesung auf keinen Fall parallel zu einer anderen spezifischen Vorlesung liegen soll.
+
+\subsubsection{Übungen konfigurieren}
+Übungen haben alle Konfigurationsparameter einer Vorlesung, jedoch zusätzlich zwei weitere Optionen (siehe \figref{fig:meine_veranstaltungen_vplan_add_wunschzeiten_u}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/MeineVeranstaltungen//MeinVeranstaltungsplan_Add_Wunschzeiten_Übung.png}
+    \caption{Übungen konfigurieren}
+    \label{fig:meine_veranstaltungen_vplan_add_wunschzeiten_u}
+\end{figure}
+In das Feld \textit{Übungsanzahl insgesamt} muss eingetragen werden, wie viele Übungsgruppen es pro Woche geben soll.
+Im Feld \textit{Davon selber halten} soll eingetragen werden, wie viele Übungsgruppen vom Dozenten der Vorlesung gehalten werden und nicht von Mitarbeitern oder Hilfskräften übernommen werden.
+Die \textit{Erwartete Hörerzahl} bei Übungen bezieht sich auf die Anzahl der Teilnehmer pro Übungsgruppe.
+Wenn es 10 Übungsgruppen bei einer Veranstaltung mit 200 Teilnehmern gibt, sollte hier also 20 angegeben werden.
+
+\subsubsection{Zentralübungen konfigurieren}
+Auch eine Zentralübung hat alle Parameter einer Vorlesung und zusätzlich weitere für Zentralübungen spezifische Optionen (siehe \figref{fig:meine_veranstaltungen_vplan_add_wunschzeiten_z}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/MeineVeranstaltungen//MeinVeranstaltungsplan_Add_Wunschzeiten_Zentralübung.png}
+    \caption{Zentralübungen konfigurieren}
+    \label{fig:meine_veranstaltungen_vplan_add_wunschzeiten_z}
+\end{figure}
+Es muss ausgewählt werden, ob die Zentralübung vom Dozenten der Vorlesung selbst gehalten wird oder ob sie von einem Mitarbeiter durchgeführt wird oder ob sie in diesem Semester nicht angeboten wird.
+Diese Eingabe ist wichtig, damit der Dozent der Vorlesung nicht gleichzeitig für zwei Veranstaltungen eingeplant wird und im Fall einer nicht stattfindenden Zentralübung kein Raum unnötig blockiert wird.
+Außerdem kann für Zentralübungen bei \textit{Wochentakt} ausgewählt werden, ob die Zentralübung 14-tägig zweistündig oder wöchentlich einstündig gehalten werden soll.
+
+\subsubsection{Änderungen speichern}
+Um die getroffenen Eingaben zu speichern, muss unten der blaue Knopf \textit{Absenden} gedrückt werden.
+Danach gelangt man wieder auf die Seite \textit{Meine Veranstaltungen}.
+Hier wird jetzt die geplante Veranstaltung unter \textit{Aktuelle Veranstaltungen} angezeigt (siehe \figref{fig:meine_veranstaltungen_vplan2}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/MeineVeranstaltungen//MeinVeranstaltungsplan2.png}
+    \caption{Meine Veranstaltungen}
+    \label{fig:meine_veranstaltungen_vplan2}
+\end{figure}
+
+\subsection{Angebotene Veranstaltung bearbeiten}
+\label{sec:meine_veranstaltungen_bearbeiten}
+Wenn nach dem ursprünglichen Erstellen einer angebotenen Veranstaltung noch Änderungen an dieser gemacht werden sollen, kann diese bearbeitet werden, indem die gewünschte Veranstaltung unter dem Punkt \textit{Aktuelle Veranstaltungen} angeklickt wird (zum Beispiel auf den Namen der Veranstaltung klicken wie in \figref{fig:meine_veranstaltungen_vplan2}).
+Dadurch öffnet sich wieder der Dialog, mit der die Veranstaltung ursprünglich erstellt wurde.
+Alle Eingaben die bisher gespeichert wurden, sind hier vorausgewählt, sodass nur Änderungen gemacht werden müssen und die Veranstaltung nicht vollständig neu konfiguriert werden muss.
+Ab hier sind die Schritte wieder wie in Kapitel \ref{sec:meine_veranstaltungen_add} beschrieben durchzuführen.
+Wenn Sie den Namen der Veranstaltung oder die Art oder Dauer der Teile ändern möchten (zum Beispiel statt 3 Stunden Vorlesung nur 2 Stunden Vorlesung anbieten wollen), kann dies wie in Kapitel \ref{sec:meine_veranstaltungen_teile} geändert werden.
+
+\subsection{Veranstaltung nicht mehr anbieten}
+Wenn Sie eine von Ihnen angebotene Veranstaltung doch nicht mehr anbieten wollen, drücken sie auf der Seite \textit{Meine Veranstaltungen} bei der zu löschenden Veranstaltung auf den Knopf \textit{Löschen} (siehe \figref{fig:meine_veranstaltungen_vplan2}).
+\begin{warning}
+    Aus Versehen gelöschte Veranstaltungen können nur direkt nach dem Löschen wiederhergestellt werden wie in Kapitel \ref{sec:meine_veranstaltungen_wiederherstellen} beschrieben wird.
+\end{warning}
+
+
+\subsection{Aus Versehen gelöschte Veranstaltung wiederherstellen}
+\label{sec:meine_veranstaltungen_wiederherstellen}
+Falls eine Veranstaltung aus Versehen gelöscht wurde, drücken Sie auf den Knopf \textit{Wiederherstellen} (siehe \figref{fig:meine_veranstaltungen_wiederherstellen}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/MeineVeranstaltungen//MeinVeranstaltungsplan_löschen.png}
+    \caption{Aus Versehen gelöschte Veranstaltung wiederherstellen}
+    \label{fig:meine_veranstaltungen_wiederherstellen}
+\end{figure}
+Danach wird die vorher gelöschte Veranstaltung wieder unter \textit{Aktuelle Veranstaltungen} angezeigt und alle Wunschzeiten und andere Eingaben werden wiederhergestellt.
+Diese Aktion ist nur möglich, wenn sie direkt im Anschluss an das Löschen ausgeführt wird.
+Ansonsten sind alle Eingaben zu dieser Veranstaltung unwiderruflich gelöscht worden.
+
+\subsection{Veranstaltungsteile bearbeiten}
+\label{sec:meine_veranstaltungen_teile}
+Um die Länge oder Art von Veranstaltungsteilen zu ändern, muss zunächst in die Ansicht \textit{Veranstaltungsplan bearbeiten - Wunschzeiten auswählen} der zu ändernden Veranstaltung gewechselt werden.
+Dies ist für neu angebotene Veranstaltungen in Kapitel \ref{sec:meine_veranstaltungen_add} und für schon existierende angebotenen Veranstaltungen in Kapitel \ref{sec:meine_veranstaltungen_bearbeiten} beschrieben.
+Hier muss der Knopf \textit{Veranstaltungsteile bearbeiten} gedrückt werden (siehe \figref{fig:meine_veranstaltungen_w_vteile}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/MeineVeranstaltungen//MeinVeranstaltungsplan_Add_Wunschzeiten_Vteile.png}
+    \caption{Veranstaltungsteile ändern}
+    \label{fig:meine_veranstaltungen_w_vteile}
+\end{figure}
+
+Dadurch öffnet sich die Seite \textit{Veranstaltung hinzufügen} (siehe \figref{fig:meine_veranstaltungen_w_vteile_bearbeiten}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/MeineVeranstaltungen//MeinVeranstaltungsplan_Add_Wunschzeiten_VteileBearbeiten.png}
+    \caption{Veranstaltungsteile hinzufügen, löschen und bearbeiten}
+    \label{fig:meine_veranstaltungen_w_vteile_bearbeiten}
+\end{figure}
+Oben kann der Kursname sowohl in Englisch als auch in Deutsch geändert werden und ein Kürzel für den Kurs festgelegt werden sowie der Fachbereich geändert werden.
+Die Paulnummer kann nur von einem Planer oder Administrator geändert werden.
+Unter dem Punkt \textit{Veranstaltungsteile} können die einzelnen Teile der Veranstaltung konfiguriert werden.
+Hier können durch einen Klick auf den Knopf \textit{Hinzufügen} neue Veranstaltungsteile hinzugefügt werden, wenn diese gewünscht sind.
+Es können die Art des Veranstaltungsteils (Vorlesung, Übung, Zentralübung,Praktikum, ...) festgelegt werden und wie viele Stunden dieser Teil dauern soll.
+Außerdem können auch hier Bemerkungen für die Planung eingegeben werden.
+Um einen Veranstaltungsteil zu entfernen, muss auf den Knopf \textit{Veranstaltungsteil entfernen} unter dem jeweiligen Veranstaltungsteil gedrückt werden.
+Um die Änderungen zu speichern, muss unten auf den blauen Knopf \textit{Absenden} gedrückt werden (siehe \figref{fig:meine_veranstaltungen_w_vteile_bearbeiten2}).
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/MeineVeranstaltungen//MeinVeranstaltungsplan_Add_Wunschzeiten_VteileBearbeiten2.png}
+    \caption{Veranstaltungsteile hinzufügen, löschen und bearbeiten}
+    \label{fig:meine_veranstaltungen_w_vteile_bearbeiten2}
+\end{figure}
+Danach können die Änderungen direkt auf der Seite \textit{Veranstaltungsplan bearbeiten - Wunschzeiten auswählen} gesehen werden.
+
+\subsection{Angebotene Veranstaltung aus vergangenen Semestern kopieren}
+\label{sec:meine_veranstaltungen_copy}
+Wenn Sie eine Veranstaltung schon in einem früheren Semester angeboten haben, können Sie ihre Eingaben von damals übernehmen lassen und müsssen nicht alles neu eingeben.
+Dafür muss unter dem Punkt \textit{Vergangene Veranstaltungen} das Semester ausgewählt werden, aus dem die Veranstaltung kopiert werden soll und anschließend der \textit{Auswählen} Knopf gedrückt werden.
+Anschließend erscheint eine Liste mit Veranstaltungen, die Sie in diesem Semester gehalten haben.
+Um nun eine Veranstaltung in das aktuell ausgewählte Semester zu kopieren, muss der \textit{Kopieren} Knopf gedrückt werden (siehe \figref{fig:meine_veranstaltungen_copy}).
+Anschließend erscheint die kopierte Veranstaltung unter \textit{Aktuelle Veranstaltungen} und sie kann angeklickt werden, um die Inhalte zu betrachten oder Änderungen vorzunehmen.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/MeineVeranstaltungen//MeinVeranstaltungsplan_Copy.png}
+    \caption{Veranstaltungen aus vergangenen Semestern kopieren}
+    \label{fig:meine_veranstaltungen_copy}
+\end{figure}

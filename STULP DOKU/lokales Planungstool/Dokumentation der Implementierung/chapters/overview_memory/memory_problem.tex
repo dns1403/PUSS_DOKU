@@ -1,0 +1,23 @@
+\newpage 
+\section{Memory Optimization}
+
+There is a memory leak that occurs when using the local program. Java is allocating native memory (can be seen in the Taskmanager) and holding on to it. This is most likley caused by JavaFX and the generation of GUI elements. As a result of the leak, the program will slow down significantly to a state, where it is impossible to use it efficiently.
+
+\subsection{Implemented Countermeasures}
+For the \textit{main} branch of the local program: 
+A warning has been implemented that notifies the user when a certain amount of memory is used. The user then can restart the local program. \newline 
+
+In the branch \textit{main\_fixMemory} some experimental approaches are implemented . This version still needs extensive testing and further development. \\
+Some optimitizations regarding the amount of created GUI elements has been implemented. The \textit{EmptyCell} and \textit{PlanCell} classes no longer creates their contextmenu on initialization but only when it is requested per rightclick. \newline 
+
+A dispose function to remove references and calling the dispose function of its children was added to some classes:
+\textit{StaticDataOverviewDialog} creates an overview of the wunsch- and sperrzeiten of all professors. The class \textit{ProfessorWunschSperrPlanController} is used by the fxml loader to create the GUI elements for this. On dialog close, the dispose function of the controller is called. This does free most parts of the memory allocated by the dialog. A key observation here is: no plan objects are used in this overview. \\
+
+
+The class \textit{PlannedCoursesController} has functions to add tabs for different views (e.g. Raum). Each of this functions has a \textit{tab.setOnCloseRequest(...)} that calls the dispose function of the controller that manages the tab (e.g. RoomPlanController). The dispose function for these controllers is implemented in their abstract class \textit{IPanController}. The dispose function in \textit{IPlanController} calls the dispose function of the \textit{AgendaPane}, which itself calls the dispose function for all \textit{EmptyCell}, \textit{MultiSlot} and \textit{PlanCellController}. The \textit{PlanCellController} does not extend \textit{IPlanController} but represents a plan object. The memory is currently not freed when closing a tab. The key assumption is, that plan objects still hold some references.
+
+\subsection{Further Development}
+It is recommended to continue the optimization approach described above: reducing the amount of generated GUI elements if possible and removing references by using dipose functions. It already has a positive effect on the overview dialog and on the inital memory allocation of tabs, but still has some problems with releasing the memory of tabs with plan objects..
+
+
+

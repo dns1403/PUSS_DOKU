@@ -1,0 +1,38 @@
+\documentclass{article}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{xcolor}
+\input{./config}
+
+\title{P2Tool}
+\author{Projektgruppe STULP \\ Alessio, Alexander, Daniel, Daniel, Niklas, Paul}
+\date{18. November 2024}
+
+\geometry{
+  a4paper,
+  top=3cm,
+  bottom=3cm,
+  left=2.5cm,
+  right=2.5cm,
+}
+
+% Increase spacing between lines
+\linespread{1.2}
+
+% Remove indentations but increase line spacing between paragraphs
+\setlength\parindent{0pt}
+\setlength\parskip{0.6 \baselineskip}
+
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+
+\include{kapitel/profil}
+
+\include{kapitel/meineVeranstaltungenVeranstalter}
+
+\include{kapitel/sperrzeitenVeranstalter}
+
+\end{document}

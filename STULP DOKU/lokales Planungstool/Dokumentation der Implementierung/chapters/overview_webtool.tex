@@ -1,0 +1,20 @@
+\chapter{Overview of the web tool architecture}
+
+The web tool is a single-page application (SPA). The front-end is built in Angular framework and back-end in Spring Boot framework. The communication between front-end and back-end takes place using REST API(s) where JSON is used as a data exchange format.
+
+The flow of the REST API can be seen in the figure below which shows an example of front-end getting a list of users from the server.
+
+ \begin{figure}[H]
+	\centering
+	\includegraphics[width=.9\textwidth]{chapters/overview_webtool/images/rest-flow.png}
+	\caption{REST API flow}
+	\label{fig:RestApiFlow}
+\end{figure}
+
+\input{chapters/overview_webtool/architecture_frontend}
+\input{chapters/overview_webtool/user_interface}
+\input{chapters/overview_webtool/passing_user_interface_actions_to_backend}
+\input{chapters/overview_webtool/architecture_backend}
+\input{chapters/overview_webtool/access_rights_and_control}
+\input{chapters/overview_webtool/design_decisions}
+\input{chapters/overview_webtool/email_component}

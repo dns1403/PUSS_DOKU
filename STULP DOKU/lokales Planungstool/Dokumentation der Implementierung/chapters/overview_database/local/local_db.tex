@@ -1,0 +1,379 @@
+\paragraph{Local program database interface}
+\label{subsec:local-program-db}
+The \href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/src/main/java/de/upb/stulp/database/localProgram/LocalProgramDatabase.java}{LocalProgramDatabase} interface offers methods for predefined complex querying, inserting, and manipulating data in the database, used by the local program planning tool. The database contains planning data expressing the schedule of course parts. The schedule assigns each part of a course to a time slot, room, and lecturer. The database scheme is an extended version of the one in Monika Werner's bachelor thesis.
+
+\paragraph{Usage of the interface}
+Usage (without try/catch for exception handling to support readability):
+
+\begin{lstlisting}[language=Java]
+/**Instantiation**/
+//exchange SQLiteLocalProgramDatabase with your custom 
+//implementation if needed
+SQLiteLocalProgramDatabase sqldb = 
+	new SQLiteLocalProgramDatabase(
+		"path/to/local_program.db");
+/**Create a record**/
+Professor prof = db.getRecordFactory().createProfessor();
+/**Query for all professors in the database**/
+List<Professor> allProfs = db.getRecords(prof);
+/**Insert professor into database**/
+prof = db.getRecordFactory()
+.createProfessor(/*professor data here*/);
+db.insert(prof);
+\end{lstlisting}
+
+\paragraph{Schema and sample data}\label{sec:databasescheme}
+\begin{landscape}
+	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			             & ProfID & Name & Fakultaet \\\hline\hline
+			Data Type & TEXT & TEXT & TEXT \\
+			Constraints & NN, PK & NN & NN \\
+			Checks & & & \\\hline
+			& ProDr.SteBöt & Prof. Dr. Stefan Böttcher & EIM \\
+			& ProDr.ChrSch & Prof. Dr. Christian Scheideler & EIM \\\hline
+		\end{tabular}
+		\caption{Schema of Professor relation with sample records}
+		\label{schema:professor}
+	\end{table}
+	%
+	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			& Raumnr & Gebaeude & Sitzplatzzahl & Prioritaet \\\hline\hline
+			Data Type & TEXT & TEXT & INTEGER & INTEGER \\
+			Constraints & NN, PK, U & NN & NN & NN \\
+			Checks & & & & \(\in\{0,1\}\) \\\hline
+			& O 2 & O & 117 & 1 \\
+			& E 1 111 & E & 30 & 0 \\\hline
+		\end{tabular}
+		\caption{Schema of Raum relation with sample records}
+		\label{schema:raum}
+	\end{table}
+	%
+	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			& KursID & Kursname & KursnameEN & Sprache \\\hline\hline
+			Data Type & TEXT & TEXT & TEXT & Text \\
+			Constraints & NN, PK, U & NN & NN & NN \\
+			Checks & & & & \\\hline
+			& MOD-1 & Modellierung & Foundations of Modelling & Deutsch \\
+			& ML2-1 & Machine Learning II (in English) & Machine Learning II (in English) & Englisch \\\hline
+		\end{tabular}
+		\caption{Schema of Kurs relation with sample records}
+		\label{schema:kurs}
+	\end{table}
+	%
+	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\hline
+			& StudiengangsID & Hauptfach & Nebenfach & Pruefungsordnung & Semester \\\hline\hline
+			Data Type & TEXT & TEXT & TEXT & Text & INTEGER \\
+			Constraints & NN, PK, U & NN & NN & NN & NN\\
+			Checks & & & & & \\\hline
+			& InfM-1BPO4 & Informatik Bachelor & Mathematik & 4 & 1 \\
+			& InfoOhne-2MPO3 & Informatik Master & Ohne & 3 & 2 \\\hline
+		\end{tabular}
+		\caption{Schema of Studiengaenge relation with sample records}
+		\label{schema:studiengänge}
+	\end{table}
+	%
+	\begin{table}
+		\centering
+		\tiny
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			& KursID & Veranstaltungsteil & Tag & Uhrzeit & Dauer & ProfID & Raumnr & Veranstaltungsart & Wunschzeit & Hoererzahl & Bemerkung \\\hline\hline
+			Data Type & TEXT & TEXT & TEXT & INTEGER & INTEGER & TEXT & TEXT & TEXT & TEXT & INTEGER & TEXT \\
+			Constraints & NN, PK & NN, PK & & & & NN, PK & & NN & & & \\
+			Checks & & & \(\in Tag\) & & & & & \(\in Veranstaltungsart\) & & & \\\hline
+			& MOD-1 & 1.2 & Freitag & 11 & 2 & ProDr.JohBlö & L 1 & Vorlesung & [] & 400 & \\
+			& ML2-1 & 1 & Donnerstag & 14 & 2 & ProDr.EykHül & O 2 & Vorlesung & [3,4,7] & 60 & \\\hline
+		\end{tabular}
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			& Zweiwoechentlich & Startwoche & Tafel & Beamer & Fenster & Ort & SonstigesRaumplanung & SonstigesZeitplanung & Fremdkurs \\\hline\hline
+			Data Type & INTEGER & INTEGER & INTEGER & INTEGER & INTEGER & INTEGER & TEXT & TEXT & INTEGER \\
+			Constraints & Default(0) & Default(1) & Default(0) & Default(0) & Default(0) & Default(3) & & & PK, Default(0) \\
+			Checks & \(\in\{0,1\}\) & & \(\in\{0,1\}\) & \(\in\{0,1\}\) & \(\in\{0,1\}\) & \(\in\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/main/java/de/upb/stulp/database/enums/Ort.java}{Ort}\) & & & \(\in\{0,1\}\) \\\hline
+			& 0 & 1 & 1 & 1 & 1 & 0 & & & 0 \\
+			& 0 & 1 & 1 & 1 & 0 & 0 & & & 0 \\\hline
+		\end{tabular}
+		\caption{Schema of Plan relation with sample records}
+		\label{schema:plan}
+	\end{table}
+	%
+	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\hline
+			& KursID & Veranstaltungsteil & StudiengangsID & Pflichtfach & Alternativgruppe \\\hline\hline
+			Data Type & TEXT & TEXT & TEXT & Text & TEXT \\
+			Constraints & NN, PK & NN, PK & NN, PK, FK(Studiengaenge) & NN & NN \\
+			Checks & & & & \(\in Pflichtfach\) & \(\in Alternativgruppe\) \\\hline
+			& MOD-1 & 1.2 & InfM-1BPO4 & Ja & - \\
+			& ML2-1 & 1 & InfoOhne-2MPO3 & Nein & - \\\hline
+		\end{tabular}
+		\caption{Schema of Pflicht relation with sample records}
+		\label{schema:pflicht}
+	\end{table}
+	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|c|c|}
+			\hline
+			& KursID1 & KursID2 & Veranstaltungsteil1 & Veranstaltungsteil2 & Type & Heavy & StudiengangsID \\\hline\hline
+			Data Type & TEXT & TEXT & TEXT & Text & TEXT & INTEGER & TEXT \\
+			Constraints & NN, PK & NN, PK & NN, PK & NN, PK & NN, PK & NN, PK & NN,PK \\
+			Checks & & & & & & \(\in\{0,1\}\) & \\\hline
+			& GP-1 & MOD-1 & 2.3 & 2.7 & STUDIENGANG\_CONFLICT & 0 & InfM-1BPO4 \\
+			& MOD-1 & CA & 1.1 & 1 & PROFESSOR\_CONFLICT & 1 & \\\hline
+		\end{tabular}
+		\caption{Schema of IgnoredConflict relation with sample records}
+		\label{schema:ignoredConflict}
+	\end{table}
+
+    \begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|}
+			\hline
+			& ConflictType & Priority  \\\hline\hline
+			Data Type & TEXT & INTEGER  \\
+			Constraints & NN, PK, U & NN  \\
+			Checks & & \\\hline
+			& Raum & 1  \\
+			& Professor & 2 \\
+            & StudiengangLeicht & 3 \\
+            & StudiengangSchwer & 1  \\
+            & WunschOrt & 5  \\\hline
+		\end{tabular}
+		\caption{Schema of ConflictPriorities relation with sample records}
+		\label{schema:ConflictPrios}
+	\end{table}
+     \begin{table}
+    		\centering
+    		\begin{tabular}{|c|c|c|c|c|}
+    			\hline
+    			& ConflictType & Query & Active  \\\hline\hline
+    			Data Type & TEXT & TEXT & INTEGER  \\
+    			Constraints & NN, PK, U, FK(ConflictPriorities) & NN & NN  \\
+    			Checks & & & \(\in\{0,1\}\)  \\\hline
+    			& WunschOrt & SELECT * FROM Plan WHERE Raumnr NOT LIKE 'F\%' AND Ort = 1 AND &  \\ 
+                & & Raumnr NOT LIKE 'kein Raum' & 1  \\
+    			& RaumZuKlein & SELECT * FROM Plan JOIN Raum ON Plan.Raumnr = Raum.Raumnr WHERE & \\ 
+                & & Plan.Raumnr NOT LIKE 'kein Raum' AND Raum.Sitzplatzzahl < Plan.Hoererzahl & 0  \\\hline
+    		\end{tabular}
+    		\caption{Schema of CustomConflicts relation with sample records}
+    		\label{schema:customConflict}
+    	\end{table}
+     \begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			& Timeslot & Weekday & Time & Duration \\\hline\hline
+			Data Type & INTEGER & TEXT & INTEGER & INTEGER \\
+			Constraints & NN, PK, U & NN & NN & NN \\
+			Checks & & \(\in\{Montag, Dienstag, ...\}\) & &  \\\hline
+			& 1 & Montag & 8 & 3 \\
+			& 2 & Montag & 11 & 2 \\\hline
+		\end{tabular}
+		\caption{Schema of Timeslot relation with sample records}
+		\label{schema:timeslots}
+	\end{table}
+\end{landscape}
+
+\paragraph{Further explanations of the Database scheme} 
+As some notations might be unclear we provide some further explanations what they refer to.
+
+\textbf{Plan Table} - The columns from the p2tool database that contain information about the \textit{Bemerkung} fields are currently not parsed by the local program database. The flags \textit{Plan.Zweiwoechentlich} until \textit{Plan.Ort} are parsed from the fields \textit{BemerkungAnkuendigung} and \textit{BemerkungPlanung}. The value of \textit{Plan.Ort} describes where the course should be planned (\textit{1} for Fürstenallee, \textit{2} for campus and \textit{3} for "don't care"). 
+
+In the p2tool exist two flags \textit{Zweiwoechentlich} and \textit{Einstuendig}. In the local planning tool only the flag \textit{Plan.Zweiwoechentlich} is used. If an entry has \textit{Dauer=1} and the flag \textit{Plan.Zweiwoechentlich} it is automatically set to \textit{Dauer=2}. This makes the flag \textit{Einstuendig} redundant.
+
+The value of \textit{Plan.Fremdkurs} indicates whether the \textit{Plan} entry was loaded from PAUL data. If so, the value is set to \textit{1}. 
+
+\textbf{Pflicht Tabelle} - Throughout the database boolean values are stored as Interger values (0 or 1). However, for some unknown reason, \textit{Pflicht.Pflichtfach} is stored as a String with the values \textit{Ja} or \textit{Nein}. We did not consider changing it because it worked. \textit{Pflicht.Alternativgruppe} is set to \textit{ÜB} if there are multiple exercises to one lecture. It indicates that you have at least one alternative available for this exercise (at least two in total). 
+
+\textbf{Timeslot Table} - In order to display \textit{Wunschzeiten} correctly, the timeslot table stores the time values for the given integer values. The timeslot \textit{1} refers to the time \textit{Monday, 8 o'clock, 3 hours}. This means that if \textit{Plan.Wunschzeiten} contains \textit{1}, the desired time would be Monday from 8 to 11 o'clock. 
+
+\textbf{Missing foreign key constraints} - The database is currently missing foreign key constraints. 
+\begin{enumerate}
+    \item \textbf{Pflicht.KursID} references \textbf{Kurs}
+    \item  \textbf{Plan.KursID} references \textbf{Kurs}
+    \item  \textbf{Plan.ProfID} references \textbf{Professor}
+    \item  \textbf{Plan.Raumnr} references \textbf{Raum}
+    \item  \textbf{IgnoredConflict.KursID1} references \textbf{Kurs}
+    \item  \textbf{IgnoredConflict.KursID2} references \textbf{Kurs}
+    \item  \textbf{IgnoredConflict.StudiengangsID} references \textbf{Studiengaenge}
+\end{enumerate}
+
+
+\paragraph{Implementing the interface}
+To implement the \href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/src/main/java/de/upb/stulp/database/localProgram/LocalProgramDatabase.java}{LocalProgramDatabase} interface, do as follows and implement the methods you need to overwrite:
+
+\begin{lstlisting}[language=Java]
+public class MyLocalProgramDatabase 
+implements LocalProgramDatabase {
+...
+}
+\end{lstlisting}
+\noindent
+An instance of this class will then be used by the local program to query
+the database. When implementing MyLocalProgramDatabase, you will also
+have to return an instance of a class implementing the
+\href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/src/main/java/de/upb/stulp/database/localProgram/LocalRecordFactory.java}{LocalRecordFactory}
+interface as this is the only way for users of your interface to
+instantiate objects representing records in the database. These are needed
+to pass filter information to queries provided in the interface. Thus, you will need to create the following class:
+
+\begin{lstlisting}[language=Java]
+public class MyLocalRecordFactoy 
+implements LocalRecordFactory {
+...
+}
+
+\end{lstlisting}
+\noindent
+The database interface only offers one insert, update, delete, and getRecords operation, yet the database has different tables. This is because these methods 
+delegate the operation to the different table implementations. To take
+advantage of this the
+\href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/src/main/java/de/upb/stulp/database/Record.java}{Record}
+interface has been introduced. This interface enables you to call
+the corresponding method of the record interface for delegation.
+
+\paragraph{How are Records of database relations implemented in the
+	interface}
+
+Every relation in your database has a corresponding entity class that
+stores exactly one record of a relation,
+e.g.~\href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/src/main/java/de/upb/stulp/database/localProgram/Professor.java}{Professor}.
+Thus, when querying the database, you wrap every record in its
+corresponding interface class and return this.
+
+\paragraph{How to implement a record class}
+
+To implement a record class, you inherit from the corresponding
+interface class and override the missing methods. For example:
+
+\begin{lstlisting}[language=Java]
+public class MyProfessor extends Professor {
+//make sure to make the constructors protected 
+//such that the user is forced to use the 
+//RecordFactory for instantiation
+...
+}
+\end{lstlisting}
+\noindent
+The interface demands the implementation of methods for inserting, updating, deleting, and retrieving a record from the database. To allow different database implementations, the creation of a table itself has not to be implemented in the corresponding entity class. Instead, this can be done anywhere, depending on your needs. For each entity class its factory methods have to be implemented in MyLocalRecordFactory:
+
+\begin{lstlisting}[language=Java]
+public Plan createMyProfessor() {
+return new MyProfessor(/*professor data here*/);
+}
+
+public Plan createMyProfessor() {
+return new MyProfessor(/*professor data here*/);
+}
+
+\end{lstlisting}
+
+\paragraph{Adding new functionality without database schema change}
+
+For adding new functionality to the database without changing the schema, only the new required method has to be added to the \href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/src/main/java/de/upb/stulp/database/localProgram/LocalProgramDatabase.java}{LocalProgramDatabase} interface and implemented in MyLocalProgramDatabase or \href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/src/main/java/de/upb/stulp/database/impl/localProgram/SQLiteLocalProgramDatabase.java}{SQLiteLocalProgramDatabase}.
+
+\paragraph{Changing existing relations}
+
+Changing an existing relation requires the following steps: \\
+\\
+1. Update the abstract entity class corresponding to the relation to be changed, e.g. \href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/src/main/java/de/upb/stulp/database/localProgram/Professor.java}{Professor}. \\
+\\
+2. Update its implementation, e.g. MyProfessor or \href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/src/main/java/de/upb/stulp/database/impl/localProgram/SQLiteProfessor.java}{SQLiteProfessor}. \\
+\\
+3. Update the affected methods for record creation in the \href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/src/main/java/de/upb/stulp/database/localProgram/LocalRecordFactory.java}{LocalRecordFactory} interface so that the parameters fit. \\
+\\
+4. Update the affected methods in its implementation, e.g. MyLocalRecordFactory or \href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/src/main/java/de/upb/stulp/database/impl/localProgram/SQLiteLocalRecordFactory.java}{SQLiteLocalRecordFactory}. \\
+\\
+5. (Optional) Update \href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/src/test/resources/planning_tool_schema.db}{planning\_tool\_schema.db} if the implementation in \href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/src/main/java/de/upb/stulp/database/impl/localProgram/SQLiteProfessor.java}{SQLiteProfessor} is used because it is using JOOQ for automatic code generation of the corresponding classes for type safe SQL queries. \\
+\\
+6. Update affected queries in MyLocalProgramDatabase or \href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/src/main/java/de/upb/stulp/database/impl/localProgram/SQLiteLocalProgramDatabase.java}{SQLiteLocalProgramDatabase}. \\
+\\
+7. Update the method for creation of the table, if \href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/src/main/java/de/upb/stulp/database/impl/localProgram/SQLiteProfessor.java}{SQLiteProfessor} is used then update its method createTableIfNotExists.
+
+\paragraph{Adding new relations}
+Adding a new relation requires the following steps: \\
+\\
+1. Create the abstract entity class representing a record of the new relation:
+
+\begin{lstlisting}[language=Java]
+public abstract class NewRelation implements Record {
+// use protected constructors only
+// Add getter and setter methods
+// overwrite equals and hashCode methods
+}
+
+\end{lstlisting}
+\noindent
+2. Implement it:
+
+\begin{lstlisting}[language=Java]
+public class MyNewRelation extends NewRelation {
+// Implement methods
+// use protected constructors only
+}
+\end{lstlisting}
+\noindent
+3. Add the factory methods for the relation record to the \href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/src/main/java/de/upb/stulp/database/localProgram/LocalRecordFactory.java}{LocalRecordFactory}:
+
+\begin{lstlisting}[language=Java]
+public interface LocalRecordFactory {
+// place holder for old interface methods
+NewRelation createNewRelation();
+NewRelation createNewRelation(/*list of all fields to set*/);
+}
+\end{lstlisting}
+\noindent
+4. Implement the factory methods, e.g. in MyLocalRecordFactory or \href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/src/main/java/de/upb/stulp/database/impl/localProgram/SQLiteLocalRecordFactory.java}{SQLiteLocalRecordFactory}. \\
+\\
+5. Create a method for the creation of the table. \\
+\\
+6. (Optional) Create a demo table in \href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/src/test/resources/planning_tool_schema.db}{planning\_tool\_schema.db} if you are using the SQLite interface provided by this repository so that its schema is defined for JOOQ. \\
+
+\subsubsection{Import Data From p2tool}
+As the p2tool uses a database scheme different from the local program, it must be translated. This is done by opening the VLPT database exported from the p2tool. If this happens the function \texttt{downloadFromOtherDB()} in the \texttt{SQLiteLocalProgramDatabase} class is called:
+
+\begin{lstlisting}[language=Java]
+public void downloadFromOtherDB(String path, 
+String localDBPath, Boolean update) {
+// VLPT data is parsed from the database at path 
+// and correctly inserted in database localDBPath
+
+// if update is true
+// tables are updated correctly and not overwritten
+}
+\end{lstlisting}
+
+\paragraph{\color{red}Limitation} \color{black}
+The adapter code to form the interface between p2tool and the local planning tool was taken from the old Monika tool. Thus, it has a different code structure. It utilizes prepared statements and could benefit from a cleaner code structure that supports changes in the p2tool database. In the table \textbf{Vorlesungsplan} in the p2tool database, columns for \textbf{Hoereranzahl}, \textbf{Tafel} etc. already exist. Yet the adapter requires the \textbf{BemerkungAnkuendigung} and \textbf{BemerkungPlanung} columns to extract this information from XML strings. This should be improved as the data is already offered by the p2tool but not currently used.
+
+
+\subsection{Add own conflicts}
+It is possible to add custom conflict types to the database. To be capable of doing so, it is crucial to understand the database structure first. See section \ref{sec:databasescheme} for some sample queries. Adding Queries requires some restrictions:
+
+\begin{itemize}
+    \item The query must return Plan entries.
+\end{itemize}
+
+The local planning tool's interface allows for the creation of new CustomConflicts. When a CustomConflict entry is created, an entry to ConflictPriority is automatically inserted. The default priority is 1. This functionality is tested for ConflictTypes that refer to one Plan entry. This means that, e.g., the 2nd query from \autoref{schema:customConflict} returns the Plan entries planned in rooms that are too small. The conflict does not exist between two separate entries. Theoretically, this should work as well, but it is untested.
+
+\subsection{Further comments}
+\subsubsection{Javadoc}
+A detailed overview of the database and its classes can be found at \href{https://git.cs.uni-paderborn.de/stulp/sven_database/-/blob/main/javadoc}{git.cs.uni-paderborn.de/stulp/sven\_database/-/blob/main/javadoc}. The list with all classes can be viewed in the \textbf{allclasses-index.html} file.
+
+\subsubsection{Not used components}
+\begin{enumerate}
+    \item \textbf{enums.Alternativgruppe}: This enum is used in the database implementation, yet the adapter code is not actually using its values. It is implemented with strings.
+\end{enumerate}

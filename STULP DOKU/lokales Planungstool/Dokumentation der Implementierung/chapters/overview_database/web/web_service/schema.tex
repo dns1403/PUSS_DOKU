@@ -1,0 +1,148 @@
+\subsubsection{Schema and sample data}
+\begin{landscape}
+	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|}
+			\hline
+			& KursID & Veranstaltungsteil & Veranstaltungsart & Dauer & BemerkungPlanung \\\hline\hline
+			Data Type & TEXT & INTEGER & TEXT & INTEGER & TEXT \\
+			Constraints & NN, PK, FK(Kursnamen) & NN, PK & NN & NN & \\
+			Checks & & & \(\in\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/main/java/de/upb/stulp/database/enums/Veranstaltungsart.java}{Veranstaltungsart}\) & & \\\hline
+			& MOD & 1 & Vorlesung & 3 & mit Projektor\\
+			& MOD & 2 & Übung & 2 &  \\\hline
+		\end{tabular}
+		\caption{Schema of Veranstaltungen relation with sample records}
+		\label{schema:veranstaltungen}
+	\end{table}
+	%
+	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|c|c|}
+			\hline
+			& KursID & Kursname & KursnameEN & Fachbereich & BeauftragterID & PaulNr & VeranstalterGeneriert \\\hline\hline
+			Data Type & TEXT & TEXT & TEXT & TEXT & TEXT & TEXT & INTEGER\\
+			Constraints & NN, PK, U & NN & NN & NN & NN & NN & NN \\
+			Checks &  &  &  &  &  &  & \(\in\{0,1\}\) \\\hline
+			& MOD & Modellierung & Modelling & Informatik & Lessmann & L.0.231.1 & 0\\
+			& Prog & Programmierung & Programming & Informatik & Lessmann & L.0.1.1 & 0\\\hline
+		\end{tabular}
+		\caption{Schema of Kursnamen relation with sample records}
+		\label{schema:kursnamen}
+	\end{table}
+	%
+	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|c|c|}
+			\hline
+			& StudiengangsID & Hauptfach & Nebenfach & Semester & Prüfungsordnung & BeauftragterID & Aktiv \\\hline\hline
+			Data Type & TEXT & TEXT & TEXT & INTEGER & INTEGER & TEXT & TEXT\\
+			Constraints & NN, PK, U & NN & NN & NN & NN & NN & NN \\
+			Checks & &  &  &  &  &  & \(\in\{Ja, Nein\}\) \\\hline
+			& infmathbpo3 & Informatik & Mathematik & 1 & 3 & Lessmann & Nein\\
+			& infmathbpo4 & Informatik & Mathematik & 1 & 4 & Lessmann & Ja\\\hline
+		\end{tabular}
+		\caption{Schema of Studiengänge relation with sample records}
+		\label{schema:studiengänge}
+	\end{table}
+	%
+	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|c|c|}
+			\hline
+			& StudiengangsID & KursID & Modulname & Veranstaltungsteile & ECTS & Pflichtfach \\\hline\hline
+			Data Type & TEXT & TEXT & TEXT & TEXT & INTEGER & TEXT \\
+			Constraints & NN, PK, FK(Studiengänge) & NN, PK, FK(Kursnamen) & NN & NN & NN & NN \\
+			Checks & &  &  &  &  & \(\in\{Ja, Nein\}\) \\\hline
+			& infmathbpo4 & MOD & Modellierung & [1,2,3]  & 9 & Ja \\
+			& infmathbpo4 & Prog & Programmierung & [1,2,3,4] & 4 & Ja \\\hline
+		\end{tabular}
+		\caption{Schema of Module relation with sample records}
+		\label{schema:module}
+	\end{table}
+	%
+	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			& StudiengangsID & KursID & Druckrubrik \\\hline\hline
+			Data Type & TEXT & TEXT & TEXT \\
+			Constraints & NN, PK, FK(Studiengänge) & NN, PK, FK(Kursnamen) & NN, PK \\
+			Checks & &  & \\\hline
+			& infmathbpo4 & MOD & Informatik Bachelor - Pflichtteil (POv4)\\
+			& infmathbpo4 & Prog & Informatik Bachelor - Pflichtteil (POv4) \\\hline
+		\end{tabular}
+		\caption{Schema of Druckrubriken relation with sample records}
+		\label{schema:druckrubriken}
+	\end{table}
+	%
+	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			& Bezeichnung & Parent & Reihenfolge \\\hline\hline
+			Data Type & TEXT & TEXT & INTEGER \\
+			Constraints & NN, PK & PK & \\
+			Default & & & 1 \\\hline
+			& Informatik Bachelor (POv4) & & 1 \\
+			& Informatik Bachelor - Pflichtteil (POv4) & Informatik Bachelor (POv4) & 1\\\hline
+		\end{tabular}
+		\caption{Schema of Druckrubrikbezeichnungen relation with sample records}
+		\label{schema:druckrubrikbezeichnungen}
+	\end{table}
+	%
+	\begin{table}
+		\centering
+		\tiny
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+			\hline
+			& ProfID & KursID & Veranstaltungsteil & Veranstaltungsart & Übungsanzahl &
+			Wunschzeit & Sprache & Hoererzahl \\\hline\hline
+			Data Type & TEXT & TEXT & INTEGER & TEXT & INTEGER & TEXT & TEXT & INTEGER \\
+			Constraints & \multicolumn{1}{p{3cm}}{NN, PK, FK(Professor)} & \multicolumn{1}{p{3cm}}{NN, PK, FK(Veranstaltungen)} & \multicolumn{1}{p{3cm}}{NN, PK, FK(Veranstaltungen)} & NN & NN & & NN & \\
+			Check & & & & \(\in\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/main/java/de/upb/stulp/database/enums/Veranstaltungsart.java}{Veranstaltungsart}\) & & & & \\\hline
+			& N.N. & MOD & 3 & Übung & 2 & [5,9,12] & Deutsch & 20 \\
+			& Scheidler & MOD & 1 & Vorlesung & 0 & [] & Deutsch & 50 \\\hline
+		\end{tabular}
+	\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+		\hline
+		& Zweiwoechentlich & Startwoche & Tafel & Beamer & Fenster & Ort & SonstigesRaumplanung & SonstigesZeitplanung \\\hline\hline
+		& INTEGER & INTEGER & INTEGER & INTEGER & INTEGER & INTEGER & TEXT & TEXT\\
+		& Default(0) & Default(1) & Default(0) & Default(0) & Default(0) & Default(3) & & \\
+		& \(\in\{0,1\}\) & & \(\in\{0,1\}\) & \(\in\{0,1\}\) & \(\in\{0,1\}\) & \(\in\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/main/java/de/upb/stulp/database/enums/Ort.java}{Ort}\) & & \\\hline
+		& 1 & 2 & 1 & 1 & 1 & 1 & Seminarraum & \\
+		& 0 & 0 & 1 & 1 & 1 & 1 & & egal \\\hline
+	\end{tabular}
+		\caption{Schema of Vorlesungsplan and Alter\_Vorlesungsplan relation with sample records}
+		\label{schema:vorlesungsplan}
+	\end{table}
+	%
+	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|c|}
+			\hline
+			& ProfID & Sperrtag & Sperrzeit & Dauer \\\hline\hline
+			Data Type & TEXT & TEXT & TEXT & INTEGER \\
+			Constraints & NN, PK, FK(Professor) & NN, PK & NN, PK & NN \\
+			Check & & \(\in\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/main/java/de/upb/stulp/database/enums/Tag.java}{Tag}\) & & \\\hline
+			& Scheidler & Montag & 8:00 & 6 \\
+			& Scheidler & Mittwoch & 8:00 & 1 \\\hline
+		\end{tabular}
+		\caption{Schema of Sperrzeiten relation with sample records}
+		\label{schema:sperrzeiten}
+	\end{table}
+	%
+	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|c|}
+			\hline
+			& ProfID & Name & Fakultät \\\hline\hline
+			Data Type & TEXT & TEXT & TEXT \\
+			Constraints & NN, PK& NN & NN \\
+			Check & & & \\\hline
+			& Scheidler & Prof. Dr. Christian Scheidler & EIM \\
+			& Böttcher & Prof. Dr. Stefan Böttcher & EIM \\\hline
+		\end{tabular}
+		\caption{Schema of Professor relation with sample records}
+		\label{schema:professor}
+	\end{table}
+\end{landscape}

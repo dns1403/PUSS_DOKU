@@ -1,0 +1,19 @@
+\subsubsection{Schema}
+\begin{landscape}
+	\begin{table}
+		\centering
+		\tiny
+		\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+			\hline
+			& ID & UserID & DateCreated & DateModified & Description & File &
+			FileInfo & Type & Fachbereich\\\hline\hline
+			Data Type & INTEGER & TEXT & TEXT (ISO8601) & TEXT (ISO8601) & TEXT &
+			TEXT & TEXT & TEXT & TEXT\\
+			Constraints & PK & NN & NN & NN & & NN & & NN &\\\hline
+			& 1 & Böttcher & TeX version & 2019-11-27T04:24:46.638836+01:00 & 2019-11-29T04:24:46.638836+01:00 & info.tex & & LATEX & Informatik\\
+			& 2 & Böttcher & PDF version & 2019-11-27T05:24:46.638836+01:00 & 2019-11-29T04:24:46.638836+01:00 & info.pdf & application/octetstream & PDF & Informatik \\\hline
+		\end{tabular}
+		\caption{Schema of TeXPdf relation with sample records}
+		\label{schema:texPdf}
+	\end{table}
+\end{landscape}

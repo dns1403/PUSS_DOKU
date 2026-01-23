@@ -1,0 +1,27 @@
+\section{Overview of the database architecture}\label{section1}
+This chapter describes the implementation of the database interfaces used by the local program. Implementing these interfaces guarantees that the used database implementations can be replaced in the local program or web tool without changing their code base.
+\\\\
+The following sections describe each database interface, including the schema used, its usage, and a detailed description of how to maintain the implementation if, for example, new functionality is needed.
+\\\\
+To make the schema definitions simpler, the following abbreviations are used:
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|c|c|}
+		\hline
+		Abbreviation & Meaning \\\hline\hline
+		PK & Primary Key\\
+		FK & Foreign Key \\
+		NN & Not Null\\
+		U & Unique \\
+		AI & Auto Incrementing \\\hline
+	\end{tabular}
+	\caption{Abbrevations and their meaning}
+\end{table}
+%
+\noindent Please note that when using \textit{SQLite}, it is more efficient not to use auto increment for non-composite integer primary keys because the database will automatically create an alias for its row id column. This is also why no auto-increment constraint is found for this kind of primary key in our implementation. When referring to a foreign key constraint referencing, e.g., the \textit{ProfID} field of the \textit{Professor} relation, \(FK(Professor)\) is used.\\
+
+
+\noindent The source code for the database can be found at \\ \href{https://git.cs.uni-paderborn.de/stulp/sven\_database}{https://git.cs.uni-paderborn.de/stulp/sven\_database}.
+
+%\input{chapters/overview_database/web}
+\input{chapters/overview_database/local}

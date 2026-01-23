@@ -1,0 +1,144 @@
+\documentclass{article}
+\usepackage[ngerman]{babel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{xcolor}
+
+\input{./config}
+
+
+\title{P2Tool}
+\author{Projektgruppe STULP \\ Alessio, Alexander, Daniel, Daniel, Niklas, Paul}
+\date{\today}
+
+\geometry{
+  a4paper,
+  top=3cm,
+  bottom=3cm,
+  left=2.5cm,
+  right=2.5cm,
+}
+
+% Increase spacing between lines
+\linespread{1.2}
+
+% Remove indentations but increase line spacing between paragraphs
+\setlength\parindent{0pt}
+%\setlength\parskip{0.6 \baselineskip}
+
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\section{Systemadministration}
+Dieses Kapitel enthält die Informationen, die der Administrator benötigt, um das Tool in Betrieb zu nehmen und zu warten.
+\paragraph{Grundlagen}
+Das Tool wurde auf einer vom IRB zur Verfügung gestellten Debian VM getestet und die folgende Anleitung ist für den Betrieb auf einer solchen konzipiert.  
+Die Verwendung einer solchen wird empfohlen, ist aber nicht zwingend erforderlich. 
+Die Kommunikation mit der VM erfolgt über SSH und ist nur aus dem Netzwerk der Universität oder über ein entsprechendes VPN \footnote{https://hilfe.uni-paderborn.de/VPN\_unter\_Windows} möglich. Für den Aufbau einer SSH-Verbindung zur VM wird der Single-Sign-On-Dienst der Universität Kerberos\footnote{https://cs.uni-paderborn.de/rechnerbetrieb-irb/old/dienste/login-per-kerberos} benötigt. Alternativ ist auch eine direkte Kommunikation über das Virtual Service Center\footnote{https://vmc.cs.uni-paderborn.de/} möglich, wird aber nicht empfohlen, da wichtige Quality of Live Features wie Copy and Paste nicht oder nur unzureichend unterstützt werden.
+\paragraph{VM Konfigurieren}
+Sollte es nötig werden beim IRB eine neue VM zu beantragen, ist es ausreichend, eine Debian VM in der Standard Konfiguration mit Backups zu beantragen. Eine VM mit Backup wird vom IRB alle 24 Stunden gespeichert, die täglichen Backups werden zu wöchentlichen Backups aggregiert und die wöchentlichen Backups zu monatlichen. Im Schadensfall durch bespielsweise fehlerhafte Bedienung, kann das IRB die VM in den Zustand eines geigneten Backups zurücksetzten.
+
+\paragraph{Dateistruktur}
+Das git repository\footnote{\url{https://git.cs.uni-paderborn.de/stulp/stulp_vm_setup.git}} enthält alle Dateien, die für den Betrieb des Servers notwendig sind. Einige besonders wichtige Dateien und ihre Funktion sind hier zusammengefasst. Die Datei server.xml beschreibt, auf welchen Ports der Server lauscht und welches Zertifikat er verwendet. Der Ordner \textbf{Scipts} enthält verschiedene Skripte, die Aufgaben wie das Erstellen eines Backups oder das Einspielen eines Updates automatisieren. Der Ordner \textbf{webapps} enthält die ROOT.war, aus der der Server beim Start alle p2tool-spezifischen Dateien generiert. Über die Datei startup.sh ist ein manueller Start des Servers ohne Systemdienst möglich.
+
+
+
+\paragraph{Verwalten von Ports}
+Die Ports, auf denen der Tomcat-Server lauscht, sind in der Datei \textbf{Server.xml} definiert. Hierbei ist zu beachten, dass es für Prozesse ohne sudo-Rechte nicht möglich ist, auf den Standard-http- und https-Ports 80/443 zu lauschen. Ein dauerhafter Betrieb des Tools mit sudo-Rechten ist aus Sicherheitsgründen problematisch. Es wird empfohlen, eine Weiterleitung von diesen Ports auf andere Ports wie z.B. 8080/8443 einzurichten. Eine solche permanente Weiterleitung kann z.B. mit dem Programm iptables wie folgt eingerichtet werden
+\begin{verbatim}
+sudo apt-get install iptables-persistent 
+sudo iptables -t nat -A PREROUTING -p tcp --dport 443 -j REDIRECT --to-port 8443 
+sudo iptables-save > /etc/iptables/rules.v4
+\end{verbatim}
+
+
+\paragraph{Einrichten von https}
+Damit der Server eine sichere Verbindung über https anbieten kann, benötigt er ein Zertifikat mit zugehörigem geheimen Schlüssel. Die zur Erzeugung eines solchen Zertifikats notwendigen Dateien befinden sich standardmäßig im Verzeichnis \textbf{/etc/ssl/private}. Ein passendes Zertifikat kann mit openssl erzeugt werden. Beispielsweise mit dem Befehl
+\textbf{openssl pkcs12 -export -in p2tool-buster.cs.uni-paderborn.de.pem -inkey p2tool-buster.cs.uni-paderborn.de.key -name server \textgreater server.p12 }
+In der Datei \textbf{server.xml} muss das bei der Zertifikatserstellung verwendete Passwort und ein Pfad zum Zertifikat hinterlegt werden.
+
+\paragraph{Systemctl und der Tomcat\_user}
+Damit Tomcat den Server beim Start der VM automatisch startet, empfiehlt es sich, einen Systemdienst zu verwenden. Dies ist notwendig, da der IRB den Server periodisch neu startet, um Updates einzuspielen. Dazu sollte ein dedizierter Benutzer tomcat\_user angelegt werden.
+Des Weiteren muss eine Servicekonfiguration im Pfad \textbf{/etc/systemd/system/tomcat.service} erstellt werden. Ein Beispiel für eine funktionierende Datei wäre wie folgt. Passende Werte für die Umgebungsvariablen können der Ausgabe des Servers, entnommen werden, die man erhält, wenn man den Server, mit der \textbf{startup.sh} manuell startet. Eine Anpassung der Pfade kann erforderlich sein, wenn die absoluten Pfade zum Server abweichen.
+Eine Änderung in der Datei \textbf{/etc/systemd/system/tomcat.service} wird mit \textbf{ sudo systemctl daemon-reload} geladen.
+Der Befehl \textbf{ systemctl status tomcat.service} erzeugt einen Statusreport des Servers.  
+Der Befehl \textbf{systemctl status tomcat.service} startet den Server bei Bedarf manuell.
+\begin{verbatim}
+[Unit]
+Description=Apache Tomcat Web Application Container
+After=network.target
+
+[Service]
+Type=forking
+
+# Environment setup
+Environment="JRE_HOME=/usr"  # Specify your Java installation path
+Environment="CATALINA_TMPDIR=/stulp_vm_setup/vlpt-tomcat/temp"
+Environment="CATALINA_HOME=/stulp_vm_setup/vlpt-tomcat"
+Environment="CATALINA_BASE=/stulp_vm_setup/vlpt-tomcat"
+Environment="CLASSPATH=/stulp_vm_setup/vlpt-tomcat/bin/bootstrap.jar: ←
+/stulp_vm_setup/vlpt-tomcat/bin/tomcat-juli.jar" 
+WorkingDirectory=/stulp_vm_setup/vlpt-tomcat/bin
+
+# Define the Tomcat startup and shutdown scripts
+ExecStart=/stulp_vm_setup/vlpt-tomcat/bin/startup.sh
+ExecStop=/stulp_vm_setup/vlpt-tomcat/shutdown.sh
+
+# Run Tomcat as the specified user
+User=tomcat_user
+Group=tomcat_user
+
+# Restart Tomcat if it stops unexpectedly
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+\end{verbatim}
+
+
+
+
+\paragraph{Nutzer-Rechte}
+Da der tomcat\_user keine sudo Rechte hat, ist es notwendig, dass ihm alle Dateien auf die der Server zugreifen muss gehören oder seiner Gruppe zugeordnet sind. Es ist zu beachten, dass Operationen mit git oder das Einspielen von Patches die Ownership der Datein teilweise zurücksetzten, was zu einen Serverfehler mit einer FileNotFoundException führt. Eine korrekte und sichere Ownership kann beispielsweise mit den folgenden Befehlen sichergestellt werden. 
+
+\begin{verbatim}
+sudo chgrp -R tomcat_user stulp_vm_setup/
+sudo chmod -R 770 stulp_vm_setup/
+
+\end{verbatim}
+
+
+
+
+
+\include{kapitel/profil}
+
+\include{kapitel/timeslots}
+
+\include{kapitel/semesterauswahl}
+
+\include{kapitel/semesterverwaltung}
+
+\include{kapitel/meineVeranstaltungenVeranstalter}
+\include{kapitel/meineVeranstaltungenAdmin}
+
+\include{kapitel/sperrzeitenVeranstalter}
+\include{kapitel/sperrzeitenAdmin}
+
+\include{kapitel/veranstaltungenUnsererFak}
+
+\include{kapitel/datenexport}
+
+\include{kapitel/planungsstandImportieren}
+
+\include{kapitel/benutzer}
+
+\include{kapitel/modulhandbuch}
+
+\include{kapitel/ausgabe}
+
+
+\end{document}

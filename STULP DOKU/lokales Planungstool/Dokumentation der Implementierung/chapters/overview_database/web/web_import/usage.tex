@@ -1,0 +1,18 @@
+\subsubsection{Usage}
+Usage (without try/catch for exception handling to support readability):
+
+\begin{lstlisting}[language=Java]
+/**Instantiation**/
+SQLiteLocalProgramDatabase ldb = 
+		new SQLiteLocalProgramDatabase(
+			"path/to/local_program.db"
+		);
+SQLiteWebServiceDatabase wdb = 
+		new SQLiteWebServiceDatabase(
+			"path/to/web_service.db"
+		);
+SQLiteWebServiceDatabaseImport imp = 
+		new SQLiteWebServiceDatabaseImport(ldb);
+/**invoke import**/
+ldb = imp.importData(wdb);
+\end{lstlisting}

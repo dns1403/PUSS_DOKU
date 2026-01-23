@@ -1,0 +1,643 @@
+Dieses Kapitel beschreibt die Nutzung  des Tools zur lokalen Planung  als Planer. Insbesondere wird die Verwendung des \paultools 
+und des \localprograms beschrieben und erläutert.
+
+\subsection{Voraussetzung zur Nutzung der Software als Planer}
+
+\subsubsection{Benötigte zusätzliche Software}
+ Um das lokale Planungstool problemlos auszuführen, wird Java 22 oder 23 benötigt. 
+
+\subsubsection{Korrekte Installation der Software}
+Das \localprogram und das \paultool werden als jar-Datei mit dem Namen 
+Planungstool.jar bzw. Paultool.jar 
+ausgeliefert. Eine manuelle Installation ist nicht nötig. 
+Die jar-Dateien können in einem beliebigen Ordner platziert werden. Es wird empfohlen, alle Dateien, 
+die während der Planung benötigt oder erzeugt werden, in demselben Ordner wie die jar-Datei zu speichern. 
+Die beim \paultool mitgelieferte Datei \texttt{rooms.txt}, muss sich im selben Ordner befinden, wie die 
+jar-Datei des \paultools. Auf Windows kann die jeweilige jar-Dateien  mittels eines Doppelklicks ausgeführt 
+werden. Auf Linux sollte das jeweilige Programm über die Kommandozeile mittels des Befehls 
+\texttt{java -jar Planunungstool.jar} bzw. \texttt{java -jar Paultool.jar} ausgeführt werden. 
+
+\subsection{Nutzung des \paultools}
+Das \paultool ermöglicht das Importieren von Zeiten und Räumen aus Paul für alle Kurse, 
+die in PAUL angelegt bzw.  erzeugt wurden. Dabei können zum einen Zeiten und Räume für eigene 
+Kurse aus den vorherigen Semestern importiert werden, oder Zeiten und Räume für fremde Kurse. \\
+Weitere Informationen sind in dem Benutzerhandbuch des Paultools zu finden.
+
+
+%Fremde Kurse  sind diejenigen Kurse, die in einem zu planenden Studiengang enthalten sind, aber einem anderen 
+%Fachbereich unterliegen. Diese Fremdkurse unterliegen also nicht der Planung des Planers.
+
+%\subsubsection{Übersicht über das \paultool}
+%\begin{figure}[ht]
+%	\caption{Übersicht \paultool}
+%	\includegraphics[scale=0.4]{images/paul_tool/overview.png}
+%	\label{fig:pi_overview}
+%\end{figure}
+%\FloatBarrier
+%In Abbildung \ref{fig:pi_overview} ist eine Übersicht über das \paultool zu sehen. 
+%Der \paultool besteht aus zwei Teilen. Diese sind: 
+%\begin{enumerate}
+%	\item Menüleiste für die Programmsteuerung
+%	\item Anzeige der zu importierenden Kurse  und Räume, um händische Korrekturen vorzunehmen
+%\end{enumerate}
+
+
+
+%\subsubsection{Importieren von eigenen Kursen aus Paul}
+
+%Der Import von eigenen und fremden Veranstaltungen aus Paul wird über\texttt{ Import > Kurse > p2-Kurse} ausgelöst. Der Import von eigenen Veranstaltungen hat den folgenden Ablauf (für fremde analog, Zahlen beziehen sich auf  Abbildung  \ref{fig:pi_import}):
+%\begin{enumerate}
+%	\item \texttt{Import > Kurse > p2-Kurse} drücken
+%	\item Fachbereich auswählen
+%	\item Eigene Veranstaltungen als Ziel auswählen (3)  (zum Importieren von fremden Kursen hier Fremde Veranstaltungen auswählen)
+%	\item Eigene Veranstaltungen zum Importieren aussuchen (1)  	
+%	\item Semester wählen (4)
+%	\item Importmodalität für Übungen auswählen (5)
+%	\begin{itemize}
+%		\item Alle Übungen: alle Übungen werden importiert
+%		\item Einmalige Übungen: nur einmalige Übungen (Zentralübung)  werden importiert
+%		\item Keine Übungen: keine Übungen werden importiert
+%	\end{itemize}
+%	\item \textbf{Kurse suchen} drücken (6)
+%	\item In Paul gefundene Kurse zum Importieren überprüfen  um gezielt daraus Kurse für den Import auszuwählen  (2). Näher erklärt in \ref{par:pi_import_choose}.
+%	\item \textbf{Kurse übernehmen} drücken
+%	\item Importierte Kurse händisch nachbearbeiten. Näher erklärt in \ref{par:pi_import_edit}.
+%\end{enumerate}
+%\begin{figure}[H]
+%	\centering
+%	\caption{Importieren von Veranstaltungen}
+%	\label{fig:pi_import}
+%	\includegraphics[scale=0.37]{images/paul_tool/import.png}
+%\end{figure}
+%\paragraph{Zu importierende Kurse aussuchen}\label{par:pi_import_choose}
+%\begin{wrapfigure}{r}{0.5\textwidth}
+%	\caption{Zu importierende Veranstaltungen aus den gefundenen auswählen}
+%	\label{fig:pi_choose_to_import}
+%	\includegraphics[scale=0.55]{images/paul_tool/choose_to_import.png}
+%\end{wrapfigure}
+%Die Veranstaltungen, die ausgewählt wurden, werden in Bereich 2 angezeigt, wie in Abbildung \ref{fig:pi_choose_to_import} nochmal genauer zu sehen ist.  In diesem Fenster können Veranstaltungen, die in Paul gefunden wurden, zum Importieren ausgewählt oder ausgeschlossen werden.\\
+%Je nachdem, ob etwas für einen Kurs auf Paul gefunden wurde, wird der Name farblich kodiert. Ist der Hintergrund der Veranstaltung grün eingefärbt, wurde in Paul eine Veranstaltung gefunden, die exakt denselben Namen trägt. Um genaue Informationen über die in Paul gefundene Veranstaltung zu finden, lässt sich der Eintrag der Veranstaltung ausklappen. Es wird dann zusätzlich der Name der Veranstaltung in Paul, die Anzahl der gefundenen Übungen und die Anzahl der verbundenen Veranstaltungen angezeigt.\\
+%Ist der Hintergrund der Veranstaltung gelb eingefärbt, wurde in Paul lediglich eine Veranstaltung gefunden, die einen ähnlichen Namen wie die zu suchende Veranstaltung hat. In diesem Fall empfiehlt es sich, den Namen durch Ausklappen des Eintrags zu überprüfen. Falls die Veranstaltung nicht die gesuchte ist, kann der Haken am Eintrag der Veranstaltung durch Klicken entfernt werden. Diese Veranstaltung wird beim weiteren Import dann nicht mehr beachtet.\\
+%Ist der Hintergrund der Veranstaltung rot eingefärbt, wurde keine Veranstaltung mit dem gleichen oder einem ähnlichen Namen in Paul gefunden. Diese Veranstaltung kann somit nicht aus Paul importiert werden.\\ 
+%Für alle drei Farbkodierungen ist in Abbildung \ref{fig:pi_choose_to_import} eine Beispielveranstaltung zu sehen. Datenstrukturen und Algorithmen wurde exakt mit demselben Namen gefunden, ist demnach grün hinterlegt. Die Veranstaltung Interactive Data Visualization enthält in Paul noch den Zusatz (in English), ist somit gelb hinterlegt. Die Veranstaltung Tutorenschulung Informatik wurde in Paul nicht gefunden. Dementsprechend ist diese Veranstaltung rot hinterlegt.\\
+%Falls eine in Paul gefundene Veranstaltung mehr Übungen oder Vorlesungen anbietet als die eigene Veranstaltung es vorsieht, werden nur so viele Termine importiert, wie es die eigene Veranstaltung zulässt. Falls hingegen eine in Paul gefundene Veranstaltung weniger Übungen oder Vorlesungen anbietet, als die eigene Veranstaltung es vorsieht, bleiben einige Termine der Veranstaltung ungeplant. Diese müssen dann noch mit dem \localprogram geplant werden.
+%\paragraph{Zu importierende Kurse nachbearbeiten}\label{par:pi_import_edit}
+%In 2 aus Abbildung \ref{fig:pi_overview} lassen sich die importierten Kurse händisch nachbearbeiten. Dazu muss eine Veranstaltung in der Liste ausgewählt werden. Für die Veranstaltung  lassen  sich Name, Dozent und ID nachbearbeiten. Es können Termine hinzugefügt (+), gelöscht (-) und bearbeitet werden. Ebenfalls können Studiengänge, die die ausgewählte Veranstaltung hören, hinzugefügt oder gelöscht werden. Etwaige Fehler aus Paul können so korrigiert werden. 
+
+
+
+
+\subsection{Nutzung der lokalen Planungssoftware}
+Das Planungstool ermöglicht die Zeit- und Raumplanung für die Kurse, die über das \webprogram erzeugt wurden.
+
+\subsubsection{Übersicht über die Planungssoftware}
+
+\begin{sidewaysfigure}[ht]
+	\includegraphics[scale=0.65]{images/planning_tool/overview.png}
+	\caption{Übersicht Planungssoftware}
+	\label{fig:plt_overview}
+\end{sidewaysfigure}
+\FloatBarrier
+\newpage 
+In Abbildung \ref{fig:plt_overview} ist eine Übersicht über das \localprogram zu sehen. Das \localprogram besteht aus 6 Teilen. Diese sind: 
+\begin{enumerate}
+	\item Menüleiste für die Programmsteuerung und Einstellungen. Mithilfe der Menüleiste wird das Programm gesteuert und es können wichtige Einstellungen vorgenommen werden. 
+	\item Hotkeyleiste, um oft benötigte Funktionen direkt und mittels Tastaturkommandos auszulösen.
+	\item Anzeige, um die derzeitigen Konflikte anzuzeigen und zu durchsuchen. Näher erklärt in Kapitel \ref{subsubsec:plt_conf}.
+	\item Anzeige, um die nicht geplanten Veranstaltungen anzuzeigen und zu durchsuchen. 
+	\item Primärer Stundenplan für die Veranstaltungsplanung.
+	\item Sekundärer Stundenplan für die Veranstaltungsplanung.
+    \item Anzeige, welche Datenbank gerade geöffnet ist.
+\end{enumerate}
+Mithilfe der Teile 4, 5, 6 werden die Veranstaltungen geplant. Dazu werden Veranstaltungen mittels \glqq Drag and Drop\grqq{} zwischen verschiedenen Stundenplänen bewegt und somit zum Beispiel die Uhrzeit oder der Raum geändert. 
+
+
+\subsubsection{Planungsdatenbanken öffnen, aktualisieren und mit dem Webprogramm teilen}
+
+\paragraph{Lokale Planungsdatenbank öffnen}
+Der Knopf \textbf{Aus Datei} im Menüabschnitt \textbf{Datenbank} ermöglicht das Öffnen einer lokalen Planungsdatenbank. Diese muss auf dem System des Benutzers erreichbar sein. Das Öffnen hat den folgenden Ablauf:
+\begin{enumerate} 
+	\item Knopf \textbf{Aus Datei} im Menüabschnitt \textbf{Datenbank} drücken
+	\item Auswählen der lokalen Planungsdatenbank  aus dem Dateisystem des Computers 
+	\item Knopf \textbf{Öffnen} drücken
+\end{enumerate}
+
+\begin{wrapfigure}{R}{0.35\textwidth}
+	\caption{Datenbanken öffnen}
+	\includegraphics[scale=0.5]{images/planning_tool/before_opening_db.png}
+	\label{fig:before_opening_db}
+\end{wrapfigure}
+
+\paragraph{Web Planungsdatenbank öffnen (VLPTDB)}\label{sec:open-vlptdp}
+Ebenfalls über den Knopf \textbf{Aus Datei} im Menüabschnitt \textbf{Datenbank} 
+lässt sich eine VLPTDB im Format des Webservers öffnen. Diese lässt sich im Interface des Webservers  in das lokale Dateisystem auf dem Computer des Planenden  herunterladen.
+Wird ein solches Datenbankschema erkannt, muss nach dem Bestätigen des Meldungsfensters ein Speicherort 
+für die neu zu erstellende lokale Planungsdatenbank ausgewählt werden. Das Öffnen hat den folgenden Ablauf:
+\begin{enumerate}
+	\item Knopf \textbf{Aus Datei} im Menüabschnitt \textbf{Datenbank} drücken
+	\item Auswählen der Web Planungsdatenbank (VLPTDB) auf dem System
+	\item Knopf \textbf{Öffnen} drücken
+	\item Meldungsfeld bestätigen
+	\item Neuen Speicherort für die lokale Planungsdatenbank auswählen
+	\item Knopf \textbf{Speichern} drücken
+\end{enumerate}
+
+\paragraph{Neue VLPT Daten in bestehende Planungsdatenbank laden}
+Sollen neue Daten vom Webprogramm geladen werden, kann eine VLPTDB genau wie in Abschnitt \ref{sec:open-vlptdp} geladen werden. Allerdings muss nun als Speicherort, eine bereits existierende lokale Planungsdatenbank gewählt werden. Die neuen Daten werden dann als ungeplante Veranstaltungen in der lokalen Planungsdatenbank sichtbar sein. 
+
+\paragraph{Fremddaten aus PAUL importieren}
+Es können mit Hilfe des PAUL-Tools Fremddaten geladen werden. Die mit dem  PAUL-Tool  erstellte Datenbank kann in dem Dialog hinter dem ausgegrauten \textbf{Aus PAUL-Export} in Abbildung \ref{fig:before_opening_db} ausgewählt werden. Die Datenbank wird von dem  lokalen Planungstool  gelesen und  die darin enthaltenen  Fremddaten in die lokale Planungsdatenbank importiert. Der Knopf  \textbf{Aus PAUL-Export}  ist erst benutzbar, sobald eine lokale Planungsdatenbank im lokalen Tool geöffnet ist. Der Knopf ist ab dann nicht mehr ausgegraut.
+
+\paragraph{Lokalen Planungsstand hochladen}
+Im  p2tool (Webserver)  lässt sich der Planungsstand  in der Rolle des Planenden oder Admins  unter \textbf{Planungsstand importieren/exportieren} hochladen und auch wieder herunterladen.
+
+
+
+
+\subsubsection{Anzeige der Konflikte}\label{subsubsec:plt_conf}
+\begin{wrapfigure}{R}{0.35\textwidth}
+    \centering
+	\caption{Konfliktanzeige}
+	\includegraphics[scale=0.6]{images/planning_tool/conflicts.png}
+	\label{fig:plt_conflicts}
+\end{wrapfigure}
+In Teil 3 von Abbildung \ref{fig:plt_overview} werden alle momentan existierenden nicht ignorierten Konflikte in einer Tabelle angezeigt. Die Tabelle kann mithilfe eines Filters nach Veranstaltung und Typ des Konflikts gefiltert werden. Das Planungswerkzeug ermöglicht es, existierende Konflikte zu ignorieren. Diese Konflikte werden nicht mehr in der Tabelle angezeigt. Ebenfalls werden ignorierte Konflikte nicht mehr in einem Stundenplan angezeigt.
+\paragraph{Konfliktabelle}\label{par:conf_table}
+Die Tabelle 1 in Abbildung \ref{fig:plt_conflicts} zeigt alle momentan existierenden nicht ignorierten Konflikte an. Dabei repräsentiert eine Zeile der Tabelle exakt einen Konflikt zwischen zwei Veranstaltungsteilen. Für einen Konflikt werden jeweils die KursID in der Spalte KursID und der Veranstaltungsteil in der Spalte Teil der beteiligten Veranstaltungsteile angezeigt. Zusätzlich wird in der Spalte Konflikt das Konfliktobjekt angezeigt. Dieses Konfliktobjekt ist entweder ein Professor, ein Raum oder ein Studiengang.\\ 
+Die erste Zeile der Tabelle in Abbildung \ref{fig:plt_conflicts}  Teil 1  zeigt zum Beispiel den Konflikt zwischen der Veranstaltung  \textit{FoC Veranstaltungsteil 1} und der Veranstaltung \textit{KT Veranstaltungsteil 1} an. Der Konflikt ist ein Raumkonflikt für den Raum mit der Raumnummer \textit{B1}.   \\
+Mittels der Konflikttabelle können angezeigte Konflikte ignoriert werden. Dazu muss lediglich mittels eines Rechtsklicks auf die Zeile des Konflikts das Kontextmenü geöffnet werden und der Menüpunkt \textbf{Ignorieren} ausgewählt werden. Zudem kann der Stundenplan des Konfliktobjekts aufgerufen werden. Dazu muss im Kontextmenü der Menüpunkt \textbf{Gehe zu} ausgewählt werden.
+
+\paragraph{Filtern der Konfliktliste}
+Die Konflikttabelle kann mittels des Filters 2 in Abbildung \ref{fig:plt_conflicts} gefiltert werden. Es stehen ein Veranstaltungsfilter (Veranstaltung) und ein Konflikttypfilter (Typ) zur Verfügung. Mittels des Veranstaltungsfilters kann eine Veranstaltung ausgewählt werden. Die Konflikttabelle zeigt dann nur Konflikte an, die zu dieser Veranstaltung gehören. Mittels des Konflikttypfilters kann ein Konflikttyp ausgewählt werden. Die Konflikttabelle zeigt dann nur Konflikte an, die den ausgewählten Konflikttyp haben. Falls beide Filter aktiv sind, werden in der Konflikttabelle nur die Konflikte angezeigt, die beiden Filtern genügen.\\
+Ein Filter ist aktiv, sobald der Kippschalter des Filters sich in der rechten Stellung befindet und eine gültige Eingabe für den Wert des Filter ausgewählt wird. Ein Filter ist deaktiviert, sobald sich der Kippschalter des Filters in der linken Stellung befindet. Durch Klicken auf den Kippschalter kann die Stellung verändert werden. In \ref{fig:plt_conflicts} ist zum Beispiel der Veranstaltungsfilter  deaktiviert und es wird nicht nach einer speziellen Veranstaltung gefiltert.  Der Konflikttypfilter ist ebenfalls deaktiviert. 
+
+
+
+\paragraph{Konflikt Prioritäten}
+In Teil 3 von Abbildung \ref{fig:plt_conflicts} können die Prioritäten der verschiedenen Konflikttypen verwaltet werden. Standardmäßig exisiteren 4 Konflikttypen: Raum, Professor, StudiengangLeicht und StudiengangSchwer. Beim Erstellen einer lokalen Planungsdatenbank werden diese Konflikttypen mit der Priorität 1 versehen. Es gibt die Prioritäten 1-5, wobei 1 die höchste Priorität ist und 5 die niedrigste. Über den Knopf \textbf{Prios verwalten} können diese Prioritäten angepasst werden. Es öffnet sich ein Fenster: Abbildung \ref{fig:plt_conflict_prios}. 
+\begin{wrapfigure}{r}{0.4\textwidth}
+    \centering
+	\caption{Prioritäten zuweisen}
+	\includegraphics[scale=0.7]{images/planning_tool/conflict_prio_dialog.png}
+	\label{fig:plt_conflict_prios}
+\end{wrapfigure}
+Die Farbanzeige der Konflikte im Planungsfenster richtet sich nach der Konflikt-Prioritäten Zuordnung. Wenn Raumkonflikte die Priorität 1 besitzen und die Farbe für Konflikte der Priorität 1 rot ist, dann werden diese rot angezeigt. Zudem können über den Schalter \textbf{Prio} Konflikte ausgeblendet werden. Wenn im Plan nur die Konflikte mit einer Priorität größer als 3 (also Priorität 1 und 2), kann der Schalter aktiviert werden und in dem Eingabefeld eine 2 eingetragen werden.  
+
+\paragraph{Eigene Konflikte}
+Es besteht die Möglichkeit im Tool per SQL-Query eigene Konflikte zu definieren. Diese existieren dann zusätzlich zu den standardmäßig unterstützten Konflikttypen. Bspw. kann ein Konflikt \textbf{WunschOrt} definiert werden, der auftritt, falls eine Veranstaltung für die Fürstenallee geplant wird, obwohl als Wunschort Campus angegeben ist. Diese Funktion birgt Risiken für den Benutzer, da die Queries bestimmte Eigenschaften erfüllen müssen. 
+\textbf{Besteht der Wunsch diese Funktion zu nutzen, lesen Sie sich auch die Datenbank Dokumentation durch.} 
+Als Beispiel: \texttt{SELECT * FROM Plan WHERE Raumnr NOT LIKE 'F\%' AND Ort = 1 AND Raumnr NOT LIKE 'kein Raum'}. Diese Query wählt alle Plan-Einträge aus, deren Raumnummer nicht mit "F" beginnt (Demnach nicht in der Fürstenallee geplant wurden), jedoch als Wunschort (Ort) die Fürstenalle (Wert 1) angegeben haben. Sollen auch Konflikte angezeigt werden, wenn Veranstaltungen im Campus gewünscht sind, dort jedoch nicht geplant wurden, kann die Query um diese Bedingung erweitert werden. Ein solcher Konflikt kann entweder im Konflikt-Menü in Abbildung \ref{fig:plt_conflict_menu} unter \textbf{Eigenen Konflikt hinzufügen} hinzugefügt werden oder in Abbildung \ref{fig:plt_conflicts} über das \textbf{+}. Über das sich öffnende Fenster in Abbildung \ref{fig:plt_add_custom_conflict} kann der Konflikttyp dann eingegeben werden. \\
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}{0.5\textwidth}
+        \centering
+        \caption{Eigenen Konflikttyp erstellen}
+        \includegraphics[scale=0.5]{images/planning_tool/add_custom_conflict.png}
+        
+        \label{fig:plt_add_custom_conflict}
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.4\textwidth}
+        \centering
+        \caption{Konflikte Menü}
+        \includegraphics[scale=0.5]{images/planning_tool/conflict_menu.png}
+        
+        \label{fig:plt_conflict_menu}
+    \end{minipage}
+\end{figure}
+
+Die eigenen Konflikte können zusätzlich Im Dialog Fenster aus Abbildung \ref{fig:plt_custom_conflicts_manage} aktiviert und deaktiviert werden. So können eigene Konflikte aus der Übersicht genommen werden, ohne dass sie aus der Datenbank gelöscht werden müssen. 
+
+\begin{figure}[H]
+    \centering
+    \caption{Eigene Konflikte verwalten}
+    \includegraphics[scale=.55]%{images/planning_tool/manage_custom_conflicts.png}
+    {images/planning_tool/pic08}
+    \label{fig:plt_custom_conflicts_manage}
+\end{figure}
+
+%\begin{wrapfigure}{r}{0.4\textwidth}
+%	\caption{Eigene Konflikte verwalten}
+%	\includegraphics[scale=0.7]{images/planning_tool/manage_custom_conflicts.png}
+%	\label{fig:plt_custom_conflicts_manage}
+%\end{wrapfigure}
+
+\paragraph{Verwaltung der ignorierten Konflikte}
+
+Im Menü- abschnitt Konflikte können ignorierte Konflikte verwaltet werden. Durch das Drücken des Knopfes \textbf{Zurücksetzen} im Menüabschnitt Konflikte werden alle ignorierten Konflikte zu nicht-ignorierten Konflikten. Eine Verwaltung der Konflikte ist mittels eines Dialogs, der durch Drücken des Knopfes Verwalten im Konflikt-Menüabschnitt geöffnet wird, möglich.\\
+%\begin{wrapfigure}{r}{0.4\textwidth}
+%	\caption{Konflikte verwalten}
+%	\includegraphics[scale=0.35]{images/planning_tool/conflicts_manage.png}
+%	\label{fig:plt_conflicts_manage}
+%\end{wrapfigure}
+Im Dialog in \ref{fig:plt_conflicts_manage} werden die momentan nicht-ignorierten Konflikte in der Konflikttabelle 1 angezeigt. Die momentan ignorierten Konflikte werden in der Konflikttabelle 3 angezeigt. Mittels der 4 Knöpfe in 2 können einzelne oder alle Konflikte zwischen den beiden Konflikttabellen verschoben werden. Die Knöpfe haben die folgenden Funktionen (von oben nach unten ):
+\begin{enumerate}
+	\item ignoriert den momentan selektierten Konflikte aus Konflikttabelle 1
+	\item ignoriert alle Konflikte aus Konflikttabelle 1
+	\item unignoriert den momentan selektierten Konflikte aus Konflikttabelle 3
+	\item unignoriert alle Konflikte aus Konflikttabelle 3
+\end{enumerate}
+Die Veränderungen können mittels \textbf{Annehmen} gespeichert oder \textbf{Abbrechen} verworfen werden.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{minipage}{0.45\textwidth}
+        \centering
+        \caption{Konflikte verwalten}
+        \includegraphics[scale=0.45]{images/planning_tool/conflicts_manage.png}
+        
+        \label{fig:plt_conflicts_manage}
+    \end{minipage}
+    \hspace{0.05\textwidth}
+    \begin{minipage}{0.45\textwidth}
+       \centering 
+    
+	  \includegraphics[scale=0.45]{images/planning_tool/unplanned.png}
+   \caption{Ungeplante Veranstaltungen}
+   \label{fig:plt_unplanned} 
+    \end{minipage}
+\end{figure}
+
+\FloatBarrier
+
+%\begin{wrapfigure}{HR}{0.38\textwidth}
+%	\centering
+%	\caption{Ungeplante Veranstaltungen}
+%	\includegraphics[scale=0.40]%{images/planning_tool/unplanned.png}
+%	\label{fig:plt_unplanned}
+%\end{wrapfigure}
+
+
+\subsubsection{Ungeplante Veranstaltungen}
+In Teil 4 von Abbildung \ref{fig:plt_overview} werden alle momentan ungeplanten Veranstaltungen in einer Tabelle angezeigt. Die Tabelle kann mithilfe eines Filters nach Veranstaltungen gefiltert werden. 
+
+\paragraph{Ungeplante Veranstaltungstabelle}\label{par:unplan_table}
+Die Tabelle 1 in \ref{fig:plt_unplanned} zeigt alle momentan ungeplanten Veranstaltungsteile an,  also diejenigen, die keinen Raum, Tag und Uhrzeit haben.
+Dabei repräsentiert eine Zeile der Tabelle exakt einen ungeplanten Veranstaltungsteil. Für einen ungeplanten Veranstaltungsteil wird die KursID in der Spalte KursID, der Veranstaltungsteil in der Spalte Teil, der Professor in der Spalte ProfID und die Dauer der Veranstaltung in der Spalte Dauer angezeigt.\\ 
+Die erste Zeile der Tabelle in Abbildung \ref{fig:plt_unplanned} zeigt zum Beispiel die ungeplante Veranstaltung GP Veranstaltungsteil 1 gehalten vom Professor mit der ProfID HK. Die Veranstaltung dauert eine Stunde.
+\paragraph{Filtern der Ungeplanten Veranstaltungstabelle}
+Die Tabelle kann mittels des Filters 2 in \ref{fig:plt_unplanned} gefiltert werden.   Es steht ein Veranstaltungsfilter zur Verfügung. Mittels des Veranstaltungsfilters kann eine Veranstaltung ausgewählt werden. Die Tabelle zeigt dann nur ungeplante Veranstaltungsteile an,  die zu dieser Veranstaltung gehören.\\
+Ein Filter ist aktiv, sobald der Kippschalter des Filters sich in der rechten Stellung befindet und eine gültige Eingabe für den Wert des Filters ausgewählt wird. Ein Filter ist deaktiviert, sobald sich der Kippschalter des Filters in der linken Stellung befindet. Durch Klicken auf den Kippschalter kann die Stellung verändert werden. In \ref{fig:plt_unplanned} ist zum Beispiel der Veranstaltungsfilter aktiv und es wird nach Veranstaltungsteilen mit der KursID GP gefiltert.
+
+
+\subsubsection{Planen von Veranstaltungsteilen}
+Das Planen von Veranstaltungsteilen wird mittels des primären und sekundären Stundenplanfensters 
+und der ungeplanten Veranstaltungstabelle durchgeführt. Dazu können die Elemente der 
+Stundenpläne und der ungeplanten Veranstaltungstabelle mittels Drag- and Drop-Gesten zwischen 
+den Stundenplänen und innerhalb eines Stundenplans verschoben werden. Dabei werden die, durch 
+die Verschiebung entstanden Änderungen an Raum und Zeit des Veranstaltungsteils, gespeichert. 
+Das Verschieben eines Veranstaltungsteils zu der ungeplanten Veranstaltungstabelle entfernt die 
+Zeit und den Raum des Veranstaltungsteils. Dieser ist somit ungeplant.
+
+\paragraph{Stundenplantypen}\label{par:agenda_types}
+Die Planungssoftware unterstützt 5 verschiedene Stundenplantypen. Jeder Stundenplantyp zeigt verschiedene 
+Veranstaltungsteile an.
+\begin{table}[ht]
+	\begin{tabular}{|p{0.17\textwidth}|p{0.73\textwidth}|}
+		\hline
+		Typ & Angezeigte Veranstaltungsteile\\\hline
+		Raum & Veranstaltungsteile, die in dem Raum stattfinden\\
+		Professor& Veranstaltungsteile, die vom Professor gehalten werden\\
+		Studiengang& Veranstaltungsteile, die Teil des Studiengangs sind\\
+		Veranstaltung & Veranstaltungsteile, die zu der Veranstaltung gehören\\
+		Filter &  beliebige Veranstaltungsteile, die mittels Filtern aus den anderen Stundenplantypen erstellt werden können  \\\hline
+	\end{tabular}
+\end{table}
+\paragraph{Aufbau des primären und sekundären Stundenplanfensters}
+In einem Stundenplanfenster (primär und sekundär) findet die eigentliche Planung der Veranstaltungen statt.\\
+
+In der Menüleiste unter Planung befindet sich für das primäre und das sekundäre Stundenplanfenster jeweils eine Menügruppe mit Knöpfen, mit denen das jeweilige Stundenplanfenster manipuliert werden kann. Die Knöpfe, zu sehen in  Abbildung  \ref{fig:plt_menu_plan}, bieten die folgenden Funktionen an: 
+
+\begin{enumerate}
+	\item blendet das jeweilige Stundenplanfenster aus
+	\item öffnet einen Raum-Stundenplantab
+	\item öffnet einen Professor-Stundenplantab
+	\item öffnet einen Veranstaltung-Stundenplantab
+	\item öffnet einen Studiengang-Stundenplantab
+	\item öffnet einen Filter-Stundenplantab
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\caption{Menü Stundenplanfenster}
+	\includegraphics[scale=0.5]{images/planning_tool/menu_planung.png}
+	\label{fig:plt_menu_plan}
+\end{figure}
+
+%\begin{figure}[H]
+%   \centering
+%    	\caption{Auswahl Stundenplantab}
+%    	\includegraphics[scale=0.4]{images/planning_tool/menu_plan_popup.png}
+%    	\label{fig:plt_plan_popup}
+%\end{figure}
+
+%\begin{figure}[H]
+%      \centering
+%		\caption{Aufbau Stundenplanfenster}
+%		\includegraphics[scale=0.35]{images/planning_tool/plan_window.png}
+%		\label{fig:plt_pimary_plan}
+%\end{figure}
+
+%\begin{figure}[H]
+ %   \centering
+  %  \begin{minipage}{0.45\textwidth}
+  %      \centering
+%		\caption{Aufbau Stundenplanfenster}
+%		\includegraphics[scale=0.25]{images/planning_tool/plan_window.png}
+%		\label{fig:plt_pimary_plan}
+%    \end{minipage}
+%    \hspace{0.05\textwidth}
+%    \begin{minipage}{0.45\textwidth}
+%        \centering
+%    	\caption{Auswahl Stundenplantab}
+%    	\includegraphics[scale=0.4]{images/planning_tool/menu_plan_popup.png}
+%    	\label{fig:plt_plan_popup}
+%    \end{minipage}
+%\end{figure}
+
+\begin{wrapfigure}{r}{0.4\textwidth}
+    \centering
+	\caption{Auswahl Stundenplantab}
+	\includegraphics[scale=0.4]{images/planning_tool/menu_plan_popup.png}
+	\label{fig:plt_plan_popup}
+\end{wrapfigure}
+
+Beim Öffnen eines Raum-, Professor-, Veranstaltung- oder Studiengang-Stundenplantabs muss zusätzlich mittels eines Menüs, zu sehen in Abbildung \ref{fig:plt_plan_popup}, das Objekt des Stundenplans ausgewählt werden. Dazu muss lediglich das gewünschte Objekt in der Liste ausgewählt werden und die Auswahl mittels des Knopfes \textbf{Öffne Stundenplan} bestätigt werden.\\
+In Abbildung \ref{fig:plt_pimary_plan} ist eine Beispielabbildung für das primäre Stundenplanfenster zu sehen (die Planung mit dem sekundären Stundenplanfenster ist analog).
+Die derzeit geöffneten Stundeplantabs können in der Leiste in 1 gesehen werden. Mittels Klick auf das Tab wird der jeweilige Stundenplan des Objekts geöffnet. Der aktuell geöffnete Tab ist hell hinterlegt. Die Tabs lassen sich mittels Drag- and Drop-Gesten zwischen dem primären und sekundären Stundenplanfenster verschieben. Dazu muss der gewünschte Tab in der Liste in die Tabliste des anderen Stundeplanfensters mittels Drag- and Drop Geste  gezogen  werden.\\ 
+In  Teil 2 von Abbildung \ref{fig:plt_pimary_plan}  werden Informationen über das Objekt des Stundenplans angezeigt, für einen Raum zum Beispiel Raumnummer und Sitzplatzanzahl.\\
+
+\begin{figure}[H]
+      \centering
+		\caption{Aufbau Stundenplanfenster}
+		\includegraphics[scale=0.45]{images/planning_tool/plan_window.png}
+		\label{fig:plt_pimary_plan}
+\end{figure}
+
+Die Toolbar in  Abbildung \ref{fig:plt_pimary_plan} Teil 3  bietet einige Knöpfe an, um die Darstellung des aktuell angezeigten Stundenplans zu manipulieren. Die Knöpfe, zu sehen in \ref{fig:plt_agenda_toolbar}, bieten die folgenden Funktionen an:
+\begin{enumerate}
+	\item Öffnet die verfügbare Räume Spalte (erklärt in Abschnitt \autoref{par:available_rooms})
+	\item Vergrößert die Breite einer Zelle im Stundenplan (horizontales Hineinzoomen)
+	\item Verringert die Breite einer Zelle im Stundenplan (horizontales Herauszoomen)
+	\item Vergrößert die Höhe einer Zelle im Stundenplan (vertikales Hineinzoomen)
+	\item Verringert die Höhe einer Zelle im Stundenplan (vertikales Herauszoomen)
+    \item Wechselt die Anzeige zwischen \textit{nur 2 Veranstaltungen nebeneinander} (für mehr Übersichtlichkeit) und \textit{alle Veranstaltungen nebeneinander} (um Screenshots zu machen, auf denen alle VAs zu sehen sind)
+	\item Öffnet den Vollbildmodus für den Stundenplan (maximales horizontales und vertikales Herauszoomen)
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\caption{Toolbar Stundenplan}
+	\includegraphics[scale=0.6]{images/planning_tool/plan_toolbar.png}
+	\label{fig:plt_agenda_toolbar}
+\end{figure}
+
+Der eigentliche Stundenplan des Objekts ist in  Abbildung \ref{fig:plt_pimary_plan} Teil 4  zu sehen.
+\FloatBarrier
+\paragraph{Veranstaltungsteile im Stundenplan}
+In einem Stundenplan werden je nach Stundenplantyp die jeweiligen Veranstaltungsteile angezeigt. Ein Veranstaltungsteil wird mithilfe eines Rechtecks an der von Tag und Uhrzeit bestimmten Stelle im Stundenplan angezeigt. Die folgenden Informationen werden im Rechteck für einen Veranstaltungsteil in Abbildung \ref{fig:plt_single} angezeigt:
+
+\begin{enumerate}
+	\item KursID und Nummer des Veranstaltungsteils
+	\item Raum, in dem der Veranstaltungsteil stattfindet
+	\item ProfID des Professors, der den Veranstaltungsteil gibt
+	\item Studiengänge, zu denen der Veranstaltungsteil gehört. Falls der Veranstaltungsteil zu mehr als einem Studiengang gehört, lässt sich mittels des Pfeils eine Liste aller betroffenen Studiengänge anzeigen 
+ \item Anzeige ob für diesen Veranstaltungsteil ein Konflikt existiert, dessen Konflikttyp manuell hinzugefügt wurde. Falls ein Konflikt existiert, wird dieses Feld farblich hervorgehoben
+\end{enumerate}
+
+\begin{figure}[H]
+	\centering
+	\caption{Veranstaltungsteil im Stundenplan}
+	\begin{subfigure}{0.3\linewidth}
+        \centering
+		\caption{}
+		\includegraphics[scale=0.8]%{images/planning_tool/plan_single.png}
+        {images/planning_tool/pic01.png}
+		\label{fig:plt_single}
+	\end{subfigure}
+	\begin{subfigure}{0.3\linewidth}
+    \centering
+		\caption{}
+		\includegraphics[scale=0.8]%{images/planning_tool/plan_single_conflict.png}
+        {images/planning_tool/pic02.png}
+		\label{fig:plt_single_conflict}
+	\end{subfigure}
+	\begin{subfigure}{0.3\linewidth}
+    \centering
+	\caption{}
+	\includegraphics[scale=0.6]%{images/planning_tool/plan_multiple.png}
+    {images/planning_tool/pic03.png}
+	\label{fig:plt_multiple}
+\end{subfigure}
+\end{figure}
+
+Je nach Veranstaltungsart wird das Rechteck mit einer anderen Farbe ausgefüllt. Wenn für Raum, Professor oder einen der Studiengänge ein Konflikt vorliegt wird dieser farbig hinterlegt. Standardmäßig  wird  rot für einen schweren und gelb für einen leichten Konflikt  genutzt.\\ Das Rechteck in Abbildung \ref{fig:plt_single_conflict} visualisiert somit die folgenden Informationen über den Veranstaltungsteil. Die Verstanstaltung des Veranstaltungsteils ist \textit{DuA-1}. Es ist der zweite Veranstaltungsteil von DuA-1. Der Veranstaltungsteil wird im Raum mit der Raumnummer \textit{L 1} gegeben. Der Veranstaltungsteil wird von dem Professor \textit{ProfDr.SevGha} gegeben. Der Veranstaltungsteil ist Teil des Studiengangs \textit{CEB-2BPO3}. Zudem existiert für den Veranstaltungsteil ein schwerer Raum- und ein schwerer Studiengangskonflikt.
+Wenn mehrere Veranstaltungsteile einer Zelle des Stundenplans zugeordnet sind, werden diese nebeneinander angezeigt. So zu sehen in \ref{fig:plt_multiple}. \\
+
+
+
+Die Start- und Endzeit des Stundenplans kann frei konfiguriert werden. Mehr dazu in \autoref{par:settings_time}. Daher kann es passieren, dass Veranstaltungsteile nur teilweise oder gar nicht angezeigt werden. Falls ein Veranstaltungsteil nur partiell angezeigt wird, erscheint ein Warndreieck im zugehörigen Rechteck. Zudem erscheint ein rotes Warndreieck in der linken oberen Ecke des Stundenplans, falls ein Veranstaltungsteil existiert der nur partiell oder gar nicht angezeigt wird. Beide Indikatoren sind in \autoref{fig:plt_agenda_indicator} zu sehen. Der Veranstaltungsteil \textit{DuA-1 1} geht von 8 bis 10 Uhr. Da der Stundenplan allerdings erst um 9 Uhr beginnt, wird der Veranstaltungsteil nur partiell angezeigt.
+
+\begin{figure}[ht]
+	\centering
+	\caption{Warnung Stundenplan}
+	\includegraphics[scale=0.5]%{images/planning_tool/agenda_warning_indicator.png}
+    {images/planning_tool/pic04.png}
+	\label{fig:plt_agenda_indicator}
+\end{figure}
+
+Durch Rechtsklick auf einen Veranstaltungsteil öffnet sich ein Kontextmenü. Mittels des Kontextmenüs kann sofort der Stundenplan der Veranstaltung, des Professors, des Raumes oder des Studiengangs geöffnet werden.  
+\\
+Falls der Stundenplantyp Professor ist, werden zusätzlich zu den Rechtecken für die Veranstaltungsteile, ebenfalls die Sperrzeiten des Professors im Stundenplan mittels dunkelroten Rechtecken in den jeweiligen Zellen angezeigt. Die Anzeige von Sperrzeiten in einem Stundenplan ist in \ref{fig:plt_plan_wunsch_sperr} zu sehen. 
+
+\paragraph{Verfügbare Räume Spalten}\label{par:available_rooms}
+\begin{wrapfigure}{}{0.53\linewidth}
+	\centering
+	\caption{Verfügbare Räume Spalten}
+	\includegraphics[scale=0.5]%{images/planning_tool/agenda_available_rooms.png}
+    {images/planning_tool/pic05.png}
+	\label{fig:plt_agenda_available_rooms}
+\end{wrapfigure}
+
+Wenn die verfügbaren-Räume-Spalten eingeblendet werden, wird für jeden Tag eine zusätzliche Spalte in dem Stundenplan angezeigt. Für jeden Zeitslot existiert in der Spalte eine Liste. In der Liste wird angezeigt welche Räume für den Tag und die Zeit frei sind. Ein Veranstaltungsteil kann mithilfe einer Drag- and Drop-Geste direkt in die Liste bewegt werden, um den Veranstaltungsteil direkt zu dem Raum zu bewegen. In \autoref{fig:plt_agenda_available_rooms} ist ein Beispiel für die verfügbare-Räume-Spalte zu sehen. In  Teil 1 von \autoref{fig:plt_agenda_available_rooms}  werden alle verfügbaren Räume für den Zeitslot \textit{Montag 9 Uhr} angezeigt. Das heißt, in den Räumen \textit{F0 530} und \textit{F2 211} findet keine Veranstaltung am \textit{Montag um 9 Uhr} statt. Dasselbe gilt für \textit{F0 530}, \textit{F2 211} und \textit{L 1} am \textit{Montag um 10 Uhr} nach Teil 2 der Abbildung.
+
+
+
+\FloatBarrier
+\newpage
+\paragraph{Planen einer Veranstaltung}
+Ein Veranstaltungsteil kann innerhalb eines Stundenplans, zwischen zwei Stundenplänen und der ungeplanten Veranstaltungstabelle mittels einer Drag- and Drop-Geste bewegt werden. Wenn ein Veranstaltungsteil innerhalb eines Stundenplans bewegt wird, wird lediglich der Tag und die Uhrzeit entsprechend verändert. Bei zwei verschiedenen Stundenplänen (beide müssen den Typ Raum haben) wird der Tag, die Uhrzeit und der Raum entsprechend geändert. Bei einer Bewegung von einem Stundenplan zur ungeplanten Veranstaltungstabelle wird der Tag, die Uhrzeit und der Raum für den Veranstaltungsteil gelöscht. Er ist danach ungeplant.\\
+Bei einer Drag- and Drop-Geste wird angezeigt, ob eine Bewegung erlaubt ist oder nicht. Dazu wird der Zielzeitslot grün bei einer erlaubten und rot bei einer verbotenen Bewegung eingefärbt. In Abbildung \ref{fig:plt_plan_move_allowed} ist eine erlaubte Bewegung und in Abbildung \ref{fig:plt_plan_move_forbidden} eine verbotene Bewegung zu sehen.  Eine erlaubte Bewegung ist eine Bewegung von (ungeplanten) Veranstaltungen in Räume oder in die Ansichten, die zu den Veranstaltungsdaten passen. Eine Veranstaltung die von Professorin X gehalten wird, kann nur in die Ansicht von Professorin X verschoben werden. Wenn versucht wird eine Veranstaltung in eine abweichende Ansicht (z.B. Professor Y) zu verschieben, handelt es sich um eine verbotene Bewegung. Darunter fällt auch das Verschieben ungeplanter Veranstaltung in eine Nicht-Raum Ansicht.  Falls eine Drag- and Drop-Geste für eine verbotene Bewegung durchgeführt wird, werden keine Veränderungen ausgelöst.\\
+Falls für den bewegten Veranstaltungsteil Wunschzeiten und für den Professor des Veranstaltungsteils Sperrzeiten bekannt sind, werden diese während der Drag- and Drop-Geste in dem Stundenplan, über dem sich die Maus befindet, angezeigt: Wunschzeiten des Veranstaltungsteils in dunkelgrün und Sperrzeiten des Professors dunkelrot. So zu sehen in  Abbildung  \ref{fig:plt_plan_wunsch_sperr}.
+
+\begin{figure}[htbp] %htbp
+	%\centering
+    \caption{Angezeigte Informationen bei einer Bewegung}
+	\begin{subfigure}{0.33\linewidth}
+    \centering
+		\caption{Erlaubte Bewegung}
+		\includegraphics[scale=0.6]%{images/planning_tool/plan_allowed_move.png}
+        {images/planning_tool/pic06.png}
+		\label{fig:plt_plan_move_allowed}
+	\end{subfigure}
+	\begin{subfigure}{0.33\linewidth}
+        \centering
+		\caption{Verbotene Bewegung}
+		\includegraphics[scale=0.6]%{images/planning_tool/plan_forbidden_move.png}
+        {images/planning_tool/pic07.png}
+		\label{fig:plt_plan_move_forbidden}
+	\end{subfigure}
+	\begin{subfigure}{.33\linewidth}
+		\centering
+		\caption{Wunsch- und Sperrzeiten}
+		\includegraphics[scale=0.6]{images/planning_tool/plan_wunsch_sperr.png}
+		\label{fig:plt_plan_wunsch_sperr}
+	\end{subfigure}
+ 
+\end{figure}
+
+
+\paragraph{Stundenplan für Raum \glqq Ohne Raum\grqq}
+Um die Planung zu erleichtern, gibt es den Raum \glqq Ohne Raum\grqq. Veranstaltungsteile, die sich in diesem Raum befinden, haben einen Tag und eine Uhrzeit zugewiesen, jedoch keinen Raum. Dieser Raum dient als Zwischenablage für Veranstaltungsteile, für die schon ein Tag und eine Uhrzeit, aber noch kein Raum geplant ist. 
+\newpage 
+
+
+\subsubsection{Übersicht über Daten}
+Der Menüabschnitt \textbf{Daten} (Abbildung \ref{fig:plt_menu_data}) bietet einige Funktionen an, um einen Überblick über die Daten zu gewinnen und diese zu manipulieren.
+
+\begin{figure}[H]
+	\caption{Daten Übersicht}
+	\centering
+	\includegraphics[scale=0.65]{images/planning_tool/menu_daten_neu.png}
+	\label{fig:plt_menu_data}
+\end{figure}
+
+
+\paragraph{Überblick}
+Der Knopf \textbf{Überblick} im Menüabschnitt \textbf{Daten} ermöglicht einen Überblick über alle Sperrzeiten und Wunschzeiten der Kurse der Professoren. In dem sich öffnenden Dialog wird für jeden Professor ein Stundenplan angezeigt. In dem Stundenplan werden nur die Sperrzeiten des Professors und die Wunschzeiten von Veranstaltungen des Professors angezeigt. Es kann ebenfalls durch einen Filter nach einem bestimmten Professor gesucht werden, dessen Stundenplan dann groß angezeigt wird.
+
+\paragraph{Raum hinzufügen}
+\begin{wrapfigure}{}{0.35\linewidth}
+\centering
+        \caption{Raum hinzufügen}
+    	\includegraphics[scale=0.6]{images/planning_tool/add_room.png}
+    	\label{fig:plt_menu_add_room}
+\end{wrapfigure}
+
+Der Knopf \textbf{Überblick} im Menüabschnitt \textbf{Daten} ermöglicht es dem Planer einen Raum zur Planungsdatenbank hinzuzufügen.
+Falls eine Veranstaltung in einem Raum geplant werden soll, der in der Planungsdatenbank noch nicht existiert, kann der Raum folgendermaßen hinzugefügt werden:
+
+
+\begin{enumerate}
+	\item Knopf \textbf{Raum hinzufügen} im Menüabschnitt \textbf{Daten} drücken. Ein Fenster wie in Abbildung \ref{fig:plt_menu_add_room} öffnet sich
+	\item Raumnummer eingeben
+	\item Gebäude, in dem sich der Raum befindet, eingeben
+	\item Sitzplatzzahl des Raums eingeben
+	\item Priorität des Raumes angeben. Ein Raum mit einer hohen Priorität wird weiter oben in den Raumlisten angezeigt.
+	\item \textbf{Einreichen} drücken, um Raum der Planungsdatenbank hinzuzufügen 
+\end{enumerate}
+\FloatBarrier
+
+Ebenfalls können über den Knopf \textbf{Räume aus Datei hinzufügen} Räume aus einer Text-Datei gelesen werden. 
+Die Eintrage der Textdatei müssen dem Format: \texttt{<Raumnummer>-<Gebäude>-<Priorität>-<Hörerzahl>} 
+(Beispiel: \texttt{A 1-A-w-250}) entsprechen. Es können auch CSV Dateien gelesen werden. Dabei enstpricht jede Zeile einem Raum-Eintrag. Die Formatierung ist ähnlich zu der in der Text-Datei (\texttt{<Raumnummer>;<Gebäude>;} \texttt{<Priorität>;<Hörerzahl>}). In Tabellenform ist jeder Wert in einer eigenen Zelle. Es sollten keine zusätzlichen Texte in der Datei stehen.
+
+
+
+\paragraph{Verfügbare Räume}
+Der Knopf \textbf{Verfügbare Räume} im Menüabschnitt \textbf{Daten} ermöglicht es dem Planer für jeden Zeitslot die verfügbaren Räume einzusehen. Somit kann der Planer auf einen Blick sehen, welche Räume für einen Zeitslot noch frei sind.
+\newpage 
+
+\begin{wrapfigure}{}{0.35\linewidth}
+        \caption{Raum sperren}
+    	\centering
+    	\includegraphics[scale=0.6]{images/planning_tool/raum_sperren.png}
+    	\label{fig:plt_block_room}
+\end{wrapfigure}
+
+\paragraph{Räume sperren}
+Über den Knopf \textbf{Räume sperren} können Räume gesperrt werden. In der sich öffnenden Maske (Abbildung \ref{fig:plt_block_room}) müssen die Felder ausgefüllt werden 
+und bestätigt werden. Dabei ist das Feld \textbf{Kommentar} optional. Der ausgewählte Raum ist dann zu dieser Zeit als blockiert angezeigt.
+\FloatBarrier
+
+\paragraph{Überprüfung}
+Durch Klicken auf den Knopf \textbf{Überprüfung} im Menüabschnitt Daten öffnet sich das Überprüfungsfenster. Das Fenster ist in Abbildung \ref{fig:plt_daten_check} zu sehen. Es fungiert als Abschlussüberprüfung vor Abschluss der Phase 4. Die folgenden Informationen werden angezeigt:
+\begin{enumerate}
+	\item alle Konflikte 
+	\item alle ignorierten Konflikte 
+	\item alle Veranstaltungsteile, die keinen Raum zugewiesen haben
+	\item alle Veranstaltungsteile, die keinen Raum und keinen Tag und keine Uhrzeit zugewiesen haben
+\end{enumerate}
+Für die Darstellung der Konflikte, ignorierten Konflikte und Veranstaltungsteile  werden die bereits erklärten Tabellen aus Abschnitt \ref{par:conf_table} (Konflikttabelle) und \ref{par:unplan_table} (Ungeplante Veranstaltungstabelle) verwendet.
+Ein Stundenplan ist erst bereit für die Veröffentlichung, wenn keine Veranstaltungsteile mehr ohne Raum oder ohne Raum, Tag und Uhrzeit existieren. Der Benutzer kann frei entscheiden, ob er die Phase 4 abschließen möchte, obwohl noch Konflikte zwischen Veranstaltungsteilen existieren.
+\begin{figure}[ht]
+    \centering
+		\caption{Daten überprüfen}
+	\includegraphics[scale=0.4]{images/planning_tool/daten_check.png}
+	\label{fig:plt_daten_check}
+\end{figure}
+
+\subsubsection{Einstellungen}
+Im Menüabschnitt Einstellungen, zu sehen in \ref{fig:plt_menu_settings_overview},  können Einstellungen für das \localprogram vorgenommen werden. Es können Wochentage und Uhrzeiten im Stundenplan, die Farben der Rechtecke im Stundenplan und Standardwerte für das \webprogram eingestellt werden. Die Einstellungen werden automatisch lokal auf dem Computer gespeichert und beim nächsten Öffnen des Planungswerkzeugs geladen.
+\begin{figure}[H]
+    %\centering
+	\caption{Einstellungen Übersicht}
+	\includegraphics[scale=0.6]{images/planning_tool/settings.png}
+	\label{fig:plt_menu_settings_overview}
+\end{figure}
+\paragraph{Stundenplan}\label{par:settings_time}
+\begin{wrapfigure}{R}{0.35\textwidth}
+    \centering
+	\caption{Einstellungen Stundenplan}
+	\includegraphics[scale=0.55]{images/planning_tool/menu_settings_stundenplan.png}
+	\label{fig:plt_menu_settings_stundenplan}
+\end{wrapfigure}
+Für die Stundenpläne im Stundenplanfenster lässt sich das folgende einstellen (zu sehen in \ref{fig:plt_menu_settings_stundenplan}):
+\begin{enumerate}
+	\item Anfangs- und Endzeit des Stundenplans. Der linke Knopf bestimmt die Anfangszeit. Der rechte Knopf bestimmt die Endzeit.
+	\item Spalten für Samstag und Sonntag aus- und einblenden
+\end{enumerate}
+In Abbildung \ref{fig:plt_menu_settings_stundenplan} gehen die Stundepläne von 6 Uhr bis 19 Uhr. Die Spalten für Samstag und Sonntag werden nicht angezeigt.
+\FloatBarrier
+\paragraph{Farben}
+Für die Farben der Rechtecke in einem Stundenplan lässt sich das folgende einstellen (zu sehen in \ref{fig:plt_menu_settings_farben}):
+
+\begin{enumerate}
+	\item Farbe für Konflikte der Priorität 1
+	\item Farbe für Konflikte der Priorität 2
+    \item Farbe für Konflikte der Priorität 3
+    \item Farbe für Konflikte der Priorität 4
+    \item Farbe für Konflikte der Priorität 5
+	\item Farbe für eine Vorlesung
+	\item Farbe für eine Übung
+	\item Farbe für eine Zentralübung
+	\item Farbe für einen importierten Kurs
+	\item Farbe für eine Wunschzeit eines Veranstaltungsteils
+	\item Farbe für eine Sperrzeit eines Professors	
+\end{enumerate}
+
+Bei Klick auf einen der Knöpfe für die Farben öffnet sich ein Fenster, in dem die jeweilige Farbe frei konfiguriert werden kann. So zu sehen in \ref{fig:plt_menu_settings_farben_choose}.
+\begin{figure}[H]
+\centering
+\caption{Farbeinstellungen} 
+	\begin{subfigure}{0.7\linewidth}
+    \centering
+		\caption{}
+		\includegraphics[scale=0.5]{images/planning_tool/color_settings.png}
+		\label{fig:plt_menu_settings_farben}
+	\end{subfigure}
+	\begin{subfigure}{0.29\linewidth}
+    \centering
+		\caption{}
+		\includegraphics[scale=0.5]{images/planning_tool/menu_settings_farben_choose.png}
+		\label{fig:plt_menu_settings_farben_choose}
+	\end{subfigure}
+    
+\end{figure}
+
+\subsubsection{Weitere Hinweise}
+
+\begin{enumerate}
+    \item Die Anzeige hinter dem Knopf \textbf{Verfügbare Räume} unter dem Reiter \textbf{Daten} zeigt keine Daten an. Dieser Fehler konnte nicht rechtzeitig behoben werden.
+\end{enumerate}

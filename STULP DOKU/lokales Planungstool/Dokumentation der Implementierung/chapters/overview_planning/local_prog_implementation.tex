@@ -1,0 +1,482 @@
+\subsection{Major design decisions for the GUI}
+
+\subsubsection{JavaFX GUI Library}
+JavaFX is a Java library used to build rich graphics applications. The applications written using this library can run consistently across multiple operating systems, which is one of the requirements. It is the fresh library for Java graphics, and we can also access the existing features of other Java libraries such as Swing.\\
+It uses a markup language known as FXML, an HTML-like declarative markup language. The sole purpose of this language is to define a user interface independently from the application logic. This benefits in updating and reusing the UI components without touching the business logic.\\
+JavaFX provides an application named \underline{Scene Builder}. It is a visual layout tool. On integrating this application in any java IDE we can access a drag and drop design interface, resulting in an FXML file that binds the UI to the application’s logic. However, developers can switch between the textual and visual views easily.\\
+Using the rich set of APIs, we have accessed the features of Java language such as, \textit{Multi-threading}, and \textit{Lambda Expressions}. The traditional Java \textit{Collections} library was enhanced and concepts like \textit{Observable lists} and \textit{Maps} were included in it. Using these, after every drag-drop during planning we can observe the changes in the data models easily and effectively.\\
+Lastly, it also supports \textit{CSS}, meaning component properties can be changed independently of logic. The \textit{CSS} for the local program is embedded in a single file, "stulp.css". The file has properties which are used for buttons when they’re selected on a ribbon, text of these buttons and tabs, and font type for the labels. Importantly it includes easy to use drag-drop functionalities.
+
+\subsubsection{FXRibbon Library}
+FXRibbon is a free open source library and is accessbale easily. The main
+control is the Ribbon Menu, that we have used in our program at the top of
+the interface as menu. Main purpose is to separate views or interfaces based on the functionality. This external library has been added into the local program to improve user interface along with JavaFX. The Ribbon contains RibbonTabs which contains RibbonGroups to organize the menu. Controls like Buttons are added to a RibbonGroup.
+
+\subsection{Overview of the local planning tool's architecture}
+The development of the program is done in the JAVA SE-22 version as a maven project enabling the addition of the database as a dependency and all other dependencies in the project's \textit{pom.xml} file. The \textit{pom.xml} contains certain versions, e.g for JavaFX, and has to be updated manually to use newer versions. If doing so, the compatibility of different version has to be considered. It follows the three-tier architecture, particularly MVC (model, view, controller). Model usually provides a passive API to read and write data, View is responsible to display the information on the screen, and Controller updates the data model based on commands via View.
+
+\begin{figure}[h!]
+\includegraphics[width=\textwidth]%{chapters/overview_planning/images/img18}
+{chapters/overview_planning/images/fig01}
+\centering
+\caption{MVC architecture} 
+\label{MVC} 
+\end{figure}
+An event is generated when user interacts with the view. This event will cause the controller to change the model or if needed the view also. Every time the model’s data is updated by the controller, the views depending on that data are automatically updated. Same is the case when controller updates the view. The view will get the data from the underlying model to update itself. For example if the dialog for displaying the available rooms is open, and in the meantime
+the user moved a course by drag and drop in an agenda, the dialog will get the data from the underlying model to update the information displayed.
+
+\subsubsection{MVC architecture implications to Local Program}
+
+MVC separates the business logic, the presentation, and the actions based on user input into three separate categories of classes, as a result the local program has the following categories of packages. \newline 
+\textit{Business logic}:
+\begin{itemize}
+    \item Contains data related implementations.
+    \item Encapsulates application state.
+    \item Responds to state queries/updates.
+\end{itemize} \newpage 
+\textit{GUI}:
+\begin{itemize}
+    \item Renders the model.
+    \item Allows Controller to select view.
+    \item  Sends user input to the Controller.
+\end{itemize}
+\textit{Controller}:
+\begin{itemize}
+    \item  Defines application behavior.
+    \item  Maps user actions to Model updates.
+\end{itemize}
+
+
+\subsubsection{User Interface and Package Hierarchy of the Local Program}
+\begin{figure}[H]
+%\includegraphics{chapters/overview_planning/images/img1}
+\includegraphics[width=\textwidth]{chapters/overview_planning/images/figure1_1}
+\centering
+\caption{User Interface} 
+\label{fig1.1} 
+\end{figure}
+The GUI, which the user sees after running the application, is the interface to interact with the application. This is designed in \textit{main.fxml} and managed by \textit{MainController} class. \newline 
+It is divided into different components; some are custom, and some use existing JavaFX components. The \textit{MainController} is responsible for connecting different components and controlling them. Each component has a controller class and fxml view associated with it using the same name. As shown in Figure \ref{fig1.1} at the top. \textit{main.fxml} includes different ribbon tabs, and each ribbon
+tab has a separate fxml file in \textit{/resources/ribbon} along with a controller in \textit{gui.controller.ribbon}.\newline 
+On the left is the list of conflicts, whereas on the right is the list of unplanned courses. Both of these lists have their own fxml view and respective controllers. The center view can be of the type Raum, Professor, Kurs, Studiengang, and Filter. Each view requires an agenda view consisting of a grid with day and time. This view is designed in \textit{plan.fxml}. All the actions and events related to adding a tab of a type are managed in \textit{PlannedCoursesController.java} along with setting the type of the controller for each tab. Details of all the controller classes can be referred to in section \ref{controller}. \newline 
+
+The local program has the following package hierarchy separating the business logic from the GUI.\\
+\begin{figure}[H]
+%\includegraphics{chapters/overview_planning/images/img1}
+\includegraphics[scale=.8]{chapters/overview_planning/images/fig02}
+\centering
+\caption{Package Hierarchy} 
+\label{fig1} 
+\end{figure}
+Among these packages, the packages containing model classes that model business or application logic are ("business\_logic, business\_logic.util, business\_logic.interfaces") 
+Furthermore, the packages holding the GUI components are ("gui.cells, gui.dialog, gui.dialog.overview, gui.widgets, gui.widgets.agenda"). The last group of packages includes controller classes ("controller, controller.cell, controller.factory, controller.ribbon").
+
+\subsubsection{Model as Business Logic}
+The "business\_logic" package in Figure \ref{fig2} has the implementation \textit{Data} of the \textit{IData} interface, which loads all needed data from the database. To extend or to add any feature which requires to get or set data from database a method can be added in this class, considering that database interface provides the method. \newline 
+Moreover, this package has the implementation \textit{State} of the \textit{IState} interface, which has all the methods required to maintain model states w.r.t to business logic. \textit{IState} offers
+methods that can be used to change the state of the database. For example
+moving a lecture (plan object) or ignoring a conflict. Also, it has a wrapper class \textit{PlanEquivalenceClass} to evaluate the comparison of two plan objects based on (Veranstaltungsteil+ KursID).\\
+\begin{figure}[h!] 
+%\includegraphics{chapters/overview_planning/images/img2}
+\includegraphics[scale=.8]{chapters/overview_planning/images/fig03}
+\centering
+\caption{Package business\_logic} 
+\label{fig2}
+\end{figure}
+
+\textit{Tuple} is the utility class responsible for maintaining the relationship of two connected values, such as Sperrzeit (blocked slot) of a professor w.r.t day and time as a single entity.
+\begin{figure}[h!] 
+%\includegraphics{chapters/overview_planning/images/img4}
+\includegraphics[scale=.8]{chapters/overview_planning/images/fig05}
+\centering
+\caption{Package business\_logic.util} 
+\label{fig4} 
+\end{figure}
+
+
+
+\subsubsection{View as GUI Components}
+The local program uses UI components of two types that accept a domain object and manipulate it to display it. They may also provide single or bi-directional binding so that the model automatically updates  when the display  updates after drag-drop or any tab or menu click, along with edits in the UI. One of the types is the usage of the existing JavaFX’s GUI components such as \textit{Node, ComboBox, HBox, Pane or ScroolPane, Scenegraph, Dialog} and many more. New FXML files can be created in the FXML folder by using Scene Builder. Different components are added by drag and drop in SceneBuilder, and a resulting FXML file is generated. Alternatively, one can just copy and edit an existing .fxml file. \newline 
+The other types include an extension of these previously mentioned components in Java as customized components with additional features.\\
+\paragraph{ListCells} The classes in package "gui.cells" as shown in Figure \ref{fig5} are an extension of  \textit{ListCell}  by overriding the \underline{updateItem} to use these cells individually in the ListViews.
+A \textit{KursCell} will act as a custom list cell in a ListView that displays an object of the class Kurs, which holds information about a particular course. Overriding the \textit{updateItem} method is necessary because it will be called automatically by the JavaFX framework and will set the value in this cell wherever it is used.\\
+\begin{figure}[H] 
+%\includegraphics{chapters/overview_planning/images/img6}
+\includegraphics[scale=.8]{chapters/overview_planning/images/fig06}
+\centering
+\caption{Package gui.cells} 
+\label{fig5} 
+\end{figure}
+\paragraph{Dialogs} Different types of dialog and alerts  are required as a pop-up window for user input or information. Figure \ref{Figure6} illustrates the classes for customized dialogs and alerts required (add a new room to DB, view all available rooms as agenda, available rooms at a particular slot, window to manage conflicts, the dialog for an overview of an agenda cell, importing the local DB, block a room for a certain time slot, loading rooms from an external file, managing the conflict priorities, adding own conflict types). Extension of any feature to
+these pop-up windows/alerts/dialogs can be done by adding new Java files in this package that inherit from the class \textit{Dialog}.\\
+\begin{figure}[H] 
+%\includegraphics{chapters/overview_planning/images/img12}
+\includegraphics[scale=.8]{chapters/overview_planning/images/fig07}
+\centering
+\caption{Package gui.dialog} 
+\label{Figure6} 
+\end{figure}
+
+\paragraph{Widgets} As the  Figure \ref{Figure7} shows, the package "gui.widgets" has implementations of classes that are customized widgets such as \textit{AutoCompleteComboBox} to have auto-complete feature  in \textit{ComboBox} for better filtering  of list views, customized \textit{HBox} as \textit{CollapsiblePane} to collapse the panes on button press and hiding the list views that are not required. Additionally, custom tables include \textit{ConflictsTableView} and \textit{PlanTableView},  which extends \textit{TableView} for customized column headers and custom rows. \textit{ConflictsTableView} has an implementation related to showing the list of conflicts. The user can click on the rows to directly open the agenda of the corresponding room, professor, course, or one of the degree programs.
+Whereas \textit{PlanTableView} contains an implementation that is responsible for displaying unplanned courses (courses without
+a timeslot and a room).\\
+To add a new widget that can be rendered into any window/popup or pane, one can create a new Java file that extends, e.g., the class ScrollPane to create a custom scrollable pane. 
+
+\begin{figure}[h!] 
+%\includegraphics{chapters/overview_planning/images/img14}
+\includegraphics[scale=.8]{chapters/overview_planning/images/fig08}
+\centering
+\caption{Package gui.widgets} 
+\label{Figure7} 
+\end{figure}
+%\textit{DraggingTabPaneSupport} creates a handler to drag and drop panes if both the panes are handed to the method \underline{addSupport}. 
+Also, the class \textit{AgendaPaneAllAvialabeRoms} extends \textit{BorderPane} to have a pane that can be set in any of the custom dialogs, in this case, \textit{AllAvailableRoomsDialog}. Modifying this agenda pane or adding any new property will be done in this class.\\
+
+\paragraph{Agenda} The classes in "gui.widgets.agenda" in Figure \ref{Figure8} hold a collection of UI components and lay them out in groups or subgroups. The view is responsible for accepting the domain object to work with and binding/wiring up all the necessary UI components.\\
+\begin{figure}[h!] 
+%\includegraphics{chapters/overview_planning/images/img15}
+\includegraphics[scale=.8]{chapters/overview_planning/images/fig09}
+\centering
+\caption{Package gui.widgets.Agenda} 
+\label{Figure8} 
+\end{figure}
+The \textit{AgnedaPane} is \textit{BorderPane} mainly uses two \textit{GridPanes} \underline{agenda} and \underline{dragDrop}. The \underline{agenda} is used to visualize all plan objects and conflicts, whereas \underline{dragDrop} is used to create the ability of drag and drop.\\
+The visualization of the plan objects is organized as follows:
+\begin{itemize}
+\item If there is only one plan object in the agenda for a timeslot, then just a \textit{PlanCell} managed by \textit{PlanCellController} is created. 
+\item If multiple plan objects exist for a timeslot, then a \textit{MultiSlot} object is created.
+\end{itemize}
+Drag and Drop works as follows: 
+\begin{itemize}
+\item Each \textit{PlanCell} has \textit{dragDetected} and \textit{dragDone} handlers to function as a source of the drag and drop. Each cell of dragDrop is filled with a \textit{DragTarget} object. The \textit{DragTarget} object has \textit{dragEntered} and \textit{dragDropped} handlers to function as the target of the drag and drop. 
+\item Besides the \textit{Plan} instances, the agenda also visualized the available rooms. Between each column in the agenda, one column is filled with \textit{AvailableRoomPane} instances. So between each column in \textit{dragDrop} \underline{GridPane}, there is one column filled with \textit{DragTargetAvailableRoom} instances such that one can drag and drop into the available rooms list moving the plan to that particular room.
+\end{itemize}
+This package has different cells as a pane to be used within the grid of \textit{AgendaPane} to display the type of cell information such as \textit{EmptyCell}, \textit{Wunschzeit} and \textit{SperrzeitCell}. Whereas the \textit{MultiSlot} is a \textit{ScrollPane} to display more than one plan object within a shared or common time slot.\\
+
+\paragraph{FXML files} As illustrated in Figure \ref{Figure9}, the other GUI format uses existing JavaFX  components as FXML. GUI is divided into tabs, each with ribbon groups with ribbon items. The parent FXML is \textit{Main.fxml}, which includes \textit{planned\_courses.fxml, unplanned\_coures.fxml, manage\_ignored\_conflicts.fxml} and \textit{conflicts.fxml}.  Other categories of FXML files are ribbon and cell. The FXML files in "Cell" are the files for custom cells in the list view of conflicts and unplanned courses. Meanwhile, the FXML in "Ribbon" is responsible for the descent buttons of sub-functions in each tab. To extend the GUI and to add, e.g., a Ribbon tab, \textit{Main.fxml} needs to be updated. After including the Ribbon tab in \textit{main.fxml}, a function should be added to the \textit{MainController} class such that the event \textit{onAction} is bound to that function. For code maintenance, the tab can be included as a separate FXML file, which has its own ribbon group and respective component.\\
+\begin{figure}[H] 
+%\includegraphics{chapters/overview_planning/images/img17}
+\includegraphics[scale=.8]{chapters/overview_planning/images/fig10}
+\centering
+\caption{Directory fxml} 
+\label{Figure9} 
+\end{figure}
+The menu commands, buttons, context menus, and drag-drop bind to "Controller" classes, representing commands that can be issued. These are a separate layer of functionality that can inspect the View to determine the current context and the domain object being used and then issue commands to the model. Each FXML file has a controller associated with it with the same name as the FXML file. After adding a new FXML file, a controller associated with it should be created in the controllers' directory with the same name as the FXML file.
+
+\subsubsection{Controller}\label{controller}
+A controller class is a normal Java class that links the objects created from
+the FXML file with the data. To create a new controller, a new Java class named
+the same as the FXML file it is responsible for, followed by the "Controller" keyword,
+is created. The existing controllers can be extended like normal classes. For
+example, one can add a method to the existing \textit{MainController} that opens a dialog.
+This method can then be bound to a component of the controller's view, such as a button in the FXRibbon menu. Controller
+classes may also have some limited awareness of the domain model e.g. one
+might need to show or hide some UI components based on the model state, such
+as the tabs and buttons will be visible if any type of database is uploaded or initialized before planning. So, controllers handle this functionality related to the UI state.
+
+%The controller may also have some limited awareness of the domain model. E.g., you might need to show or hide some UI components based on model states such as the tabs and buttons that will be visible if any type of database is uploaded or initialized before planning. So, this functionality is related to the UI presentation handled by the controller.\\
+\begin{figure}[h!] 
+%\includegraphics{chapters/overview_planning/images/img7}
+\includegraphics[scale=.8]{chapters/overview_planning/images/fig11}
+\centering
+\caption{Package gui.controller} 
+\label{Figure10} 
+\end{figure}
+The package "gui.controller" in Figure \ref{Figure10} has an implementation of interfaces from package "gui.controller.interfaces" in Figure \ref{Figure11} along with other controllers. \\
+%\textit{IAgendaView} is responsible for binding the color  properties of agenda cells such as colors for part of courses, for major and minor conflicts, number of days to be displayed, start and end time of the days. //this class does nothing anymore? where are colors (e.g. for prios) managed
+\textit{IPlanController} is managing the plan.fxml. This controller is  the parent of other controllers such as \textit{ProfessorPlanController, RoomPlanController, StudiengangController, FilterPlanController, KursPlanController} and \textit{OhneRoomPlanController} which aims to update and display the data based on the type of the child class in an \textit{AgenaPane}. Also, the major properties and operations of the \textit{AgenaPane} are triggered by this controller, such as zoom in/out or
+full screen. However, the main task of these controllers is to hand data to the used AgendaPane and to trigger the update process on data changes of the used AgendaPane.
+\begin{figure}[H] 
+%\includegraphics{chapters/overview_planning/images/img10}
+\includegraphics[scale=.8]{chapters/overview_planning/images/fig12}
+\centering
+\caption{Package gui.controller.interfaces} 
+\label{Figure11} 
+\end{figure}
+For better usability and compliance with the requirements, the user can configure the type of planned courses. So the \textit{FilterPlanController} manages an \textit{AgendaPane}, which can be freely filtered by professors, rooms, degree programs, and courses. \\
+
+\textit{IAllAvailableRoomsController} is a copy of \textit{IPlanController} to handle the display
+of all available rooms in the form of an agenda with only basic operations like zoom in/out and full-screen.\newline
+\textit{ConflictsController} for \textit{conflicts.fxml} is handling the conflicts both ignored and un-ignored. \newline 
+\textit{PlannedCoursesController} is the controller for \textit{planned\_courses.fxml} and enables
+the user to open a tab showing the \textit{plan.fxml} view managed by one of the children of the \textit{IPlanController}. The opened tabs are also managed by the \textit{PlannedCoursesController}. It prevents opening tabs multiple times, i.e., prohibits, for example, the creation of multiple \textit{ProfessorPlanController} for the same professor, and offers the functionality to switch to the already opened tab if such a case occurs. \\
+As shown in Figure \ref{Figure10}, the package also has a class to manage the list of unplanned courses as \textit{unplanned\_courses.fxml} named \textit{UnplannedCoursesController}. This class focuses on managing the drag and drop from the \textit{AgendaPane} to the \textit{PlanTableView} and the other way around and, based on these operations, updating the data in the \textit{AgendaPanes} and the unplanned courses list. Also, for a better user experience, it handles the filtering functionality using a combo box.\\
+The stage or the main window that the user sees after running the application is the \textit{main.fxml}, and it is managed by \textit{MainController}. This class handles the disabling of all the tabs and buttons until any type of database is imported into the program. It provides the methods for bringing into action all the tabs and respective subgroups. In the home tab, this class facilitates methods to open/import/export the database, add a room to the database, switch to tabs, and, most importantly, undo/redo functionality. Nevertheless, it also oversees initializing views such as conflicts, unplanned courses, and collapsible panes.\\
+\begin{figure}[h!] 
+%\includegraphics{chapters/overview_planning/images/img8}
+\includegraphics[scale=.8]{chapters/overview_planning/images/fig13}
+\centering
+\caption{Package gui.controller.cell} 
+\label{Figure12} 
+\end{figure}
+The package in Figure \ref{Figure12} has two controllers, which are \textit{ConflictManageCellController} and \textit{UnplannedCoursesListCellController} for managing the custom cells \textit{conflict\_manage\_cell.fxml} and \textit{unplanned\_courses\_list\_cell.fxml} that can be used in ListViews. Both of these controllers offer methods to set the given item in the customized cell. \\
+\begin{figure}[h!] 
+%\includegraphics{chapters/overview_planning/images/img11}
+\includegraphics[scale=.8]{chapters/overview_planning/images/fig14}
+\centering
+\caption{Package gui.controller.ribbon} 
+\label{Figure13} 
+\end{figure}
+
+The other controller package is "gui.controller.ribbon" (Figure \ref{Figure13}), which contains classes w.r.t to ribbon group and subgroups in each tab in the FXRibbon menu. \textit{RibbonGroupPlannedCoursesController} provides methods to open popups to choose from a list of rooms, professors, degree programs(studiengang), courses, or filter tab for which a child of the \textit{IPlanController} class with the corresponding type
+will be created to show an AgendaPane. In addition, it offers functionality to
+hide/unhide the primary or secondary planned courses view.  The other ribbon group is for the conflicts tab, and the controller for this ribbon group is \textit{RibbonTabConflictsController}. It provides two main methods for un-ignoring the ignored conflicts and opening a popup(\textit{ConflictsManageDialog}) to manage all conflicts. The last ribbon group controller is of the settings tab, i.e., \textit{RibbonGroupSettingsController} bound to \textit{ribbon/settings.fxml}. It offers control methods to modify application appearance, and the settings will be written back using Preferences API. During initialization, all text properties are bound to text fields, color properties to the color picker, agenda properties to agenda and then finally saving these properties  using Preferences API.\\
+\begin{figure}[h!] 
+%\includegraphics{chapters/overview_planning/images/img9}
+\includegraphics[scale=.8]{chapters/overview_planning/images/fig15}
+\centering
+\caption{Package gui.controller.factory} 
+\label{Figure14} 
+\end{figure}
+The last and vital package in the controller category is "gui.controller.factory", which has only one class that is not a controller as seen in Figure \ref{Figure14} i.e., \textit{ControllerFactory}. This class intends to specify to the FXMLLoader how to instantiate the controllers such that they can use the implementation of the business
+logic interfaces \textit{IState} and \textit{IData}. %\textit{IWebProgram}.
+
+
+\subsubsection{Observer Design Pattern}
+%The Observer pattern captures the lion's share of the Model-View-Controller architecture that is very vital for the local programs. It specifies the communication between objects: observable and observers. An observable is an object which notifies observers about the changes in its state. \\
+%\begin{figure}[h!] 
+%\includegraphics[width=\textwidth]%%{chapters/overview_planning/images/img19}
+%{chapters/overview_planning/images/fig16}
+%\centering
+%\caption{Observer Design Pattern in MVC} 
+%\label{Figure19} 
+%\end{figure}
+
+\begin{figure}[h!] 
+%\includegraphics{chapters/overview_planning/images/img5}
+\includegraphics[scale=.8]{chapters/overview_planning/images/fig17}
+\centering
+\caption{Package business\_logic.interfaces.observer} 
+\label{Figure15} 
+\end{figure}
+%Separate observer structures are there to register and to be notified only if its specific data is updated, avoiding the whole data update for better efficiency. So all the classes that need to be notified about data changes need to implement \textit{IObservable} class. On the other hand, the classes that only need to observe the change in plan data implement the interface \textit{IPlanObserver} and the classes that are interested in observing the available rooms data implement \textit{IAvailableRoomObserver}.
+
+%\subsubsection{Observer structure}
+The local program uses an observer structure to update the GUI with the current data provided by the business logic such that data changes are propagated to the controller classes managing the GUI. In Figure \ref{fig_ocd}, one can see a simplified class diagram of the observer structure. For simplicity, the mechanism concerning rooms is visualized and explained here.
+The package is shown in Figure \ref{Figure15} "business\_logic.interfaces.observer" has \textit{IObservable} as observable and \textit{IPlanObserver} and \textit{IAvailableRoom} as observers. 
+\begin{figure}[h!] 
+%\includegraphics{chapters/overview_planning/images/img4}
+\includegraphics[width=\textwidth]{chapters/overview_planning/images/fig_ocd}
+\centering
+\caption{Observer Class Diagram} 
+\label{fig_ocd} 
+\end{figure}
+The interface \textit{IObservable} offers methods to register and deregister observers and notify the observers when there is a change in the data. The business logic class \textit{IData} extends \textit{IObservable}. A class that wants to observe an implementation of \textit{IData} has to implement the interface \textit{IPlanObserver}. It can then observe entities, such as a room, professor, degree program, or course.
+If the instance observes a room, it will be notified if there is a change in data concerning the observed room. For example, if a lecture was moved to the room or a conflict for a lecture in the room vanishes. This works analogously for observing professors, degree programs, or courses. The sequence diagram in Figure \ref{fig_osd} shows a representative control flow of the observer structure. Here a class named \textit{RoomPlanController} (which is an actual JavaFX controller class
+in the package \textit{de.upb.stulp.local\_program.gui.controller}) is registering itself to the observer structure to observe a \textit{Raum} instance „raum“ with room number „raumNr“. The sequence diagram visualizes the steps needed to propagate data changes to the class \textit{RoomPlanController}. For other observable entities,
+the process is analogously using the corresponding methods of \textit{IObservable} for the entity. \newpage 
+
+\begin{figure}[h!] 
+%\includegraphics{chapters/overview_planning/images/img4}
+\includegraphics[width=\textwidth]{chapters/overview_planning/images/fig_osd}
+\centering
+\caption{Observer Class Diagram} 
+\label{fig_osd} 
+\end{figure}
+
+\begin{enumerate}
+   \item \textit{RoomPlanController} registers at \textit{IData} implementation \textit{Data} to observe a particular room „raum“ with room number „raumNr“
+    \item User moves a course (for example a lecture or a tutorial) to the room raum“ with the room number „raumNr“
+    \item \textit{RoomPlanController} issues a move of the course to \textit{IState} implementation \textit{State}
+    \item \textit{State} marks the room „raum“ with the room number „raumNr“ and all other entities that need an update for example professors or degree programs as needs to be updated in \textit{Data}
+    \item \textit{State} triggers the simultaneous update process of all marked entities
+    \item \textit{Data} notifies \textit{RoomPlanController} and all other classes that observe one of the marked entities simultaneously
+    \item \textit{RoomPlanController} (and the other notified classes) acquire the current data by calling appropriate functions on \textit{Data}
+    \item \textit{RoomPlanController} deregisters if the observation should end
+\end{enumerate}
+
+By splitting up the observer structure by the entities that can be observed, only the parts of the GUI which are affected by the change in the data have to be updated. If one wants to display data by creating new GUI classes, the observer structure can be used to propagate changes to the GUI classes. An example class is \textit{RoomPlanController} that extends \textit{IPlanController} that implements \textit{IPlanObserver}. In the constructor, the class instance registers as an observer for the room \textit{raum} at data. The class contains the \textit{updatePlan} method, which will be called if a change in data affects the room \textit{raum}. \\
+
+In addition to \textit{IPlanObserver} there exists also an observer \textit{IAvailableRoomObserver}. A class implementing \textit{IAvailableRoomObserver} can also observe a class extending \textit{IObservable}. It gets notified about data related to free rooms for a timeslot. Furthermore there exists an observer \textit{IStaticDataObserver} which observers static data lists containing rooms, professors, degree programs and courses. This observer can also observe classes extending \textit{IObservable}.
+
+\subsection{Why MVC architecture}
+The model-view architecture is important because of the system's requirements, such as information hiding and managing application state for undo/redo operations. Also, this architecture facilitates ignored conflict handling, resetting the ignored conflicts, and feature expansion in the future if any new feature is to be added. Because the model or business logic is independent of views, adding new types of views to the system generally does not affect the model. As a result, the scope of change is confined to the view. Nevertheless, Figure \ref{MVC} depicts MVC provides logical separation as each of the components and connectors are described above.
+\begin{figure}[H] 
+\includegraphics[width=\textwidth]{chapters/overview_planning/images/img16}
+\centering
+\caption{Component Diagram} 
+\label{Figure16} 
+\end{figure}
+
+\subsection{Further Documentation}
+The Repository contains Javadocs including an overview of every contained class at \href{https://git.cs.uni-paderborn.de/stulp/sven_local_program/-/tree/main/javadoc}{https://git.cs.uni-paderborn.de/stulp/sven\_local\_program/-/tree/main/javadoc}.
+
+
+\newpage 
+
+
+% \subsection{Database interface including schemas of used database tables}
+% \label{sec:localschema}
+% The Local Program Database offers methods for predefined querying and manipulating data in the database, used for the local program planning tool, as it would not be possible by using the entity classes for the relations. \\
+% The database interface consists of \textit{PaulaImportDatabase}, \textit{WebServiceDatabaseImport} and \textit{LocalProgramDatabase}, which extends \textit{Database<LocalRecordFactory>}. Whereas \textit{LocalRecordFactory} provides methods for creating instances of the database records or Monika's schema, \textit{WebServiceDatabaseImport} interface is for importing data from the web service database into a new local program database, and \textit{LocalProgramDatabase} is the main interface of the database, being responsible for queries.\\
+% Each relation in the database has a corresponding abstract entity class that represents one record of that relation, e.g. Raum. These entity classes are used to specify filter conditions for querying and are returned as the result of a query. \\ \\
+% The Database Scheme is as follows:\\ \\
+% \textbf{ConflictPriorities} (\underline{ConflictType}, Priority) \\
+% \textbf{CustomConflict} (\underline{ConflictType}, Query, Active) \\
+% \textbf{Kurs} (\underline{KursID}, Kursname, KursnameEN, Sprache)\\
+% \textbf{Pflicht} (\underline{KursID, Veranstaltungsteil, \textit{StudiengangsID}}, Pflichtfach, ALternativgruppe)\\
+% \textbf{Professor }(\underline{ProfID}, Name, Fakultaet)\\
+% \textbf{Raum} (\underline{Raumnr}, Gebaeude, Sitzplatzzahl, Prioritaet)\\
+% \textbf{Studiengaenge} (\underline{StudiengangsID}, Hauptfach, Nebenfach, Pruefungsordnung, Semester)\\
+% \textbf{IgnoredConflict} (\underline{\textit{KursID1, KursID2, Veranstaltungsteil1, Veranstaltungsteil2}},\linebreak \underline{Type, Heavy, StudiengangsID})\\
+% \textbf{Plan }(\underline{KursID, Veranstaltungsteil}, Tag, Uhrzeit, Dauer, \underline{ProfID}, Raumnnr, Veranstaltungsart, Wunschzeit, Hoererzahl, Bemerkung, Zweiwoechentlich, Startwoche, Tafel, Beamer, Fenster, Ort, SonstigesRaumplanung, SonstigesZeitplanung, \underline{Fremdkurs}) \\
+% \textbf{Timeslot} (\underline{Timeslot}, Weekday, Time, Duration).
+% \begin{landscape}
+% \textbf{Sample Data:}
+% \begin{table}[H]
+% \begin{tabular}{|l|l|}
+% \hline
+% ConflictType        & Priority  \\ \hline
+% Raum                & 1  \\ \hline
+% Professor           & 1 \\ \hline
+% StudiengangLeicht   & 2 \\ \hline
+% StudiengangSchwer   & 1 \\ \hline
+% \end{tabular}
+% \caption{ConflictPriorities}
+% \end{table}
+
+% \begin{table}[H]
+% \begin{tabular}{|l|l|l|}
+% \hline
+% ConflictType    & Query                                                                                     & Active \\ \hline
+% WunschOrt       & SELECT * FROM Plan WHERE Raumnr NOT LIKE 'F\%' AND Ort=1 AND Raumnr NOT LIKE 'kein Raum'  & 1  \\ \hline
+% \end{tabular}
+% \caption{CustomConflicts}
+% \end{table}
+
+% \begin{table}[H]
+% \begin{tabular}{|l|l|l|l|}
+% \hline
+% KursID & Kursname                                & KursnameEN                              & Sprache  \\ \hline
+% ES-1   & Eingebettete Systeme                    & Embedded Systems                        & Deutsch  \\ \hline
+% SW-1   & Semantic Web(in English)                & Semantic Web(in English)                & Englisch \\ \hline
+% SSE-1  & Secure Software Engineering(in English) & Secure Software Engineering(in English) & Englisch \\ \hline
+% S-5    & Seminar: Local Algorithms(in English)   & Seminar: Local Algorithms (in English)  & Deutsch \\ \hline
+% \end{tabular}
+% \caption{Kurs}
+% \end{table}
+
+% \begin{table}[H]
+% \begin{tabular}{|l|l|l|l|l|}
+% \hline
+% KursID & Veranstaltungsteil & StudiengangsID & Pflichtfach & Alternativgruppe \\ \hline
+% DBS-2  & 1                  & InfoO-2BPO4    & Ja          & -                \\ \hline
+% DBS-2  & 1                  & WirO-4BPO5     & Ja          & -                \\ \hline
+% DBS-2  & 2.1                & InfoO-4BPO3    & Nein        & ÜB               \\ \hline
+% DuA-1  & 3                  & LehH-4BPO2017  & Ja          & -                \\ \hline
+% DuA-1  & 3                  & WirO-4BPO5     & Ja          & -                \\ \hline
+% DuA-1  & 4.1                & InfoO-2BPO3    & Nein        & ÜB    			   \\ \hline          
+% \end{tabular}
+% \caption{Pflicht}
+% \end{table}
+
+% \begin{table}[H]
+% \centering
+% \begin{tabular}{|l|l|l|l|}
+% \hline
+% Raumnr  & Gebäude & Sitzplatzzahl & Prioritaet \\ \hline
+% O1      & O       & 120           & 1         \\ \hline
+% O1 130  & O       & 60            & 1         \\ \hline
+% F0 530  & F       & 50            & 1         \\ \hline
+% SP2     & SP      & 150           & 0         \\ \hline
+% P5 2.03 & P       & 55            & 0         \\ \hline
+% G       & G       & 200           & 1         \\ \hline
+% F1 110  & F       & 50            & 1         \\ \hline
+% \end{tabular}
+% \caption{Raum}
+% \end{table}
+
+% \begin{table}[h!]
+% \begin{tabular}{|l|l|l|l|l|l|l|}
+% \hline
+% KursID1 & KursID2 & Veranstaltungsteil1 & Veranstaltungsteil2 & Type & Heavy & StudiengangsID \\ \hline
+% MOD-1    & MOD-1   & 3.1                 & 3.10                & PROFESSOR\_CONFLICT   & 1     &                \\ \hline
+% WK 1-1   & WK 1-1  & 3.14                & 3.15                & PROFESSOR\_CONFLICT   & 1     &                \\ \hline
+% TH1-1    & TH1-1   & 2.1                 & 3.2                 & PROFESSOR\_CONFLICT   & 1     &                \\ \hline
+% SemAlg-1 & TH1-1   & 1                   & 3.7                 & STUDIENGANG\_CONFLICT & 0     & MatMas-5BPO17  \\ \hline
+% FT-1     & GdWÜ-1  & 1                   & 2.1                 & STUDIENGANG\_CONFLICT & 0     & MatWir-3BPO17  \\ \hline
+% \end{tabular}
+% \caption{IgnoredConflict}
+% \end{table}
+
+% \begin{table}[h!]
+% \begin{tabular}{|l|l|l|l|l|}
+% \hline
+% StudiengangsID  & Hauptfach                      & Nebenfach    & Pruefungsordnung & Semester \\ \hline
+% InfoO-4BPO4-2   & Informatik Bachelor            & Ohne         & PO4             & 4        \\ \hline
+% InfM-6BPO4      & Informatik Bachelor            & Mathematik   & PO4             & 6        \\ \hline
+% InfM-5BPO4      & Informatik Bachelor            & Mathematik   & PO4             & 5        \\ \hline
+% CEB-1BPO2       & Computer Engineering Bachelor  & Ohne         & PO2             & 1        \\ \hline
+% LAInfo-2BPO2017 & Lehramt Informatik Bachelor    & Berufskolleg & PO2017          & 2        \\ \hline
+% WirO-1BPO5      & Wirtschaftsinformatik Bachelor & Ohne         & PO5             & 1        \\ \hline
+% \end{tabular}%
+% \caption{Studiengaenge}
+% \end{table}
+
+% \begin{table}[h!]
+% \centering
+% \begin{tabular}{|l|l|l|}
+% \hline
+% ProfID   & Name             & Fakultaet \\ \hline
+% N.N.     & N.N.             & -        \\ \hline
+% lettmann & Theodor Lettmann & EIM      \\ \hline
+% drsommer & Christoph Sommer & EIM      \\ \hline
+% bengs    & Viktor Bengs     & EIM      \\ \hline 
+% \end{tabular}%
+% \caption{Professor}
+% \end{table}
+
+% \pagebreak
+% \newpage
+ 
+% % \textbf{6. Plan}
+% \begin{table}[h!]
+% \centering
+% \begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|l|}
+% \hline
+% KursID          & \multicolumn{1}{|p{2cm}|}{\centering Veranstal- \\ tungsteil} & Tag        & \multicolumn{1}{|p{0.8cm}|}{\centering Uhr- \\ zeit} & Dauer & ProfID   & Raumnr  & \multicolumn{1}{|p{2cm}|}{\centering Veranstal- \\ tungsart} & Wunschzeit  & \multicolumn{1}{|p{1.1cm}|}{\centering Hörer- \\ zahl} & Bemerkung & \multicolumn{1}{|p{2cm}|}{\centering Zwei- \\ woechentlich} & \multicolumn{1}{|p{1.2cm}|}{\centering Start- \\ woche} & Tafel & Beamer & Fenster & Ort & \multicolumn{1}{|p{2cm}|}{\centering Sonstiges- \\ Zeitplanung} & \multicolumn{1}{|p{1.8cm}|}{\centering Veranstal- \\ tungsteil} & \multicolumn{1}{|p{1.3cm}|}{\centering Fremd- \\ kurs} \\ \hline
+% OS:-7                                & 1 & Mittwoch   & 16 & 2 & fmadh    & F 0 530 & Seminar       & {[}12{]} & 50 &   & 0 & 1 & 1 & 1 & 0 & 1 & wieder F0.530 nehmen, wenn möglich & Das Seminar ist ein Filmseminar. & 0 \\ \hline
+% EdWvL-1                              & 1 & Montag     &    & 2 & csce     & O 1 232 & Projektgruppe & {[}{]}   & 15 &   & 0 & 1 & 0 & 1 & 0 & 2 & kein Raum                          &                                  & 0 \\ \hline
+% CA-2                                 & 1   & Donnerstag & 14 & 3 & henningw & F 1 110 & Vorlesung     & 11,12    &    &   & 0 & 1 & 0 & 0 & 0 & 3 & Zukunftsmeile                      &                                  & 0 \\ \hline
+% CA-2                                 & 2.1 & Mittwoch   & 11 & 2 & N.N.     & F 1 110 & Übung         & {[}{]}   &    &   & 0 & 1 & 0 & 0 & 0 & 3 &                                    &                                  & 0 \\ \hline
+% SPERRJun.-Prof.Dr.ChrSomMontag08:005 & 0 & Montag     & 8  & 5 & drsommer & -       & Sperrzeit     &          &    & - & 0 & 0 &   & 0 & 0 & 0 &                                    &                                  & 0 \\ \hline
+% \end{tabular}
+% \caption{Plan}
+% \end{table}
+
+% \begin{table}[H]
+% \begin{tabular}{|l|l|l|l|}
+% \hline
+% Timeslot    & Weekday   & Time  & Duration  \\ \hline
+% 1           & Montag    & 8     & 3  \\ \hline
+% 2           & Montag    & 11    & 2 \\ \hline
+% 3           & Montag    & 13    & 3 \\ \hline
+% 4           & Montag    & 16    & 3 \\ \hline
+% \end{tabular}
+% \caption{Timeslot}
+% \end{table}
+
+% \end{landscape}
+
+\section{Practical maintenance of Local Planning Tool}
+This chapter focuses on the details of maintaining the tool practically and how to start and shut down, build, or compile after updating or extending the source code.
+\subsection{Currently used versions of web server, SQLite database}
+The web server is used and maintained independently. Refer to the p2tool description for more details. Section \ref{section1} describes information on the SQLite database. 
+%detail in chapter "overview\_database/local/local\_db".
+\subsection{Current location of source codes and executables of local planning tool's build files}
+These files are located in the GIT repository of the local program at \\ \textit{https://git.cs.uni-paderborn.de/stulp/sven\_local\_program.}
+\subsection{How to start and shutdown the tool}
+It is a very simple and straightforward process, i.e., double-click on the built jar to start and click on the close icon to close. 
+
+\subsection{use the tool on Apple ARM computers}
+It is important to note that a designated version needs to be compiled if it is supposed to be used on ARM architectures. To run the local program on an Apple M1 or newer CPU, it must be compiled on a platform with the same CPU architecture (ARM).
+
+\subsection{How to generate, install, start, and run a new version of the local planning tool after changing source code}
+After making changes in the source code of the local tool and saving those changes, the source code needs to be compiled. The \textit{maven} commands to build the local program are "mvn clean compile install". Or by right-clicking the project and then selecting \textit{Run As} then click \textit{"maven install"}. If opened in an IDE (e.g., IntelliJ), maven is accessible at the right border, and the maven goals can be executed from there.
+
+\subsection{How does (or doesn’t) your software interoperate with the software generated by Jan-Philipp, Nils, and Monika}
+The database schema is almost the same as the one used by Monika and Jan-Phillip's tools. 
+Additional tables are used to transfer timeslot information from the p2tool to the local planning tool (database table: Timeslot). 
+Furthermore, umlauts were removed from table and column names, making it more error-resistant when switching between development platforms. \\
+It is not recommended to switch in the planning process between the local planning tool and Monika’s tool since Monika’s tool can introduce some undocumented database entries that the local program database can not process.
+

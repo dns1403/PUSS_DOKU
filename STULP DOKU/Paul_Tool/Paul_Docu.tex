@@ -1,0 +1,740 @@
+\documentclass{article}
+\usepackage[ngerman]{babel}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{xcolor}
+\usepackage{adjustbox}
+\usepackage{listings}
+\usepackage{dirtree}
+
+\input{./config}
+
+
+\title{Paul Tool-Entwickler}
+\author{Projektgruppe STULP \\ Alessio, Alexander, Daniel, Daniel, Niklas, Paul}
+\date{\today}
+
+\geometry{
+  a4paper,
+  top=3cm,
+  bottom=3cm,
+  left=2.5cm,
+  right=2.5cm,
+}
+
+% Increase spacing between lines
+\linespread{1.2}
+
+% Remove indentations but increase line spacing between paragraphs
+\setlength\parindent{0pt}
+%\setlength\parskip{0.6 \baselineskip}
+
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+
+\section{Inbetriebnahme unter Mac} \label{Mac}
+Da die Inbetriebnahme des Tools auf modernen Mac-Systemen wie dem M1 Mac mit dem Arm-Befehlssatz nicht trivial ist, folgt hier eine Schritt-für-Schritt-Anleitung, wie das Tool auf einem solchen System in Betrieb genommen werden kann. Das Tool wurde mit Java 21 getestet.
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{Dokumentation//Paul_Tool//img//Java.png}
+    \caption{Empfohlene Java-Version}
+    \label{fig:benutzer1}
+\end{figure}
+\paragraph{Gradle}
+Als Building Tool wird Gradle verwendet. Da die ursprüngliche Version von Gradle Java 21 nicht unterstützt, muss Gradle auf Version 8.4 oder höher umgestellt werden. Dies kann durch Bearbeiten der Datei gradle-wrapper.properties erreicht werden. Ein Beispiel für eine gültige Datei sieht wie folgt aus:
+\begin{verbatim}
+distributionBase=GRADLE_USER_HOME
+distributionPath=wrapper/dists
+distributionUrl=https://services.gradle.org/distributions/gradle-8.4-all.zip
+zipStoreBase=GRADLE_USER_HOME
+zipStorePath=wrapper/dists
+\end{verbatim} 
+Auch in der Datei build.gradle müssen Änderungen vorgenommen werden, da die alte Syntax von Gradle 8.4 nicht mehr akzeptiert wird. So muss z.B. das Schlüsselwort \texttt{compile group} entfernt und durch das moderne Äquivalent \texttt{implementation} ersetzt werden. Ein Beispiel für eine kompatible build.gradle Datei, die diese und die im folgenden beschriebenen Änderungen berücksichtigt folgt.
+
+\begin{verbatim}
+plugins {
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+tasks.withType(Jar).configureEach {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+repositories {
+    mavenCentral() 
+}
+
+dependencies {
+    implementation "org.openjfx:javafx-base:21"
+    implementation "org.openjfx:javafx-controls:21"
+    implementation "org.openjfx:javafx-fxml:21"
+    implementation "org.openjfx:javafx-media:21"
+    implementation "org.openjfx:javafx-web:21"
+    implementation 'commons-io:commons-io:2.6'
+    implementation 'org.xerial:sqlite-jdbc:3.47.2.0'
+    implementation 'com.j256.ormlite:ormlite-core:4.23'
+    implementation 'com.j256.ormlite:ormlite-jdbc:4.48'
+    implementation 'org.apache.commons:commons-lang3:3.9'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.9'
+    implementation 'com.mashape.unirest:unirest-java:1.4.9'
+    implementation 'org.controlsfx:controlsfx:11.0.0'
+    implementation 'org.jsoup:jsoup:1.12.1'
+    testImplementation 'junit:junit:4.12'
+}
+
+javafx {
+    version = "21"
+    modules = [ 'javafx.controls', 'javafx.fxml', 'javafx.media', 'javafx.web' ]
+}
+
+mainClassName = 'paulatool.Main'
+jar {
+    manifest {
+        attributes 'Main-Class': 'paulatool.Main'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+\end{verbatim}
+\paragraph{JavaFX}
+Zur Implementierung der Benutzeroberfläche verwendet das Tool die JavaFX-Bibliothek. Da die vom Tool zunächst verwendete JavaFX-Version 12 die neuen Mac-Systeme nicht unterstützt und dort zu Fehlern führt, war ein Update auf die Version 21 notwendig. Da JavaFX jedoch weitestgehend abwärtskompatibel ist, konnte der alte Code ohne relevante Änderungen mit der neuen Version betrieben werden.
+\paragraph{sqlite-jbdc}
+Die für den Datenbankzugriff verwendete Bibliothek sqlite-jdbc weist ebenfalls Kompatibilitätsprobleme auf. Daher war ein Update von Version 3.38.1 auf 3.47.2 notwendig. Die neue Version bietet volle Unterstützung für die ARM-Architektur.
+
+
+
+\section{Implementierung}
+Da wir dem Tool keine neuen Technologien hinzugefügt haben, haben wir die folgenden Teile aus der Bachelorarbeit von Jan-Philipp Hampe kopiert und wo nötig aktualisiert.
+
+
+\paragraph{Entwicklungsumgebung}
+ Als Entwicklungsumgebung wurde Eclipse IDE for Java EE (Enterprise Edition) in der Version 4.13 verwendet. Eclipse ist ein plattformübergreifendes Werkzeug, das die Entwicklung von Java-Anwendungen vereinfacht. In Eclipse können, ähnlich wie in Gradle, Projekte erstellt und verwaltet werden, so dass dem Entwickler z.B. der herkömmliche Kompilierungsprozess über die Kommandozeile (javac *.java) abgenommen wird. In diesem Projekt wird der Build-Prozess jedoch bereits von Gradle übernommen, so dass Eclipse hier größtenteils nur als Editor verwendet wird. Es ist auch möglich, Gradle-Projekte in Eclipse zu importieren, so dass Eclipse die Aufgaben von build, jar, etc. ausführt.
+
+\paragraph{Gradle}
+Gradle ist ein weit verbreitetes Werkzeug zum Erstellen, Verwalten und Kompilieren von Java-Projekten. Gradle unterstützt den Entwickler unter anderem auch beim Hinzufügen von Bibliotheken und beim Erstellen eines ausführbaren JAR-Archivs. Im Gegensatz zu z.B. Eclipse wird Gradle komplett über die Kommandozeile gesteuert und hat keine grafische Oberfläche. Sobald Gradle installiert ist, kann mit dem Befehl gradle init ein neues Projekt angelegt werden. Das Tool erzeugt dann unter anderem die Datei build.gradle. In dieser Datei wird der Build-Prozess deklarativ in der Sprache Groovy beschrieben. Die einzelnen Schritte des Build-Prozesses werden in sogenannten Tasks festgehalten. Ein Task beschreibt eine Aufgabe, die von Gradle ausgeführt werden kann, z.B. das Kompilieren von Java-Code und das Sammeln in einem JAR-Archiv, und ist im entferntesten Sinne mit einer Java-Klasse vergleichbar.
+
+\paragraph{Java Database Connectivity}
+Da wir dem Tool keine neuen Technologien hinzugefügt haben, haben wir die folgenden Teile aus der Bachelorarbeit von Jan-Philipp Hampe kopiert und gegebenenfalls aktualisiert.Die Veranstaltungsinformationen werden in einer relationalen Datenbank gespeichert. Eine einfache Möglichkeit, Java-Datenbanken zu lesen und zu schreiben, ist die Java Database Connectivity (kurz JDBC) Bibliothek. JDBC bietet eine Schnittstelle, die die Eigenheiten und Unterschiede verschiedener Datenbankmanagementsysteme abstrahiert. Der größte Vorteil von JDBC besteht darin, dass Datenbanktypen untereinander ausgetauscht werden können, ohne dass der Programmcode geändert werden muss. Stattdessen muss nur der Treiber ausgetauscht werden. Theoretisch wäre es sogar möglich, die Datenbankinformationen über einen MySQL-Server abzurufen, so dass keine Datenbankdatei vom Anwender heruntergeladen und eingelesen werden muss. 
+ \paragraph{ORMLite}
+ Das Lesen der Datenbank wird durch JDBC bereits stark vereinfacht, da die interne Logik des Datenbankmanagementsystems auf einfache SQL-Abfragen reduziert wird. Das Einlesen der Daten für den Entwickler kann jedoch noch weiter vereinfacht werden, z.B. durch das Konzept des Object Relational Mapping (ORM). ORM bezeichnet die Abbildung von Werten einer Datenbanktabelle auf die Variablen eines Objekts in einer objektorientierten Programmiersprache. ORMLite ist eine Bibliothek für Java, die objektrelationales Mapping auf Basis der JDBC-Schnittstelle ermöglicht. ORMLite wird dazu zwischen das Anwendungsprogramm und die JDBC-Schnittstelle geschaltet. Bei Abfragen, wie z.B. das Einlesen aller Events, kümmert sich ORMLite darum, die entsprechende SQL-Abfrage zu erstellen und an die JDBC-Schnittstelle zu senden.Das ResultSet wird dann von ORMLite gelesen und die Werte des ResultSets werden von Reflection in die entsprechenden Klassen geparst. Die resultierenden Objekte werden dann an die Anwendung zurückgegeben.
+
+
+\paragraph{JavaFX}
+Für die grafische Benutzeroberfläche wird JavaFX verwendet. JavaFX ist ein Framework ähnlich AWT\footnote{$https://de.wikipedia.org/wiki/Abstract_\Window\_Toolkit$} und Swing\footnote{$https://de.wikipedia.org/wiki/Swing\_(Java)$}. Ein großer Vorteil von JavaFX gegenüber Swing und AWT ist, dass die Benutzeroberflächen in XML-Dokumenten beschrieben werden können. Diese sogenannten FXML-Dokumente können mit Hilfe des Scene Builders5 über eine grafische Benutzeroberfläche erstellt werden. Der Scene Builder ermöglicht es, die grafischen Elemente der Anwendung per Drag \& Drop zusammenzustellen. Das FXML-Dokument kann dann zur Laufzeit geladen werden und das Framework erzeugt über Reflection die entsprechenden Objekte (z.B. Button, BorderPane, ...) wie im FXML-Dokument angegeben. Ein Nachteil bei der Verwendung von JavaFX ist allerdings, dass JavaFX ab Version 11 nicht mehr Bestandteil des Oracle Java Development Kit (JDK) ist. Als Alternative kann jedoch die Open Source Implementierung OpenJFX, wie im Abschnitt \ref{Mac} beschrieben, als Bibliothek hinzugefügt werden. Diese Bibliothek hat den zusätzlichen Vorteil, dass die Anwendung mit dem Open JDK auf Unix-Systemen kompatibel ist und nicht nur mit dem Oracle JDK bis Version 10.
+\section{Änderungen}
+Das Tool verwendet eine Standard Model View Controller Architektur, auftretende Bugs haben wir durch Änderungen am Model und Controller behoben, die View ist unverändert wie wir sie vorgefunden haben. Im Folgenden beschreiben wir die wichtigsten Änderungen, die wir am Tool vorgenommen haben. 
+\paragraph{SQL}
+Wir haben an verschiedenen Stellen Änderungen an den SQL-Anweisungen des Tools vorgenommen, zum einen wurden problematische Zeichen wie Ä,Ö entfernt. 
+Die Tabelle Studiengänge wurde umbenannt in Studiengaenge. In der Tabelle Studiengaenge wurde die Spalte Prüfungsordnung in Pruefungsordnung umbenannt. In der Tabelle Plan wurde die Spalte Übungsanzahl in Uebungsanzahl und die Tabelle Höreranzahl in Hoereranzahl umbenannt. In der Tabelle Professor haben wir die Spalte Fakultät in Fakultaet umbenannt. In der Tabelle Raum haben wir die Spalte Gebäude in Gebaeude und die Spalte Priorität in Prioritaet umbenannt. An einer Stelle haben wir auch die Semantik geändert, in der Datei \texttt{CoursesSearchController.java} wurde geändert, aus welchen Tabellen die Daten gelesen werden, wenn eine Datenbank im Tool initial eingelesen wird, so dass diese nun aus der Tabelle Module geladen werden und nicht wie bisher aus der Tabelle Vorlesungsplan. 
+
+\paragraph{Export}
+Da der Export der gefundenen Veranstaltungen nicht fehlerfrei funktionierte, haben wir die Klasse \texttt{ExportDatabase} neu geschrieben, wobei wir, wo immer möglich, Komponenten der alten Klasse als Bausteine verwendet haben. Wichtige Änderungen sind z.B., dass wir ein einheitliches Exportverfahren für Fremd- und Eigenveranstaltungen eingeführt haben, wo es vorher eine komplexe Fallunterscheidung für Fremd- und Eigenveranstaltungen gab. Außerdem wurden in der alten Version alle SQL-Abfragen zu Batches aggregiert und ausgeführt. Davon musste an einigen Stellen abgewichen werden, da es problematisch war, wenn einzelne Befehle im Batch Fehler verursachten und dadurch der gesamte Batch nicht geschrieben wurde.   
+
+\section{Known Issues}
+\paragraph{Räume}
+Die Suche nach Räumen über das Tool funktioniert derzeit nicht. Das Tool findet normalerweise keine Räume und wirft eine Nullpointer-Exception.
+\paragraph{Fehlende Studiengänge}
+Bei der Suche nach eigenen Studiengängen kommt es zu einem visuellen Fehler in der Liste der gefundenen Veranstaltungen, da bei diesen keine Studiengänge angezeigt werden, die Pflichttabelle mit den entsprechenden Daten beim Export aber korrekt gefüllt wird. 
+\paragraph{Tote Schaltflächen}
+Es gibt immer noch einige Schaltflächen in der Benutzeroberfläche, wie z.B. die STULP-Schaltfläche, die mit Funktionen verknüpft sind, die nicht funktionieren. Wir haben diese Schaltflächen vorerst nicht entfernt, da uns die Zeit gefehlt hat, uns mit den Funktionen der Benutzeroberfläche im Detail vertraut zu machen.
+Insbesondere Programm/Über, Programm/Benutzerhandbuch, STULP/Webprogrammdatenbank herunterladen, STULP/Planungswerkzeugdatenbank herunterladen funktionieren nicht.
+\paragraph{Semester}
+Im Dialog zur Auswahl des Semesters, aus dem die Studiengänge geladen werden sollen, kommt es gelegentlich zu einem Timeout. Leider ist dieser Fehler sehr schwer zu reproduzieren, da er selten und unregelmäßig auftritt.  
+
+\section{Klassen und ihre Funktionen}
+\begin{itemize}
+  \item \textbf{de.upb.stulp.paul.business\_logic}
+  \begin{itemize}
+    \item \textbf{IWebProgram}: Interface for operations involving the STULP WebProgram
+    \item \textbf{Tuple}: Class to present a tuple of connected values
+    \item \textbf{WebProgram}: Implementation of the IWebProgram interface using UNIREST (\url{http://kong.github.io/unirest-java/}) as a REST client
+  \end{itemize}
+  \item \textbf{de.upb.stulp.paul.gui.dialog}
+  \begin{itemize}
+    \item \textbf{FachbereichChooserDialog}: Dialog that lets the user choose their Fachbereich
+    \item \textbf{STULPDBChooserDialog}: Dialog that lets the user choose the database file
+    \item \textbf{WebLoginDialog}: Dialog that offers the user the possibility to authenticate to a STULP WebProgram backend.
+  \end{itemize}
+  \item \textbf{de.upb.stulp.paul.gui.widgets}
+  \begin{itemize}
+    \item \textbf{AutoCompleteComboBox}: A box for Dialogs with AutoComplete capabilities
+  \end{itemize}
+  \item \textbf{paulatool}
+  \begin{itemize}
+    \item \textbf{Constants}: Contains global, constant values which are used in different parts of the application.
+    \item \textbf{Main}: Main class. This should be run if you want to start the application in an IDE.
+    \item \textbf{PaulaTool}: The actual main class which loads the main scene of the application
+  \end{itemize}
+  \item \textbf{paulatool.controller}
+  \begin{itemize}
+    \item \textbf{AddDateController}: Controller responsible for creating/editing a Date for a Course. Other classes can implement the AddDateListener and listen for the created date. The values of the edited date will be changed directly.
+    \item \textbf{CourseEditController}: Controller responsible for editing the data of a course.
+    \item \textbf{CourseListController}: Controller responsible for displaying the list of courses as a TreeTableView. When a course has been selected it informs the CourseEditController which courses have been selected. The CourseEditController then tells this controller which courses have been deleted.
+    \item \textbf{CourseSearchController}: Controller responsible for searching a single course by name and inform its listeners of the course that has been found.
+    \item \textbf{CoursesSearchController}: Controller responsible for calculating the courses that have an intersection with our study plan and search these courses in PAUL.
+    \item \textbf{MainController}: Controller which holds a CourseListController and a RoomListController. Also receives the events of the menubar. This controller is loaded when the application starts.
+    \item \textbf{RoomEditController}: Controller responsible for editing the data of a room.
+    \item \textbf{RoomListController}: Controller responsible for displaying a list of rooms in a TableView.
+    \item \textbf{RoomSearchController}: Controller responsible for crawling and displaying rooms of our study path in PAUL.
+    \item \textbf{CourseEditController}: Controller class responsible for creating a Room object. Handles input and sends the created Room to the RoomListController.
+  \end{itemize}
+  \item \textbf{paulatool.database}
+  \begin{itemize}
+    \item \textbf{ExportDatabase}: Responsible for writing the Courses to a sqlite Database.
+    \item \textbf{ImportDatabase}: Creates and closes the input database connection and provides Data Access Objects (DAO) for the application.
+  \end{itemize}
+  \item \textbf{paulatool.model.paul}
+  \begin{itemize}
+    \item \textbf{Course}: Represents a course in PAUL. Contains a list of CourseDate and a list of tutorials and connected courses. Has an id, name, url, docent, a list of dates, and a list of tutorials and connected courses.
+    \item \textbf{CourseDate}: Represents a date of a course in PAUL. Has a room, instructor, the number of times it takes place during the semester, and the time it takes place.
+    \item \textbf{Room}: Represents a room found in PAUL or created by the planner himself. Has a room number, capacity, and a building.
+    \item \textbf{Semester}: Represents a Semester in PAUL. Has an id and a title.
+  \end{itemize}
+  \item \textbf{paulatool.model.planningtool}
+  \begin{itemize}
+    \item \textbf{PlanEntry}: Represents a plan entry in the input database. If this exists for a course, it means that the course is part of semester we plan for. Has a reference to the corresponding course.
+    \item \textbf{StudyPath}: Represents a study path in the input database. Identified by an id, a major, side major, semester, and a study path version.
+    \item \textbf{VLPTCourse}: Represents a course of the input database. Has an id, a name, tenant, and a list of modules of which this course is part of.
+    \item \textbf{VLPTModule}: Represents a module of the input database. Not called Module because of java.lang.Module. Has a course and a study path.
+  \end{itemize}
+  \item \textbf{paulatool.paul}
+  \begin{itemize}
+    \item \textbf{CourseDetail}: Responsible for loading and parsing the details and tutorials/connected courses of a URL found in CourseSearch. Example of an URL which can be parsed: \url{https://paul.uni-paderborn.de/scripts/mgrqispi.dll?APPNAME=CampusNet&PRGNAME=COURSEDETAILS&ARGUMENTS=-N000000000000001,-N000443,-N0,-N372015610247548,-N372015610258549,-N0,-N0,-N3,-AeYUKvjPuHQPurM7-mdooQZLuvdmvYomKYWiAQUc9Vz5YQgW6PIH9WoKExfmSWNy-4B7ZfoBF7-WBHqF9vfZyVgmTQUPAHqn6YQpH7fWEHZi94QBAOtNjWBmxOtZbQS5XQUHbWuH9OjeZP-mAVvZAxqPLQILKvMoCxoPsVfUl4qPzfooHffWTvYKevdRVvgRJeNWJH-V67QV9eNLpVNUxfgW0PgR6PWU3vBGKPYmsxU5HmqZA4gUxONDwVdwkWBWURfLXQjHA3YwIOYmUef56xDRleMl6WQPIvZotQDHJYfn9vDZ-WIojQfoAYqoW3SpKWzosOIe6QoLDRUHs7qGFWdWpYSoyWdAHRdUKcYRgrqWHPq5LmD50xoLJxM5VOBcNHd6Zxf9NOoiFcQLCvQU-PWWA3SLjYDmkRUUXQ-P5vfw5mY96mUPkQQHwRDGCWN5SPdP8xWPqQdHFfSU0OB7wHS58fBw7mYGhfoWNPzLEcuojYQLWVgWNvNmwcBWmejWJxjU7eDoacIWsmBKECQPFWN5kfDmfPgo8ffW6fSU0RD5jYIL-RMoPfuKScdNAHSLVeNU6HSHtcoHYWB5WefofPZ5vOzoMrMKFvY65PqWCPopk3YKQegLEOdGe7dRN3SW9PqPuYMn-OfosVMKEQq6oxfajCfDF3uPDRYcdmWoxRU5VVYHjH-UBRz96HombebZ5HY5lxDVZOZctWZRCmzfZHBf-PoHpPWi6VDWD3BUZcSKXOdmFQWoucDD9mgWpOURs}
+    \item \textbf{CourseSearch}: Responsible for searching a listof courses in PAUL.
+    \item \textbf{PaulAPI}: Can connect to and parse information of the PAUL website. (\url{http://paul.uni-paderborn.de})
+    \item \textbf{RoomCrawler}: Responsible for getting a list rooms from PAUL. Very similar to \mbox{CourseSearch}, but parses all the pages of the search result and not just the first one. At the end of the search it then adds the rooms of the dates of the courses to a list. To get all the computer science rooms it sends an empty search request to the PAUL server with only the faculty set to computer science.
+    \item \textbf{RoomDetail}: Similar to CourseDetail, but parses the information of multiple room URLs.
+  \end{itemize}
+  \item \textbf{paulatool.util}
+  \begin{itemize}
+    \item \textbf{AlertUtil}: Open a dialog which shows an error.
+    \item \textbf{SQLUtil}: Creates a string for a prepared sql list. Example for count = 3: (?, ?, ?).
+    \item \textbf{Util}: Open the url in the operation system browser.
+  \end{itemize}
+  \item \textbf{paulatool.view}
+  \begin{itemize}
+    \item \textbf{SearchItemTreeCell}: A cell used in CoursesSearchController. Sets the background color depending on whether a course has been found or not.
+  \end{itemize}
+\end{itemize}
+
+
+
+
+
+\section{Schnittstellenbeschreibung}
+
+\subsection{PAUL Import (Phase 4.a und 4.b)}
+
+Die PAUL-Import Anwendung ist in der Lage, (Fremd-) Veranstaltungen in PAUL zu suchen. Dafür wird zum einen das Wissen benötigt, welche Veranstaltungen im aktuellen Semester gehalten werden sollen, aber auch welche fremden Studiengänge Veranstaltungen aus dem Vorlesungsplan hören müssen. Diese Informationen werden  in Form einer \texttt{sqlite}-Datenbank zur Verfügung gestellt. Das Schema der Datenbank wird im Folgenden beschrieben. Dabei wird sich auf die benötigten Tabellen und die darin benötigten Felder beschränkt.
+Alle beschriebenen Fremdschlüssel in den Datenbanken sind nur theoretischer Natur, aber nicht praktisch im Datenbankschema enthalten.
+
+\subsubsection{Eingabe}
+
+\paragraph{Kursnamen}
+
+Die Tabelle \textit{Kursnamen} enthält allgemeine Informationen zu allen Veranstaltungen, wie z.B. Name und Fachbereich.
+
+\begin{center}
+	\begin{tabular}{|| c | c | c ||}
+		\hline
+		\underline{KursID} & \underline{Kursname} & \underline{Fachbereich} \\
+		\hline
+		DuA-1 &	Datenstrukturen und Algorithmen	& Informatik \\
+		\hline
+		SWE-1 &	Software Engineering & Informatik \\
+		\hline
+		ANA2-1 & Analysis 2 & Mathematik \\
+		\hline
+		SIT-2 & Signaltheorie & Elektrotechnik \\
+		\hline
+	\end{tabular}
+\end{center}
+
+\begin{itemize}
+	\item \underline{KursID} ist Primärschlüssel, hat den Datentyp \texttt{TEXT} und identifiziert eine Veranstaltung in der Datenbank.
+	\item \underline{Kursname} hat den Datentyp \texttt{TEXT} und ordnet der \underline{KursID} einen Namen zu. Nach diesem Namen wird in PAUL gesucht.
+	\item \underline{Fachbereich} hat den Datentyp \texttt{TEXT} und gibt an aus welchem Fachbereich die Veranstaltung stammt.
+\end{itemize}
+
+
+
+\paragraph{Vorlesungsplan}
+
+Die Tabelle \textit{Vorlesungsplan} wird dazu benötigt, um zu bestimmen, welche Informatik Veranstaltungen im aktuellen Semester (Winter oder Sommer) angeboten werden. Für diese Veranstaltungen kann ein Plan generiert werden.\\
+Bei der Bestimmung von Fremdveranstaltungen werden Überschneidungen mit diesen Veranstaltungen geprüft. Um genauer zu sein: Wenn eine Studierendengruppe \texttt{DuA-1} und \texttt{Veranstaltung X} im gleichen Semester hört, wird \texttt{Veranstaltung X} zu einer für den Planer relevanten Veranstaltung.\\
+
+\begin{adjustbox}{center}
+	\begin{tabular}{|| c | c | c | c | c ||}
+		\hline
+		\underline{KursID} & \underline{Veranstaltungsteil} & \underline{Veranstaltungsart} & \underline{ProfID} & \underline{Uebungsanzahl} \\
+		\hline
+		DuA-1 & 1 & Vorlesung & ProDr.ChrSch & 0 \\
+		\hline
+		DuA-1 & 2 & Ubung & N.N. & 16 \\
+		\hline
+		SWE-1 & 1 & Vorlesung & Dr.SteSau & 0 \\
+		\hline
+		SWE-1 & 2 & Übung & N.N. & 2 \\
+		\hline
+	\end{tabular}
+\end{adjustbox}
+
+\begin{itemize}
+	\item \underline{KursID} ist Fremdschlüssel auf \underline{KursID} in \textit{Kursnamen}.
+	\item \underline{Veranstaltungsteil} (V-Teil) hat den Datentyp \texttt{TEXT} und identifiziert die V-Teile einer Veranstaltung, z.B. hat \texttt{DuA-1} 2 V-Teile.
+	\item \underline{Veranstaltungsart} hat den Datentyp \texttt{TEXT} und bestimmt die Art des V-Teils, z.B. V-Teil 1 von \texttt{DuA-1} ist eine Vorlesung.
+	\item \underline{Dauer} hat den Datentyp \texttt{INTEGER} und gibt die Dauer des V-Teils in Stunden an.
+	\item \underline{ProfID} ist Fremdschlüssel auf \underline{ProfID} in Tabelle \textit{Professor} und hat den Datentyp \texttt{TEXT}. (Die Tabelle \textit{Professor} selbst wird bisher allerdings nicht benötigt.)
+	\item \underline{Übungsanzahl} hat den Datentyp \texttt{INTEGER} und gibt die Anzahl der Übungen in diesem Semester an. Bei der Veranstaltungssuche werden maximal \underline{Übungsanzahl} Übungen in PAUL gesucht.
+	
+\item Bei der Bestimmung der Fremdveranstaltungen wird lediglich die Spalte \underline{KursID} benötigt.
+\end{itemize}
+
+\paragraph{Veranstaltungen} Die Tabelle \textit{Veranstaltungen} wird benötigt, um die Dauer eines Eintrags in der Tabelle \textit{Vorlesungsplan} zu finden. Denn in Phase 4.a sollte als Dauer nicht der Wert, der in PAUL gefunden wurde, sondern die \textit{neue Dauer} der Veranstaltung in diesem Semester, gewählt werden.
+
+\begin{center}
+	\begin{tabular}{|| c | c | c ||}
+		\hline
+		\underline{KursID} & \underline{Veranstaltungsteil} & \underline{Dauer} \\
+		\hline
+		DuA-1 & 1 & 2 \\
+		\hline
+		DuA-1 & 2 & 1 \\
+		\hline
+		SWE-1 & 1 & 2 \\
+		\hline
+		SWE-1 & 2 & 1 \\
+		\hline
+	\end{tabular}
+\end{center}
+
+\begin{itemize}
+	\item \underline{KursID} und \underline{Veranstaltungsteil} sind Fremdschlüssel auf \textit{Vorlesungsplan}.
+	\item \underline{Dauer} hat den Datentyp \texttt{INTEGER} und gibt die Dauer des V-Teils an.
+\end{itemize}
+
+\paragraph{Studiengänge}
+
+Die Tabelle \textit{Studiengänge} enthält alle Informationen zu den Studiengängen. Ein einzelner Datensatz aus dieser Tabelle wird allerdings als eine Studierendengruppe interpretiert. Die Aggregation über alle Nebenfächer, Semester und Prüfungsordnungen zu einem Hauptfach, ergibt dann einen einzigen Studiengang. Diese Informationen werden benötigt, damit der Planer, für die Planung nicht relevante \textit{Studierendengruppen}, z.B. alte Prüfungsordnungen, ausschließen kann.\\
+
+\begin{adjustbox}{center}
+	\begin{tabular}{|| c | c | c | c | c ||}
+		\hline
+		\underline{StudiengangsID} & \underline{Hauptfach} & \underline{Nebenfach} & \underline{Semester} & \underline{Pruefungsordnung}\\
+		\hline
+		InfoO-2BPO4 & Informatik Bachelor & Ohne & 2 & 4 \\
+		\hline
+		InfM-4BPO4 & Informatik Bachelor & Mathematik & 4 & 4 \\
+		\hline
+		InfoETech-4BPO4 & Informatik Bachelor & Elektrotechnik & 4 & 4 \\
+		\hline
+	\end{tabular}
+\end{adjustbox}
+
+\begin{itemize}
+	\item \underline{StudiengangsID} ist Primärschlüssel, hat den Datentyp \texttt{TEXT} und identifiziert eine Studierendengruppe.
+	\item \underline{Hauptfach} hat den Datentyp \texttt{TEXT} und gibt das Hauptfach des Studiengangs an.
+	\item \underline{Nebenfach} hat den Datentyp \texttt{TEXT} und gibt das Nebenfach des Studiengangs an.
+	\item \underline{Semester} hat den Datentyp \texttt{INTEGER} und gibt das Semester an, in welchem sich die Studierendengruppe befindet.
+	\item \underline{Pruefungsordnung} hat den Datentyp \texttt{INTEGER} und gibt die Prüfungsordnungsversion des Studiengangs an.
+\end{itemize}
+
+\paragraph{Module}
+
+Die Tabelle \textit{Module} bestimmt, welche Studierendengruppe welche Veranstaltungen hören muss, indem sie jeweils eine StudiengangsID auf mehrere KursIDs abbildet. Dies ist eine sehr wichtige Tabelle für den PAUL Import, da durch sie die Fremdveranstaltungen bestimmt werden können.\\
+In den Beispieldaten, wären die Veranstaltungen mit den KursIDs \texttt{ANA2-1} (Analysis 2) und \texttt{SIT-1} (Signaltechnik) für den Planer relevante Veranstaltungen, da die Studierendengruppe \texttt{InfoMat-2BPO4} außerdem \texttt{SWE-1} (Vorlesungsplan) hört bzw. \texttt{InfoETech-4BPO4} außerdem \texttt{DuA-1} (Vorlesungsplan) hört.
+
+\begin{center}
+	\begin{tabular}{|| c | c ||}
+		\hline
+		\underline{StudiengangsID} & \underline{KursID} \\
+		InfoO-2BPO4 & DuA-1 \\
+		\hline
+		InfoO-2BPO4 & SWE-1 \\
+		\hline
+		InfoMat-2BPO4 & SWE-1 \\
+		\hline
+		InfoMat-2BPO4 & ANA2-1 \\
+		\hline
+		InfoETech-4BPO4 & DuA-1 \\
+		\hline
+		InfoETech-4BPO4 & SIT-1 \\
+		\hline
+	\end{tabular}
+\end{center}
+
+\begin{itemize}
+	\item \underline{StudiengangsID} ist Fremdschlüssel auf \underline{StudiengangsID} in \textit{Studiengänge}.
+	\item \underline{KursID} ist Fremdschlüssel auf \underline{KursID} in \textit{Kursnamen}.
+\end{itemize}
+
+
+
+\subsubsection{Ausgabe}
+
+Nachdem der Planer alle relevanten Veranstaltungen und Räume gefunden und bearbeitet hat, sollen diese an das Planungstool weitergegeben werden. Für die Weitergabe wird, wie auch bei der Eingabe, eine \texttt{sqlite}-Datenbank verwendet. Allgemein ähnelt das Schema dem internen Schema des lokalen Planungstools, so dass der Import für das Planungstool so einfach wie möglich ist. Das Schema wird im folgenden erläutert. Es gilt dabei jedoch zu beachten, dass für eigene Veranstaltungen (Phase 4.a) nur Einträge in der Tabelle \textit{Plan} existieren (die restlichen Tabellen enthalten keine Einträge für eigene Veranstaltungen), denn es wird davon ausgegangen, dass diese Werte bereits im lokalen Planungstool vorhanden sind. Die Einträge in der Tabelle \textit{Plan} überschreiben lediglich die Werte in der internen Datenbank des Planungstools.
+
+
+\paragraph{Kursnamen}
+
+Die Tabelle \textit{Kursnamen} enthält die Namen der Veranstaltungen, die in PAUL gefunden wurden oder vom Planer selbst erstellt wurden.\\
+
+\begin{adjustbox}{center}
+	\begin{tabular}{|| c | c | c | c ||}
+		\hline
+		\underline{KursID} & \underline{Kursname} & \underline{KursnameEN} & \underline{Sprache} \\
+		\hline
+		L.048.10701 & Signaltheorie & - & Deutsch \\
+		\hline
+		L.105.12120	& Analysis 2 & - & Deutsch \\
+		\hline
+		b12499e6-897d-4e03-924a-7a9bb76dc0cc & Mein Kurs & - & Deutsch \\
+		\hline
+	\end{tabular}
+\end{adjustbox}
+
+\begin{itemize}
+	\item \underline{KursID} ist Primärschlüssel und hat den Datentyp \texttt{TEXT}. Hierbei handelt es sich entweder um die Lehrveranstaltungsnummer aus PAUL oder eine automatisch generierte eindeutige ID, wenn die Veranstaltung vom Planer selbst erstellt wurde.
+	\item \underline{Kursname} hat den Datentyp \texttt{TEXT}.
+	\item \underline{KursnameEN} hat den Datentyp \texttt{TEXT}. In der aktuellen Version wird dieser Wert immer auf ,,-'' gesetzt. Es bleibt den zukünftigen Entwicklern frei, dieses Feld zu nutzen.
+	\item \underline{Sprache} hat den Datentyp \texttt{TEXT}. In der aktuellen Version wird dieser Wert immer auf "Deutsch" gesetzt. Es bleibt den zukünftigen Entwicklern, frei dieses Feld zu nutzen.
+\end{itemize}
+
+\paragraph{Plan}
+
+Die Tabelle \textit{Plan} enthält die Termine der Veranstaltungen. Der Plan beinhaltet eigene und fremde Veranstaltungen.\\
+
+\begin{adjustbox}{center}
+	\begin{tabular}{|| c | c | c | c | c | c | c | c | c ||}
+		\hline
+		\underline{KursID} & \underline{Veranstaltungsteil} & \underline{Tag} & \underline{Uhrzeit} & \underline{Dauer} & \underline{ProfID} & \underline{Raumnr} & \underline{Veranstaltungsart} & \underline{Fremdkurs}\\
+		\hline
+		L.048.10701 & 1 & Donnerstag & 9 & 1 & Prof. Peter Schreier & P 7 2.03 & Vorlesung & 1\\
+		\hline
+		L.048.10701 & 2.1 & Dienstag & 11 & 1 & Stefanie Horstmann & P 7 2.03 & Übung & 1 \\
+		\hline
+		L.048.10701 & 2.2 & Donnerstag & 7 & 2 & Stefanie Horstmann & P 7 2.03 & Übung & 1 \\
+		\hline
+		DuA-1 & 1 & Montag & 11 & 2 & ProDr.ChrSch & L 1 & Vorlesung & 0\\
+		\hline
+		DuA-1 & 2 & Freitag & 13 & 2 & ProDr.ChrSch & L 1 & Vorlesung & 0\\
+		\hline
+		DuA-1 & 4.1 & Montag & 9 & 2 & N.N. & D 1 303 & Übung  & 0\\
+		\hline
+	\end{tabular}
+\end{adjustbox}
+
+\begin{itemize}
+	\item \underline{KursID} ist Fremdschlüssel auf \underline{KursID} in Kursnamen.
+	\item \underline{Veranstaltungsteil} hat den Datentyp \texttt{TEXT}. Termine einer Veranstaltung werden durch ihren V-Teil identifiziert. Übungen werden durch x.y identifiziert, wobei x die Veranstaltungsnummer und y die Übungsnummer ist. Eine Veranstaltung könnte z.B. eine Vorlesung und zwei Übungen haben und hätte dementsprechend die V-Teile 1, 2.1 und 2.2.\\
+	Bei eigenen Veranstaltungen können Einträge für bestimmte V-Teile fehlen, wie es im Beispiel bei \texttt{DuA-1} für V-Teil 3 der Fall ist. Das ist der Fall, wenn ein Termin für den V-Teil in PAUL nicht gefunden wurde, wie es z.B. bei Zentralübungen oft der Fall ist oder wenn im Vorjahr weniger Übungen angeboten wurden.
+	\item \underline{KursID} und \underline{Veranstaltungsteil} zusammen bilden den Primärschlüssel.
+	\item \underline{Tag} hat den Datentyp \texttt{TEXT} und gibt den Wochentag des Termins an.
+	\item \underline{Uhrzeit} hat den Datentyp \texttt{INTEGER} und gibt den Beginn (Stunde des Tages) an.
+	\item \underline{Dauer} hat den Datentyp \texttt{INTEGER} und gibt die Dauer des Termins in Stunden an.
+	\item \underline{ProfID} ist Fremdschlüssel auf \underline{ProfID} in \textit{Professor}. Es identifiziert den/die ProfessorIn oder auch die Person, die den Termin hält. \textit{N.N.} ist ein besonderer Fall und bedeutet, dass der Termin von einem/einer MitarbeiterIn gehalten wird, dessen/deren Name unbekannt ist.
+	\item \underline{Raumnr} ist Fremdschlüssel auf \underline{Raumnr} in \textit{Raum} und hat den Datentyp \texttt{TEXT}. Es indentifiziert den Raum, in dem der Termin stattfindet.
+	\item \underline{Veranstaltungsart} hat den Datentyp \texttt{TEXT}. Mögliche Werte sind hier \textit{Vorlesung} und \textit{Übung}.
+	\item \underline{Fremdkurs} hat den Datentyp \texttt{INTEGER} und gibt an, ob es sich bei dem Eintrag um eine Fremdveranstaltung oder eigene Veranstaltung handelt. Mögliche Werte sind 1 und 0, wobei 1 bedeutet, dass es sich um eine Fremdveranstaltung handelt. Wenn es sich um eine eigene Veranstaltung handelt, gilt zu beachten, dass die Tabellen \textit{Kursnamen, Pflicht, Professor} keine Einträge für diese Veranstaltung enthalten, da davon ausgegangen wird, dass diese Werte bereits aus der Datenbank des WebServers eingelesen wurden.
+\end{itemize}
+
+\paragraph{Pflicht}
+
+Die Tabelle \textit{Pflicht} gibt an, welche Veranstaltungsteile einer Veranstaltung von welchem Studiengang gehört werden müssen.\\
+
+\begin{adjustbox}{center}
+	\begin{tabular}{|| c | c | c | c | c ||}
+		\hline
+		\underline{KursID} & \underline{Veranstaltungsteil} & \underline{StudiengangsID} & \underline{Pflichtfach} & \underline{Alternativgruppe} \\
+		\hline
+		L.048.10701 & 1 & InfoETech-4BPO3 & Nein & - \\
+		\hline
+		L.048.10701 & 1 & InfoETech-4BPO4 & Nein & - \\
+		\hline
+		L.048.10701 & 2.1 & InfoETech-4BPO3	& Nein & - \\
+		\hline
+		L.048.10701 & 2.1 & InfoETech-4BPO4	& Nein & - \\
+		\hline
+		L.048.10701 & 2.2 & InfoETech-4BPO3	& Nein & - \\
+		\hline
+		L.048.10701 & 2.2 & InfoETech-4BPO4	& Nein & - \\
+		\hline
+	\end{tabular}
+\end{adjustbox}
+
+\begin{itemize}
+	\item \underline{KursID} ist Fremdschlüssel auf \underline{KursID} in \textit{Kursnamen}.
+	\item \underline{Veranstaltungsteil} hat den Datentyp \texttt{TEXT}.
+	\item \underline{KursID} und \underline{Veranstaltungsteil} zusammen bilden einen Fremdschlüssel auf \underline{KursID} und \underline{Veranstaltungsteil} in \textit{Plan}.
+	\item \underline{StudiengangsID} ist Fremdschlüssel auf \underline{StudiengangsID} in \textit{Studiengänge}. Die Tabelle \textit{Studiengänge} ist nicht in der Ausgabe enthalten, sondern wird vom p2-Webtool geliefert.
+	\item \underline{Pflichtfach} hat den Datentyp \texttt{TEXT}. Mögliche Werte sind ,,Ja'' oder ,,Nein''. Da es sich bei den, in PAUL gesuchten, Veranstaltungen fast immer um Fremdveranstaltungen handelt, wird dieser Wert standardmäßig auf "Nein" gesetzt.
+	\item \underline{Alternativgruppe}  hat den Datentyp \texttt{TEXT} und wird lediglich aufgeführt, weil es im internen Datenbankschema des Planungstools vorkommt. Der Wert wird immer auf ,,-'' gesetzt.
+\end{itemize}
+
+\paragraph{Raum}
+
+Die \textit{Raum} Tabelle enthält eine Liste der Räume, für die der Planer planen möchte. Diese können aus PAUL stammen oder vom Planer selbst erstellt worden sein.
+
+\begin{center}
+	\begin{tabular}{|| c | c | c | c ||}
+		\hline
+		\underline{Raumnr} & \underline{Gebaeude} & \underline{Sitzplatzzahl} & \underline{Prio} \\
+		\hline
+		A 6 & A & 120 & 1 \\
+		\hline
+		C 1 & C & 200 & 0 \\
+		\hline
+	\end{tabular}
+\end{center}
+
+\begin{itemize}
+	\item \underline{Raumnr} ist Primärschlüssel und hat den Datentyp \texttt{TEXT}. Es handelt sich hierbei um die Raumnummer eines Raums an der Universität Paderborn.
+	\item \underline{Gebaeude} ist das Gebäude, in dem sich der Raum befindet. Dies ist üblicherweise der erste Großbuchstabe der Raumnummer. Der Datentyp ist \texttt{TEXT}.
+	\item \underline{Sitzplatzzahl} hat den Datentyp \texttt{INTEGER}. Es bestimmt die Anzahl der Sitze in dem Raum. Dieser Wert wird meistens vom Planer selbst eingetragen.
+	\item \underline{Prio} hat den Datentyp \texttt{INTEGER}. Mögliche Werte sind 1 oder 0. 1 bedeutet, dass der Raum für den Planer Priorität hat, also in der Liste der Räume vom Planungstool, vor Räumen ohne Priorität auftauchen soll. 0 bedeutet, dass der Raum keine Priorität hat.
+\end{itemize}
+
+\paragraph{Professor}
+
+Die Tabelle \textit{Professor} enthält die Namen und Fakultäten der Personen, die eine Veranstaltung halten, also insbesondere auch MitarbeiterInnen.
+
+\begin{center}
+	\begin{tabular}{|| c | c | c ||}
+		\hline
+		\underline{ProfID} & \underline{Name} & \underline{Fakultaet}  \\
+		\hline
+		Prof.Dr.PeterSchreier & Prof. Dr. Peter Schreier & - \\
+		\hline
+		StefanieHorstmann	& Stefanie Horstmann & - \\
+		\hline
+	\end{tabular}
+\end{center}
+
+\begin{itemize}
+	\item \underline{ProfID} ist Primärschlüssel und hat den Datentyp \texttt{TEXT}.
+	\item \underline{Name} hat den Datentyp \texttt{TEXT} und gibt den Namen der Person an.
+	\item \underline{Fakultaet} hat den Datentyp \texttt{TEXT}. Da es sich um Fremdveranstaltungen handelt und die Fakultät der Person in PAUL nicht aufgeführt wird, wird die Fakultät bisher standardmäßig auf \textit{-} bzw. unbekannt gesetzt, damit das Planungstool erkennt, dass es sich dabei um \textbf{nicht Informatik} Professor*innen handelt.
+\end{itemize}
+
+\newpage
+\subsection{Generierung der Modulhandbücher (Phase 1 und 2)}
+
+Im Folgenden wird das Datenbankschema der Modulhandbücher, bereitgestellt von Sebastian Porombka, beschrieben. Ziel ist es, die Daten dieses Schemas zu sammeln und in das Schema des WebServer einzubringen. Allgemein ist ein Modulhandbuch eines Studiengangs in der Datenbank ähnlich wie eine Baumstruktur aufgebaut. Der Wurzelknoten ist ein Studiengang, welcher genau eine Druckrubrik als Kinderknoten hat. Druckrubriken haben wiederum andere Druckrubriken und Module als Kinderknoten. Module haben Veranstaltungen als Kinderknoten. Veranstaltungen sind Blätterknoten und haben somit keine weiteren Kinder. Der Studiengang Elektrotechnik ist z.B. folgendermaßen aufgebaut:\\
+
+\dirtree{%
+.1 Bachelorstudiengang Elektrotechnik v6 (EBA v6).
+.2 {Bachelorstudiengang Elektrotechnik v6 (EBA v6) (Druckrubrik)} .
+.3 {Module im 1. Studienabschnitt des Bachelorstudiengangs (Druckrubrik)} .
+.4 {Gebiet Mathematische Grundlagen (Druckrubrik)} .
+.5 {Höhere Mathematik I (Druckrubrik)} .
+.6 {Höhere Mathematik I (ET) (Modul)} .
+.7 {Höhere Mathematik A für Elektrotechniker } .
+.7 {Höhere Mathematik B für Elektrotechniker } .
+.5 {Höhere Mathematik II (Druckrubrik)} .
+.6 {Höhere Mathematik II (ET) (Modul)} .
+.7 {Höhere Mathematik C für Elektrotechniker } .
+.5 {Stochastik (Druckrubrik)} .
+.6 {Stochastik für Ingenieure (Modul)} .
+.7 {Stochastik für Ingenieure } .
+.4 {Gebiet Elektrotechnische Grundlagen (Druckrubrik)} .
+.5 {Grundlagen der Elektrotechnik A (Druckrubrik)} .
+.6 {Grundlagen der Elektrotechnik A (Modul)} .
+.7 {Grundlagen der Elektrotechnik A } .
+.5 {Grundlagen der Elektrotechnik B (Druckrubrik)} .
+.6 {Grundlagen der Elektrotechnik B (Modul)} .
+.7 {Grundlagen der Elektrotechnik B } .
+.5 {Energietechnik (Druckrubrik)} .
+.6 {Energietechnik (Modul)} .
+.7 {Elektrische Energietechnik } .
+.5 {Messtechnik (Druckrubrik)} .
+.6 {Messtechnik (Modul)} .
+.7 {Messtechnik } .
+.5 {Feldtheorie (Druckrubrik)} .
+.6 {Feldtheorie (Modul)} .
+.7 {Feldtheorie } .
+.5 {...} .
+.4 {...} .
+}
+
+\subsubsection{Eingabeschema}
+
+\paragraph{Course}
+
+Die Tabelle \textit{Course} enthält allgemeine Informationen zu den Veranstaltungen in der Datenbank, wie z.B. den Namen der Veranstaltung.\\
+
+\begin{adjustbox}{center}
+	\begin{tabular}{|| c | c | c | c | c | c ||}
+		\hline
+		\underline{id} & \underline{name} & \underline{englishName} & \underline{type} & \underline{identifier} & \underline{tenantId}  \\
+		\hline
+		326eb761-... & Stochastik für Ingenieure & Probability for Engineers & 2V 2Ü, SS & L.048.10704 & 1b46a497-...\\
+		\hline
+		6d212b52-... & Technische Mechanik für Elektrotechniker & \texttt{null} & V2 Ü2, SS & L.104.13180 & 1cfeb123-...\\
+		\hline
+	\end{tabular}
+\end{adjustbox}
+
+
+\begin{itemize}
+	\item \underline{id} hat den Datentyp \texttt{TEXT} und ist Primärschlüssel einer Veranstaltung. \underline{id} wird auf \underline{KursID} in der Tabelle \textit{Kursnamen} des WebServers abgebildet.
+
+	\item \underline{name} hat den Datentyp \texttt{TEXT} und gibt den Namen der Veranstaltung an. \underline{name} wird auf \underline{Name} in der Tabelle \textit{Kursnamen} des WebServers abgebildet.
+	
+	\item \underline{englishName} hat den Datentyp \texttt{TEXT} und gibt den englischen Namen der Veranstaltung an. Falls kein englischer Name bekannt ist, ist dieses Feld \texttt{null}. Falls das Feld \underline{englishName} nicht \texttt{null} ist, wird es auf \underline{KursnameEN} in der Tabelle \textit{Kursnamen} des WebServers abgebildet, andernfalls wird \underline{name} auf \underline{KursnameEN} abgebildet.
+	
+	\item \underline{type} hat den Datentyp \texttt{TEXT}. Das Feld bestimmt, wie viele Veranstaltungsteile es gibt und wie lange diese dauern. Das Feld kann je nach Studiengang sehr unterschiedliche Werte annehmen. Die Länge der V-Teile kann beispielsweise vor bzw. nach dem Typ stehen oder es ist keine Länge angegeben (V2, 2V oder V). Die Länge des V-Teils wird durch einen regulären Ausdruck in \texttt{Java} eingelesen und dann auf \underline{Dauer} in der Tabelle \textit{Veranstaltungen} des WebServers abgebildet. Der Typ wird auf \underline{Veranstaltungsart} in der Tabelle \textit{Veranstaltungen} des WebServers wie folgt abgebildet:
+	 \begin{itemize}
+	 	\item \texttt{V, Vorlesung}: \texttt{Vorlesung}
+	 	\item \texttt{S, Seminar}: \texttt{Seminar}
+	 	\item \texttt{PS}: \texttt{Proseminar}
+	 	\item \texttt{R}: \texttt{Reading class}
+	 	\item \texttt{P, Prakt.}: \texttt{Praktikum}
+	 \end{itemize}
+ 	\underline{type} gibt außerdem an, in welchem Semester die Veranstaltung stattfindet (Sommer- oder Wintersemester).
+ 	
+ 	\item \underline{identifier} hat den Datentyp \texttt{TEXT} und gibt die Veranstaltungsnummer in PAUL an. Das Feld wird auf \underline{PaulNr} in der Tabelle \textit{Kursnamen} abgebildet.
+ 	
+ 	\item \underline{tenantId} hat den Datentyp \texttt{TEXT} und ist Fremdschlüssel auf \underline{id} in Tabelle \textit{Tenant}. Das Feld bestimmt die Fakultät, zu der die Veranstaltung gehört.
+\end{itemize}
+
+\paragraph{Module}
+
+Die Tabelle \textit{Module} enthält allgemeine Informationen zu den Modulen in der Datenbank, wie z.B. die Anzahl der ECTS Punkte.\\
+
+\begin{adjustbox}{center}
+	\begin{tabular}{|| c | c | c | c ||}
+		\hline
+		\underline{id} & \underline{description} & \underline{credits} & \underline{studiensemester}  \\
+		\hline
+		a849632f-... & Stochastik für Ingenieure & 5 & 4. Semester \\
+		\hline
+		8491c942-... & Technische Mechanik & 6 & 1.-3. Semester \\
+		\hline
+	\end{tabular}
+\end{adjustbox}
+
+\begin{itemize}
+	\item \underline{id} hat den Datentyp \texttt{TEXT} und ist Primärschlüssel eines Moduls.
+	\item \underline{description} hat den Datentyp \texttt{TEXT} und gibt den Namen des Moduls an. Das Feld wird auf \underline{Modulname} in der Tabelle \textit{Module} des WebServers abgebildet.
+	\item \underline{credits} hat den Datentyp \texttt{INTEGER} und gibt die Anzahl der ECTS Punkte dieses Moduls an. Das Feld wird auf \underline{ECTS} in der Tabelle \textit{Module} des WebServers abgebildet.
+	\item \underline{studiensemester} hat den Datentyp \texttt{TEXT}. Das Feld gibt eine Empfehlung der Semester an, in welchen die Veranstaltungen des Moduls gehört werden sollten. Die Werte des Feldes können sehr unterschiedlich dargestellt werden (1.+2. Semester, 1-3 Semester, 1.-3. Semester, 1./3. Semester, ...) und müssen dementsprechend erst geparsed werden.
+\end{itemize}
+
+\paragraph{Module\_Course}
+
+Die Tabelle \textit{Module\_Course} setzt Module und Veranstaltungen in Beziehung. Ein Modul kann dabei mehrere Veranstaltungen enthalten und eine Veranstaltung kann in mehreren Modulen enthalten sein (n zu n Beziehung).\\
+
+\begin{adjustbox}{center}
+	\begin{tabular}{|| c | c ||}
+		\hline
+		\underline{moduleId} & \underline{courseId} \\
+		\hline
+		a849632f-... & 326eb761-... \\
+		\hline
+		8491c942-... & 6d212b52-... \\
+		\hline
+	\end{tabular}
+\end{adjustbox}
+
+\begin{itemize}
+	\item \underline{moduleId} ist Fremdschlüssel auf \underline{id} in \textit{Module}.
+	\item \underline{courseId} ist Fremdschlüssel auf \underline{id} in \textit{Course}.
+	\item Für die Datenbank des WebServers ist es wichtig zu wissen, in welchem Semester eine Veranstaltung gehört werden sollte, da dort die Studiengänge in mehrere Studierendengruppen (eine Gruppe pro Semester) aufgeteilt werden. Einer Studierendengruppe wird dann eine Veranstaltung zugeordnet. Dieser Wert ist allerdings im Modulhandbuch nicht explizit angegeben und muss approximiert werden, durch die Felder \underline{type} in \textit{Course} und \underline{studiensemester} in \textit{Module}. Wenn also ein Modul z.B. ,,1. bis 3. Semester'' als \underline{studiensemester} und die Veranstaltung in \underline{type} ,,WS'' angegeben hat, sind die resultierenden Semester = 1 und 3 (ohne 2).
+\end{itemize}
+
+\paragraph{StudyPath}
+
+Die Tabelle \textit{StudyPath} enthält allgemeine Informationen zu den Studiengängen, die in der Datenbank modelliert sind, wie z.B. den Namen des Studiengangs.\\
+
+\begin{adjustbox}{center}
+	\begin{tabular}{|| c | c | c ||}
+		\hline
+		\underline{id} & \underline{name} & \underline{rootStudyPathStructuralElementId} \\
+		\hline
+		059ed1a9-... & Bachelorstudiengang Elektrotechnik v6 (EBA v6) & 4904e70f-...\\
+		\hline
+	\end{tabular}
+\end{adjustbox}
+
+\begin{itemize}
+	\item \underline{id} hat den Datentyp \texttt{TEXT} und ist Primärschlüssel eines Studiengangs.
+	\item \underline{name} hat den Datentyp \texttt{TEXT} und gibt den Namen des Studiengangs an. Das Feld wird auf \underline{Hauptfach} in der Tabelle \textit{Studiengänge} des WebServers abgebildet.
+	\item \underline{rootStudyPathStructuralElementId} hat den Datentyp \texttt{TEXT} und ist Fremdschlüssel auf \underline{id} in Tabelle \textit{StudyPathStructuralElement}. Das Feld gibt die Wurzel-Druckrubrik an, welche alle anderen Druckrubriken als Kinder enthält.
+\end{itemize}
+
+\paragraph{StudyPathStructuralElement}
+
+Die Tabelle \textit{StudyPathStructuralElement} enthält allgemeine Informationen zu den Druckrubriken, wie z.B. den Namen der Druckrubrik.\\
+
+\begin{adjustbox}{center}
+	\begin{tabular}{|| c | c ||}
+		\hline
+		\underline{id} & \underline{name} \\
+		\hline
+		4904e70f-... & Bachelorstudiengang Elektrotechnik v6 (EBA v6) \\
+		\hline
+		6fc1d248-... & Module im 1. Studienabschnitt des Bachelorstudiengangs\\
+		\hline
+		c4bcab7b-... & Module im 2. Studienabschnitt des Bachelorstudiengangs\\
+		\hline
+	\end{tabular}
+\end{adjustbox}
+
+\begin{itemize}
+	\item \underline{id} hat den Datentyp \texttt{TEXT} und ist Primärschlüssel einer Druckrubrik.
+	\item \underline{name} hat den Datentyp \texttt{TEXT} und gibt den Namen der Druckrubrik an.
+\end{itemize}
+
+\paragraph{StudyPathStructuralElement\_StudyPathStructuralElement}
+
+Diese Tabelle bildet die Baumstruktur der Druckrubriken. Sie bildet die ID einer Druckrubrik auf die IDs der Kinder ab (1 zu n Beziehung).\\
+
+\begin{adjustbox}{center}
+	\begin{tabular}{|| c | c | c ||}
+		\hline
+		\underline{studyPathStructuralElementId} & \underline{studyPathStructuralElementChildId} & \underline{childrens\_index} \\
+		\hline
+		4904e70f-... & 6fc1d248-... & 0\\
+		\hline
+		4904e70f-... & c4bcab7b-... & 1\\
+		\hline
+	\end{tabular}
+\end{adjustbox}
+
+\begin{itemize}
+	\item \underline{studyPathStructuralElementId} hat den Datentyp \texttt{TEXT} und ist Fremdschlüssel auf \underline{id} in \textit{StudyPathStructuralElement}. Es handelt sich hierbei um die ID der Vater-Druckrubrik.
+	\item \underline{studyPathStructuralElementChildId} hat den Datentyp \texttt{TEXT} und ist Fremdschlüssel auf \underline{id} in \textit{StudyPathStructuralElement}. Es handelt sich hierbei um die ID der Kinder-Druckrubrik.
+	\item \underline{childrens\_index} hat den Datentyp \texttt{INTEGER}. Das Feld gibt die Reihenfolge der Kind-Druckrubrik innerhalb der Druckrubriken mit der selben Vater-Druckrubrik an. Ein kleinerer Wert bedeutet, dass die Druckrubrik in der Ausgabe des Modulhandbuchs vor Druckrubriken mit größerem \underline{childrens\_index} ausgegeben werden sollten. Dieses Feld wird auf \underline{Reihenfolge} in der Tabelle \textit{Druckrubrikbezeichnungen} des WebServers abgebildet.
+	\item Diese Tabelle entspricht dem Aufbau der Tabelle \textit{Druckrubrikbezeichnungen} des WebServers. Der Name der Vater-Druckrubrik wird auf \underline{Parent} und der Name der Kind-Druckrubrik wird auf \underline{Bezeichnung} abgebildet. Die Wurzel-Druckrubrik wird zusätzlich auf \underline{Bezeichnung} abgebildet und bekommt als \underline{Parent} den Wert \texttt{null}.
+\end{itemize}
+
+\paragraph{StudyPathStructuralElement\_Module}
+
+Die Tabelle \textit{StudyPathStructuralElement\_Module} gibt an, welche Module eine Druckrubrik enthält. Eine Druckrubrik kann mehrere Module enthalten (1 zu n Beziehung).\\
+
+\begin{adjustbox}{center}
+	\begin{tabular}{|| c | c ||}
+		\hline
+		\underline{studyPathStructuralElementId} & \underline{moduleId} \\
+		\hline
+		6fc1d248-... & a849632f-...\\
+		\hline
+		6fc1d248-... & 8491c942-...\\
+		\hline
+	\end{tabular}
+\end{adjustbox}
+
+\begin{itemize}
+	\item \underline{studyPathStructuralElementId} hat den Datentyp \texttt{TEXT} und ist Fremdschlüssel auf \underline{id} in \textit{StudyPathStructuralElement}. Es gibt die Druckrubrik an.
+	\item \underline{moduleId} hat den Datentyp \texttt{TEXT} und ist Fremdschlüssel auf \underline{id} in \textit{Module}. Es gibt die Module, die zur Druckrubrik gehören, an.
+\end{itemize}
+
+\end{document} 
+
+
+
+

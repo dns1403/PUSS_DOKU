@@ -1,0 +1,164 @@
+\documentclass[a4paper]{article}
+
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{rotating}
+\usepackage{float}
+\usepackage{hyperref}
+
+\usepackage{tabularx}
+\usepackage{pdflscape}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{color}
+
+\setcounter{secnumdepth}{3}
+
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=Java,
+	basicstyle=\small\ttfamily,
+	keywordstyle=\color{javapurple}\bfseries,
+	stringstyle=\color{javared},
+	commentstyle=\color{javagreen},
+	morecomment=[s][\color{javadocblue}]{/**}{*/},
+	numbers=left,
+	numberstyle=\tiny\color{black},
+	stepnumber=2,
+	numbersep=10pt,
+	tabsize=4,
+	showspaces=false,
+	showstringspaces=false,
+	frame=single}
+
+\begin{document}
+
+\title{Test Documentation - local planning tool}
+\author{STULP Projektgruppe}
+\maketitle
+
+\tableofcontents
+
+
+\section{Overview}
+The local planning tool consists of two components: the \textit{database} and the \\ \textit{local\_program}. JUnit tests exist to ensure that they work correctly for both. \newline 
+The project is built with Maven and uses a \textit{pom.xml} file to set the dependencies for the project. Both components use their own individual \textit{pom.xml} file. How the dependencies for the JUnit tests are set for the \textit{database} can be seen in Figure \ref{fig01dbmaven} and for the \textit{local\_program} in Figure \ref{fig01lpmaven}. The \textit{pom.xml} file for the \textit{local\_program} also contains plugins for JUnit.
+More information about Maven and JUnit tests can be found here: \\
+\href{https://maven.apache.org/surefire/maven-surefire-plugin/examples/junit.html}{https://maven.apache.org/surefire/maven-surefire-plugin/examples/junit.html}.\\
+It is recommended to update the versions of the dependencies in the \textit{pom.xml} files, if possible, to get newer and safer versions. 
+
+\begin{figure}[H] 
+\includegraphics[scale=.75]{figures/testDocDBmaven.png}
+\centering
+\caption{Maven dependency in pom.xml for database} 
+\label{fig01dbmaven} 
+\end{figure}
+
+\begin{figure}[H]
+\includegraphics[scale=.75]{figures/testDocLPmaven.png}
+\centering
+\caption{Maven dependency in pom.xml for local\_program} 
+\label{fig01lpmaven} 
+\end{figure}
+
+
+\section{Database}
+The tests for the \textit{database} are in the folder \textit{src$\backslash$test}. The package hierarchy can be seen in Figure \ref{fig01db}.
+
+\begin{figure}[H] 
+\includegraphics[scale=.8]{figures/testDocDB01.png}
+\centering
+\caption{Package Hierarchy} 
+\label{fig01db} 
+\end{figure}
+
+The package \color{blue} database \color{black} (Figure \ref{fig02db}) contains \textit{AdapterTest} and \textit{TupleTest}. The \textit{AdapterTest} checks for a correct working adapter, and the \textit{TupleTest} checks the conversion between Tuples and Strings.
+
+\begin{figure}[H] 
+\includegraphics[scale=.8]{figures/testDocDB02.png}
+\centering
+\caption{Package database} 
+\label{fig02db} 
+\end{figure}
+
+The package \color{blue} database.enums \color{black} (Figure \ref{fig03db}) contains \textit{PflichtfachTest}, \textit{TagTest} and \textit{VeranstaltungsartTest}. This package checks if the following is set correctly and understood by the database: \textit{Pflichtfach}, \textit{Tag} and \textit{Veranstaltungsart} like \textit{vorlesung} or \textit{seminar}.
+
+\begin{figure}[H] 
+\includegraphics[scale=.8]{figures/testDocDB03.png}
+\centering
+\caption{Package database.enums} 
+\label{fig03db} 
+\end{figure}
+
+The package \color{blue} database.impl \color{black} (Figure \ref{fig04db}) contains \textit{ConditionBuilderTest} and \textit{DatabaseUtilTest}. This package tests if conditions for the query language JOOQ are working correctly and checks the correct conversion between Lists and Strings.
+
+\begin{figure}[H] 
+\includegraphics[scale=.8]{figures/testDocDB04.png}
+\centering
+\caption{Package database.impl} 
+\label{fig04db} 
+\end{figure}
+
+The package \color{blue} database.impl.local program \color{black} (Figure \ref{fig05db}) contains multiple classes to test, e.g., the creation of tables, the creation of database records like \textit{Kurs} or \textit{Raum}, the insertion or deletion of queries or the correct identification of conflicts.
+
+\begin{figure}[H] 
+\includegraphics[scale=.8]{figures/testDocDB05.png}
+\centering
+\caption{Package database.impl.localProgram} 
+\label{fig05db} 
+\end{figure}
+
+The package \color{blue} database.schema.planningTool \color{black} (Figure \ref{fig06db}) contains the \textit{PlanningTableGenerationTests} to check if a class has been generated for every necessary table.
+
+\begin{figure}[H] 
+\includegraphics[scale=.8]{figures/testDocDB06.png}
+\centering
+\caption{Package database.schema.planningTool} 
+\label{fig06db} 
+\end{figure}
+
+The package \color{blue} database.testutil \color{black} (Figure \ref{fig07db}) provides necessary components for the previous mentioned tests. \textit{Database} provides a database, \textit{DSLContextCreator} creates a DSL context for SQLite for building type-safe queries, and \textit{Util} checks the result of a plain java query against the result of the query generated by JOOQ.
+
+\begin{figure}[H] 
+\includegraphics[scale=.8]{figures/testDocDB07.png}
+\centering
+\caption{Package database.testutil} 
+\label{fig07db} 
+\end{figure}
+
+
+\section{Local Program}
+The tests for the \textit{local\_program} are in the folder \textit{src$\backslash$test}. The package hierarchy can be seen in Figure \ref{fig01lp}.
+
+\begin{figure}[H] 
+\includegraphics[scale=.8]{figures/testDocLP01.png}
+\centering
+\caption{Package Hierarchy} 
+\label{fig01lp} 
+\end{figure}
+
+The package \color{blue} local\_program.business\_logic \color{black} (Figure \ref{fig02lp}) contains \textit{AdapterTest}, \textit{DataTest} and \textit{StateTest}.
+The \textit{AdapterTest} checks for a correct working adapter. Since the classes \textit{Data} and \textit{State} are the only classes that connect to the \textit{database}, these two are tested. \textit{DataTest} tests if data is correctly returned by get functions from the database. \textit{StateTest} tests if plan objects are correctly created or moved with respect to the underlying data and if the undo and redo function or the ignoring and unignoring of conflicts is working correctly.
+
+\begin{figure}[H] 
+\includegraphics[scale=.8]{figures/testDocLP02.png}
+\centering
+\caption{Package local\_program.business\_logic} 
+\label{fig02lp} 
+\end{figure}
+
+The package \color{blue} local\_program.business\_logic.interfaces \color{black} (Figure \ref{fig03lp}) contains the \textit{IObserverTest} that tests for correctly working observers for different observed types like \textit{Kurs} or \textit{Raum},
+
+\begin{figure}[H] 
+\includegraphics[scale=.8]{figures/testDocLP03.png}
+\centering
+\caption{Package local\_program.business\_logic.interfaces} 
+\label{fig03lp} 
+\end{figure}
+
+\end{document}

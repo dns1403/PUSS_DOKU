@@ -1,0 +1,164 @@
+\subsubsection{Prerequisites}
+
+In order to be able to implement the web service database import for
+your custom database implementation you need to have created the
+following classes:
+\begin{itemize}
+	\item MyWebServiceDatabase (see \autoref{subsec:web-service} for more information) 
+	\item MyLocalProgramDatabase (see \autoref{subsec:local-program-db} for more
+	information)
+\end{itemize}
+
+\hypertarget{implementing-the-interface}{%
+\subsubsection{Implementing the Interface}\label{implementing-the-interface}}
+
+The implementation needs additional functionality that is not provided
+by MyWebServiceDatabase and MyLocalProgramDatabase through their
+corresponding interfaces. This is by design since you do not want to
+grant the user more functionality than absolutely necessary in order to
+mitigate the risk of forbidden or unwanted changes. Thus, you will need
+to implement extensions to your database interfaces whose access is
+restricted to the database package only. The additional functionality
+for the WebServiceDatabase is provided by the interface
+\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/main/java/de/upb/stulp/database/localProgram/databaseImport/WebServiceDatabaseInternal.java}{WebServiceDatabaseInternal}
+and for the LocalProgramDatabase by the interface
+\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/main/java/de/upb/stulp/database/BatchOperationsAvailable.java}{BatchOperationsAvailable}.
+
+\hypertarget{webservicedatabaseinternal-implementation}{%
+\subsubsection{WebServiceDatabaseInternal
+implementation}\label{webservicedatabaseinternal-implementation}}
+
+\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/main/java/de/upb/stulp/database/localProgram/databaseImport/WebServiceDatabaseInternal.java}{WebServiceDatabaseInternal}
+only lists the additional functionality and not the functionality that
+is provided by
+\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/main/java/de/upb/stulp/database/webService/WebServiceDatabase.java}{WebServiceDatabase}.
+This decision has been made because you are now able to reuse your
+implementation of MyWebServiceDatabase. To implement the interface for
+the import, create the following class:
+
+\begin{lstlisting}[language=Java]
+public final class MyWebServiceDatabaseInternal 
+				extends MyWebServiceDatabase 
+				implements WebServiceDatabaseInternal {
+    /**
+     * Default constructor. Initializes 
+     * this class from a database.
+     *
+     * @param db the database to use
+     * @throws DatabaseException
+     */
+    MyWebServiceDatabaseInternal(MyWebServiceDatabase db) 
+    						    throws DatabaseException {
+        super(db);
+    }
+
+    @Override
+    public void makeVorlesungsplanOld() 
+    							throws DatabaseException {
+        //copy content from Vorlesungsplan 
+        //to AlterVorlesungsPlan
+    }
+}
+\end{lstlisting}
+
+Now you have implemented the necessary functionality for the web service
+database.
+
+\hypertarget{batchoperationsavailable-implementation}{%
+\subsubsection{BatchOperationsAvailable
+implementation}\label{batchoperationsavailable-implementation}}
+
+\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/main/java/de/upb/stulp/database/BatchOperationsAvailable.java}{BatchOperationsAvailable}
+adds batch inserts and updates to a database interface. Here you can
+also reuse your implementation of MyLocalProgramDatabase. To implement
+the interface for the import, create the following class:
+
+\begin{lstlisting}[language=Java]
+public final class MyLocalProgramImportDatabase 
+				extends MyLocalProgramDatabase 
+				implements BatchOperationsAvailable {
+
+    MyLocalProgramImportDatabase(String dbPath) 
+    						throws DatabaseException {
+        super(dbPath);
+    }
+
+    @Override
+    public <T extends BatchRecord> 
+    void batchInsert(List<T> records) 
+    			throws DatabaseException {
+        //TODO: implement
+    }
+
+    @Override
+    public <T extends BatchRecord> 
+    void batchUpdate(List<T> records) 
+    			throws DatabaseException {
+        //TODO: implement
+    }
+}
+\end{lstlisting}
+
+Now you have implemented the necessary functionality for the local
+program database.
+
+\hypertarget{webservicedatabaseimport-implementation}{%
+\subsubsection{WebServiceDatabaseImport
+implementation}\label{webservicedatabaseimport-implementation}}
+
+Now that you have created the needed classes for the
+\href{https://git.cs.upb.de/stulp.imt/database/blob/master/src/main/java/de/upb/stulp/database/localProgram/databaseImport/WebServiceDatabaseImport.java}{WebServiceDatabaseImport}
+you can now implement this interface. Implementation of this interface
+is particularly easy because all the importing can be done using the
+interface methods and is therefore already implemented. You only need to
+create a class feeding the algorithm with your custom database classes.
+Thus, create the following class using your custom databases:
+
+\begin{lstlisting}[language=Java]
+public final class MyWebServiceDatabaseImport 
+			extends WebServiceDatabaseImport<
+						MyLocalProgramImportDatabase,
+                        MyWebServiceDatabase> {
+
+    /**
+     * Constructs this object to import to the given database.
+     *
+     * @param localProgramDb  the local program database 
+     		  (to import to)
+     * @throws DatabaseException
+     */
+    public MyWebServiceDatabaseImport()
+    				MyLocalProgramDatabase localProgramDb) 
+    							throws DatabaseException {
+        super(new MyLocalProgramImportDatabase(
+        		localProgramDb.getDBPath()
+        	 ));
+    }
+
+    @Override
+    protected void makeVorlesungsplanOld(
+    							MyWebServiceDatabase old) 
+    								throws DatabaseException {
+        new MyWebServiceDatabaseInternal(old)
+        					.makeVorlesungsplanOld();
+    }
+}
+\end{lstlisting}
+
+If you have implemented everything according to the instructions given,
+you will only need to replace MyWebserviceDatabaseImport,
+MyLocalProgramImportDatabase, MyWebServiceDatabase,
+MyLocalProgramDatabase and MyWebServiceDatabaseInternal by the class
+names you have chosen.
+
+\hypertarget{packaging-to-prevent-potential-access-issues-when-instantiating-mylocalprogramimportdatabase-and-mywebservicedatabaseinternal}{%
+\subsubsection{Packaging to prevent potential access issues when instantiating
+MyLocalProgramImportDatabase and
+MyWebServiceDatabaseInternal}\label{packaging-to-prevent-potential-access-issues-when-instantiating-mylocalprogramimportdatabase-and-mywebservicedatabaseinternal}}
+
+Make sure to put MyWebServiceDatabaseImport,
+MyLocalProgramImportDatabase and MyWebServiceDatabaseInternal into the
+same package. If you do not do this, you will get problems instantiating
+MyLocalProgramImportDatabase and MyWebServiceDatabaseInternal from
+MyWebServiceDatabaseImport since their constructors are package private
+to prevent the user from instantiating them.

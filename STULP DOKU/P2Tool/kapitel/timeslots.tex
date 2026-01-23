@@ -1,0 +1,53 @@
+\section{Zeitfenster}
+\label{sec:timeslots}
+Die Seite \textit{Zeitfenster} ermöglicht das Festlegen von Veranstaltungszeitfenstern für ein Semester.
+Dies beeinflusst die dargestellten Auswahlmöglichkeiten für Wunschzeiten der Veranstalter.
+Die Zeitfenster können für unterschiedliche Tage unterschiedlich gewählt werden.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{./img/timeslots_overview.png}
+    \caption{Übersicht der Zeitfenster}
+    \label{fig:timeslots_overview}
+\end{figure}
+
+
+\subsection{Hinzufügen}
+
+Um ein neues Zeitfenster hinzuzufügen, muss zunächst eine Zelle in der Tabelle ausgewählt werden.
+Anschließend muss die Dauer des Zeitfensters eingegeben und die Eingabe mit \texttt{Enter} bestätigt werden (siehe \figref{fig:timeslots_add}).
+Eine Erfolgsmeldung bestätigt das erfolgreiche Hinzufügen des Zeitfensters.
+
+\begin{warning}
+    Zeitfenster dürfen sich nicht überschneiden.
+\end{warning}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/timeslots_add.png}
+    \caption{Zeitfenster hinzufügen}
+    \label{fig:timeslots_add}
+\end{figure}
+
+
+\subsection{Entfernen}
+
+Um ein bestehendes Zeitfenster zu entfernen, muss das Papierkorbsymbol im gewünschten Zeitfenster geklickt werden (siehe \figref{fig:timeslots_delete}).
+Eine Erfolgsmeldung bestätigt das erfolgreiche Entfernen des Zeitfensters.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\linewidth]{img/timeslots_delete.png}
+    \caption{Zeitfenster entfernen}
+    \label{fig:timeslots_delete}
+\end{figure}
+
+\subsection{Nebenwirkungen}
+Wenn in einem Semester die Zeitfenster geändert werden, ergeben sich einige Nebenwirkungen.
+Innerhalb des Semesters werden alle angebotenen Lehrveranstaltungen so geändert, dass das gelöschte Zeitfenster nicht mehr als Wunschzeit auswählbar ist und auch in der Datenbank nicht mehr als Wunschzeit gespeichert wird.
+Das führt dazu, dass wenn ein Zeitfenster gelöscht wird und später ein Zeitfenster an der gleichen Stelle hinzugefügt wird, Wunschzeiten nicht wiederhergestellt werden können und diese Zeitfenster für alle angebotenen Lehrveranstaltungen zunächst nicht als Wunschzeit angegeben sind.
+Konkret bedeutet das, dass falls eine Wunschzeit einer angebotenen Lehrveranstaltung gelöscht wird, diese (und nur diese) Wunschzeit verschwindet.
+
+Außerhalb des Semesters hat das Ändern von Zeitfenstern die Auswirkung, dass die Wunschzeiten nicht mehr kopiert werden können, wenn ein Kurs zum Beispiel aus dem letzten Semester kopiert wird.
+Für diesen Fall wird wie beim Erstellen von neuen Kursen standardmäßig kein Zeitfenster als Wunschzeit angegeben.
+Zu beachten ist, dass auch hier schon das Löschen und anschließende Hinzufügen des selben Zeitfensters als Änderung zählt.
