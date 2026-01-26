@@ -1,0 +1,298 @@
+%% Makros
+
+% Mengensymbole
+\newcommand{\R}{{\BR}}
+\newcommand{\Z}{{\BZ}}
+\newcommand{\Q}{{\BQ}}
+\newcommand{\C}{{\BC}}
+\newcommand{\K}{{\BK}}
+\newcommand{\N}{{\BN}}
+\newcommand{\T}{{\BT}}
+\newcommand{\IR}{{\BR}}
+\newcommand{\IZ}{{\BZ}}
+\newcommand{\IQ}{{\BQ}}
+\newcommand{\IC}{{\BC}}
+\newcommand{\IK}{{\BK}}
+\newcommand{\IN}{{\BN}}
+\newcommand{\IT}{{\BT}}
+
+
+%Epsilon & Phi
+\newcommand{\eps}{\varepsilon}
+\newcommand{\ph}{\varphi}
+\newcommand{\vr}{\varrho}
+
+% Pfeile
+\newcommand{\hra}{\hookrightarrow}
+\newcommand{\lra}{\leftrightarrow}
+\newcommand{\la}{\leftarrow}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\llra}{\longleftrightarrow}
+\newcommand{\lla}{\longleftarrow}
+\newcommand{\lr}{\longrightarrow}
+\newcommand{\Lra}{\Leftrightarrow}
+\newcommand{\La}{\Leftarrow}
+\newcommand{\Ra}{\Rightarrow}
+\newcommand{\Llra}{\Longleftrightarrow}
+\newcommand{\Lla}{\Longleftarrow}
+\newcommand{\Lr}{\Longrightarrow}
+\newcommand{\xra}{\xrightarrow}
+\newcommand{\lms}{\longmapsto}
+\newcommand{\sms}{\mapsto}
+% Linien
+\newcommand{\ol}{\overline}
+\newcommand{\ul}{\underline}
+
+% Diverses
+\newcommand{\ds}{\displaystyle}
+\newcommand{\st}{\stackrel}
+\newcommand{\sfrac}[2]{{\textstyle\frac{#1}{#2}}}
+\newcommand{\ex}{\exists \,}
+
+\renewcommand{\Re}{{\rm Re\,}}
+\renewcommand{\Im}{{\rm Im\,}}
+\newcommand{\id}{{\rm id}}
+\renewcommand{\i}{{\rm i}}
+\newcommand{\e}{{\rm e}}
+\renewcommand{\d}{{\, \rm d}}
+\newcommand{\Id}{{\rm Id}}
+
+\newcommand{\ran}{\operatorname{ran}}
+
+%gleichmäßige Konvergenz
+\DeclareMathOperator*{\ulim}{u-lim}
+\newcommand{\uto}{\rightrightarrows}
+
+%Ober- und Unterintegral
+\def\upint{\mathchoice%
+	{\mkern13mu\overline{\vphantom{\intop}\mkern7mu}\mkern-20mu}%
+	{\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+	{\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+	{\mkern7mu\overline{\vphantom{\intop}\mkern7mu}\mkern-14mu}%
+	\int}
+\def\lowint{\mkern3mu\underline{\vphantom{\intop}\mkern7mu}\mkern-10mu\int}
+
+% Betrag und Norm
+\newcommand{\abs}[1]{{\lvert #1 \rvert}}
+%\newcommand{\sgn}[1]{{{\rm sgn}(#1)}}
+\DeclareMathOperator{\sgn}{sgn}
+\newcommand{\Abs}[1]{\bigl\lvert #1 \bigr\rvert}
+\newcommand{\ABS}[1]{\Bigl\lvert #1 \Bigr\rvert}
+\newcommand{\labs}[1]{\left| #1 \right|}
+\newcommand{\norm}[1]{\lVert #1 \rVert}
+\newcommand{\Norm}[1]{\Bigl\lVert #1 \Bigr\rVert}
+% Skalarprodukt
+\newcommand{\skp}[1]{\langle #1 \rangle}
+% Grad (eines Polynoms)
+\DeclareMathOperator{\grad}{grad}
+% Polygonzug
+\DeclareMathOperator{\pol}{Pol}
+
+%arccot
+\DeclareMathOperator{\arccot}{arccot}
+
+%area hyperbolicus
+\DeclareMathOperator{\arsinh}{arsinh}
+\DeclareMathOperator{\arcosh}{arcosh}
+
+% Fläche
+\DeclareMathOperator{\area}{area}
+
+% Rotation
+\DeclareMathOperator{\rot}{rot}
+\DeclareMathOperator{\divf}{div}
+
+% Volumen
+\DeclareMathOperator{\vol}{vol}
+
+%some useful limits
+\newcommand{\glmto}{\rightrightarrows}
+\newcommand{\wto}{\xrightarrow{\sfw}}
+\DeclareMathOperator*{\wlim}{w-lim}
+
+%Spektren
+\newcommand{\ps}{\sigma\!_\sfp}
+\newcommand{\cs}{\sigma\!_\sfc}
+\newcommand{\rs}{\sigma\!_\sfr}
+\newcommand{\ess}{\sigma\!_\e}
+\newcommand{\dis}{\sigma\!_\d}
+
+
+% Vektoren (vect = 3d, vectt = 2d)
+% Note: für Binome gibt's \binom
+%\renewcommand{\vec}[1]{\mathbf{#1}}
+
+\newcommand{\vect}[3]{
+	\begin{pmatrix}
+		#1\\#2\\#3
+	\end{pmatrix}
+}
+\newcommand{\vectt}[2]{
+	\begin{pmatrix}
+		#1\\#2
+	\end{pmatrix}
+}
+% in den Grenzen von...
+\newcommand{\at}{\Big|}
+
+\newcommand{\eq}{=}
+
+% Setup the matha and mathx font (from mathabx.sty) to define obot
+\DeclareFontFamily{U}{matha}{\hyphenchar\font45}
+\DeclareFontShape{U}{matha}{m}{n}{
+	<5> <6> <7> <8> <9> <10> gen * matha
+	<10.95> matha10 <12> <14.4> <17.28> <20.74> <24.88> matha12
+}{}
+\DeclareSymbolFont{matha}{U}{matha}{m}{n}
+\DeclareFontFamily{U}{mathx}{\hyphenchar\font45}
+\DeclareFontShape{U}{mathx}{m}{n}{
+	<5> <6> <7> <8> <9> <10>
+	<10.95> <12> <14.4> <17.28> <20.74> <24.88>
+	mathx10
+}{}
+\DeclareSymbolFont{mathx}{U}{mathx}{m}{n}
+
+\DeclareMathSymbol{\operp}         {2}{matha}{"6B}
+\DeclareMathSymbol{\bigoperp}       {1}{mathx}{"CB}
+
+% Environments
+
+\theoremstyle{plain}
+\newshadetheorem{satzs}{Satz}[section]  %  [chapter]  durchnumeriert
+\newshadetheorem{cors}[satzs]{Korollar}
+\newshadetheorem{lemmas}[satzs]{Lemma}
+\newshadetheorem{theos}[satzs]{Theorem}
+\newshadetheorem{props}[satzs]{Proposition}
+
+\theoremstyle{definition}
+\newshadetheorem{defis}[satzs]{Definition} %    DEFINITION
+\newtheorem{bsp}[satzs]{Example}  % Beispiel
+\newtheorem{bsp*}[satzs]{Example*}
+\newtheorem*{rem}{Remark}  % Bemerkung ohne Nummer
+\newtheorem*{ueb}{Übung}%[section]
+
+
+\newenvironment{satz}[1][]{
+	\begin{satzs}[#1]\hspace*{1mm}
+	}{\end{satzs}}
+
+\newenvironment{cor}[1][]{
+	\begin{cors}[#1]\hspace*{1mm}
+	}{\end{cors}}
+
+\newenvironment{lemma}[1][]{
+	\begin{lemmas}[#1]\hspace*{1mm}
+	}{\end{lemmas}}
+
+\newenvironment{defi}[1][]{
+	\begin{defis}[#1]\hspace*{1mm}
+	}{\end{defis}}
+
+\newenvironment{theo}[1][]{
+	\begin{theos}[#1]\hspace*{1mm}
+	}{\end{theos}}
+
+\newenvironment{prop}[1][]{
+	\begin{props}[#1]\hspace*{1mm}
+	}{\end{props}}
+
+\crefname{bsp}{Beispiel}{die Beispiele}
+\Crefname{bsp}{Beispiel}{die Beispiele}
+\crefname{bsp*}{Beispiel}{die Beispiele}
+\Crefname{bsp*}{Beispiel}{die Beispiele}
+\crefname{enumi}{}{}
+\Crefname{enumi}{}{}
+\creflabelformat{enumi}{#2(#1)#3}
+\numberwithin{equation}{section}
+\crefname{section}{Kapitel}{den Kapiteln}
+\Crefname{section}{Kapitel}{den Kapiteln}
+\crefname{subsection}{Abschnitt}{den Abschnitten}
+\Crefname{subsection}{Abschnitt}{den Abschnitten}
+
+\newtheoremstyle{empty}{\topsep}{\topsep}{\normalfont}{0pt}{\bfseries}{.}{5pt plus 1pt minus 1pt}{Fortsetzung #3}
+\theoremstyle{empty}
+\newtheorem*{fortsetzung}{NameIgnored}
+
+\newcommand{\axiom}[1]{\bigskip
+	
+	\centerline{\fbox{\sc #1}}
+
+\bigskip}
+
+%Fußnoten
+\newcommand{\fnmenv}{\hspace*{-4mm}\footnotemark\hspace*{4mm}} %Footnotemark on Name of Environment
+\newcommand{\fnmproof}{\hspace*{-2mm}\footnotemark\hspace*{2mm}} %Footnotemark on Proof
+
+%Zähler
+\newcounter{fixes}
+\newcounter{lecture}
+\newcounter{lectureweek}
+
+%Randnotizen & Zählerausgabe
+\newlength{\fixboxwidth}
+\setlength{\fixboxwidth}{\marginparwidth}
+\addtolength{\fixboxwidth}{-17pt}
+\newcommand{\fix}[1]{\marginpar{\parbox{\fixboxwidth}{\raggedright\tiny#1}}\stepcounter{fixes}}
+\newcommand{\comment}{\ \newline\texttt{\thefixes\ Bemerkungen, \thelecture\ Vorlesungen}, \thelectureweek\ Vorlesungswochen}
+
+%Booleans
+\newif\ifcommentnumber\commentnumberfalse %Ausgabe der Kommentarzahlen am Vorlesungsende
+\newif\ifbeforelecture\beforelecturetrue %vor Vorlesungsbeginn
+\newif\iflectureend\lectureendtrue %Skriptend
+
+\newcommand{\phantomsectiontotoc}[1]{
+	\stepcounter{section}
+	\addtocontents{toc}{\protect\contentsline{section}{\protect\numberline{\thesection}#1}{}{}}%
+}
+\newcommand{\startlecture}{\beforelecturefalse\lectureendfalse}
+\newcommand{\stopnotes}{\lectureendtrue\fi\ifcommentnumber\comment\fi\iffalse}
+\newcommand{\stopnotesext}{\lectureendtrue\ifcommentnumber\comment\fi}
+\newcommand{\electure}{}
+\newcommand{\flecture}{}
+\newcommand{\electureweek}{}
+\newcommand{\flectureweek}{}
+\newcommand{\startcounting}{
+	\renewcommand{\electure}{\stepcounter{lecture}\fix{Ende \thelecture. Vorlesung}}
+	\renewcommand{\flecture}{\stepcounter{lecture}\fix{Ende \thelecture. Vorlesung}\lectureendtrue\fi\ifcommentnumber\comment\fi\iffalse }
+	\renewcommand{\electureweek}{\stepcounter{lectureweek}\fix{Ende \thelectureweek. Vorlesungswoche}}
+	\renewcommand{\flectureweek}{\stepcounter{lectureweek}\fix{Ende \thelectureweek. Vorlesungswoche}\lectureendtrue\fi\ifcommentnumber\comment\fi\iffalse}
+}
+\newcommand{\stopcounting}{
+	\renewcommand{\electure}{}
+	\renewcommand{\flecture}{}
+	\renewcommand{\electureweek}{}
+	\renewcommand{\flectureweek}{}
+}
+
+%Referenzen im Dokument überarbeiten
+\def\extref{ext:}
+\makeatletter
+\newcommand\lref[1]{\@ifundefined{r@#1}{\cref*{\extref#1}}{\cref{#1}}}
+\newcommand\llref[1]{\@ifundefined{r@#1}{\labelcref*{\extref#1}}{\labelcref{#1}}}
+\newcommand\nlref[1]{\@ifundefined{r@#1}{\namecref{\extref#1}}{\namecref{#1}}}
+\makeatother
+
+%%%%%%%% diagrams %%%%%%%%
+\usepackage[all]{xy}%provides xymatrix
+\newcommand{\vcxymatrix}[1]{\vcenter{\xymatrix{#1}}}%provides a xymatrix which vertically centers eqnumbers
+
+%Category
+\newcommand{\op}{\text{op}}
+\newcommand{\Mod}{\text{Mod}}
+\newcommand{\Top}{\text{Top}}
+\newcommand{\Grp}{\text{Grp}}
+\newcommand{\Ring}{\text{Ring}}
+\newcommand{\RMod}{\text{R-Mod}}
+\newcommand{\Ab}{\text{Ab}}
+\newcommand{\Vect}{\text{Vect}}
+\newcommand{\Cat}{\text{Cat}}
+\newcommand{\Fun}{\text{Fun}}
+\newcommand{\Hom}{\text{Hom}}
+\newcommand{\End}{\text{End}}
+\newcommand{\Aut}{\text{Aut}}
+\newcommand{\Iso}{\text{Iso}}
+\newcommand{\Ob}{\text{Ob}}
+\newcommand{\Mor}{\text{Mor}}
+\newcommand{\Ext}{\text{Ext}}
+\newcommand{\Ker}{\text{Ker}}
+\newcommand{\Cok}{\text{Cok}}

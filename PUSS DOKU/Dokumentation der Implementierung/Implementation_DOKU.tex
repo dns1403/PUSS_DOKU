@@ -1,0 +1,31 @@
+% !TeX spellcheck = de_DE
+\documentclass[11pt]{article}
+
+\input{tex/header}
+
+%Einfügen aller Referenzen
+%\usepackage{xr}
+%\externaldocument[\extref]{files/references}
+
+
+%\usetikzlibrary{external}\pgfkeys{/pgf/images/include external/.code=\includegraphics{#1}}\tikzexternalize[prefix=figures/]
+
+%\commentnumbertrue %Kommentaranzahl am Ende des Skriptes ausgeben ein/ausschalten
+
+
+%\usepackage{showkeys}
+
+\begin{document}
+
+\input{tex/titel} % Titelseite
+\newpage
+%\input{tex/einleitung}
+\newpage
+\tableofcontents
+\newpage
+\addtocounter{page}{1}
+\startnotes
+% \startlecture
+% \startcounting
+\include{Kapitel/einleitung.tex}
+\end{document}
