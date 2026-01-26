@@ -1,0 +1,80 @@
+\section{Import eines bestehenden Stundenplans via DIF Dateien}
+Wie bereits in der Einleitung erwähnt, wird für dieses Kapitel davon ausgegangen, dass bereits ein bestehender Stundenplan in UNTIS vorhanden ist, welcher in das PUSS Tool importiert werden soll.
+Dafür wollen wir den Stundenplan aus UNTIS in sogenannte DIF Dateien exportieren, welche anschließend in das PUSS Tool importiert werden können.
+Dabei wollen wir auch zum einen auf den generellen Aufbau der DIF Dateien eingehen, um dem Anwender ein besseres Verständnis für die Struktur der Dateien zu vermitteln.
+Zum anderen werden wir eine Schritt-für-Schritt Anleitung bereitstellen, welche den Anwender durch den Exportprozess in UNTIS führt.
+\subsection{Erstellen der DIF Dateien}
+Um die DIF Dateien zu erstellen gibt es grundsätzlich zwei verschiedene Möglichkeiten, welche wir im Folgenden erläutern wollen.
+\begin{enumerate}
+    \item Direkter Export aus der UNTIS GUI (aka. über das Units Programmfenster)
+    \item Export via Command Line Interface (für fortgeschrittene Anwender)
+\end{enumerate}
+Dabei hat die erste Möglichkeit den Vorteil, dass sie sehr benutzerfreundlich ist und keine tiefgehenden technischen Kenntnisse erfordert.
+Die zweite Möglichkeit hingegen hat den Vorteil, dass alle DIF Dateien auf einmal exportiert werden können.
+\todo{Besser schreiben}
+\subsubsection{Direkter Export aus der UNTIS GUI}
+Die erste Möglichkeiten besteht darin, manuell über die UNTIS GUI die DIF Dateien zu exportieren.
+Dafür muss zunächst UNTIS gestartet und der entsprechende Stundenplan bzw die entsprechende Datenbank geöffnet werden.
+Anschließend navigiert man im Menü im Reiter oben Links zu \textit{Datei} $\rightarrow$ \textit{Import/Exportieren} $\rightarrow$ \textit{Export TXT Dateien} (dies ist auf den folgenden 3 Screenshots dargestellt).
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/dif_erstellen_step_1.png}
+    \caption{Navigieren zum Reiter \textit{Datei} in UNTIS}
+    \label{fig:dif_export_1}
+\end{figure}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/dif_erstellen_step_2.png}
+    \caption{Navigieren zum Reiter \textit{Import/Exportieren} in UNTIS}
+    \label{fig:dif_export_2}
+\end{figure}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/dif_erstellen_step_3.png}
+    \caption{Navigieren zum Reiter \textit{Export TXT Dateien} in UNTIS}
+    \label{fig:dif_export_3}
+\end{figure}
+\todo{Position/Größe der Screenshots anpassen}
+Nach dem Klick auf \textit{Export TXT Dateien} öffnet sich auf der rechten Seite unter Schnittstellen ein Auflistung aller verfügbaren Tabellen von Daten (auf dem folgenden Screenshot dargestellt).
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/dif_erstellen_step_4.png}
+    \caption{Auflistung aller verfügbaren Tabellen von Daten in UNTIS}
+    \label{fig:dif_export_4}
+\end{figure}
+\todo{Position/Größe der Screenshots anpassen}
+Beim klicken auf eine der Tabellen öffnet sich ein neues Fenster, in welchem verschiedene Exportoptionen ausgewählt werden können hierbei sollte bei \textit{Trennzeichen zwischen dne Feldern} Komma, als \textit{Textbegrenzung} Anführungszeichen und als Encoding UTF-8 ausgewählt werden. 
+Alle diese Einstellungen entsprechen den Standardeinstellungen bei einem Export in UNTIS, bis auf das Encoding, welches manuell auf UTF-8 gesetzt werden muss. 
+Dies ist notwendig, damit Umlaute und Sonderzeichen korrekt in den DIF Dateien dargestellt werden können. Um die Einstellungen vorzunehmen und die Exportierung durchzuführen, klick man dann auf den Button/Knopf \textit{OK}
+Auf dem folgenden Screenshot sind die Exportoptionen für eine ausgewählte Tabelle dargestellt und korrekt eingestellt.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/dif_erstellen_step_5.png}
+    \caption{Exportoptionen für die ausgewählte Tabelle in UNTIS}
+    \label{fig:dif_export_5}
+\end{figure}
+\todo{Besser schreiben}
+Nun wird der Anwender aufgefordert, einen Speicherort für die exportierte Datei auszuwählen.
+\todo{Überlegen, wo diese gespeichert werden sollen}
+Nachdem der Speicherort ausgewählt wurde, wird die Datei im DIF Format an dem angegebenen Ort gespeichert und der Export ist abgeschlossen.
+Dieser Vorgang muss für alle benötigten Tabellen wiederholt werden, um alle relevanten Daten für den Stundenplan zu exportieren.
+Die benötigten Tabellen sind im Folgenden aufgelistet:
+\begin{itemize}
+    \item Klasse
+\end{itemize}
+\todo{Nachgucken, welche Datein wir nochmal genau benötigen und hier auflisten}
+oder alternativ auf dem folgenden Screenshot mit roten Kästchen markiert:
+\todo{Screenshot mit allen benötigten Tabellen erstellen}
+Wenn alle benötigten Tabellen exportiert wurden, sollten sich die entsprechenden DIF Dateien an dem angegebenen Speicherort befinden und können nun für den Import in das PUSS Tool verwendet werden.
+\subsubsection{Export via Command Line Interface}
+Für fortgeschrittene Anwender besteht die Möglichkeit, die DIF Dateien über das Command Line Interface (CLI) von UNTIS zu exportieren.
+Dies ermöglicht es, direkt alle benötigten Tabellen auf einmal zu exportieren, ohne den manuellen Prozess über die GUI durchlaufen zu müssen.
+\todo{Zuende schrieben}
+\subsection{Aufbau der DIF Dateien}
+Die DIF Dateien sind im Wesentlichen Textdateien, welche die Daten in einem strukturierten Format speichern.
+Jede Datei besteht aus mehreren Zeilen, wobei jede Zeile einen Datensatz oder eine Information repräsentiert.
+\todo{Fiktives Beispiel einfügen und weiter erläutern}
+\subsection{Dokumentation der DIF Dateien}
+Da es bereits eine offizielle Dokumentation der DIF Dateien von Untis gibt, wollen wir an dieser Stelle nur auf diese verweisen und nur den Aufbau der für uns relevanten Dateien erläutern.
+Die offizielle Dokumentation der DIF Dateien kann unter folgendem Link gefunden werden: \url{https://www.untis.at/manual/index.html?ti_allgemeine-schnittstellen.htm}
+\todo{Beschreiben der relevanten Dateien}
