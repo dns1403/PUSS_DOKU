@@ -1,0 +1,56 @@
+\section{Dokumentation der Dif Dateien}
+In diesem Kapitel werden die relevanten Dif Dateien beschrieben, die im PUSS Tool verwendet werden.
+Diese basiert auf einer Dokumentation von Untis\footnote{siehe \url{https://www.untis.at/manual/index.html?ti_allgemeine-schnittstellen.htm}} welche ergänzt und an die Bedürfnisse des PUSS Tools angepasst wurde.
+Außerdem kann in dieser Dokumentation eine vollständige Liste aller Dif Dateien gefunden werden, insbesondere auch jene, die wir im folgenden nicht beschreiben.
+
+\subsection{Notationshinweise und Legende}
+Um die Struktur der Datenbanktabellen und deren Relation zu den DIF-Dateien zu verdeutlichen, wird in den folgenden Abschnitten eine einheitliche Notation verwendet. Diese beschreibt sowohl technische Constraints als auch den Grad der Normalisierung.
+
+\paragraph{Bedeutung der Abkürzungen (Constraints)}
+\begin{itemize}
+    \item \textbf{PK (Primary Key):} Primärschlüssel der Tabelle.
+    \item \textbf{FK (Foreign Key):} Fremdschlüssel, der auf eine andere Relation verweist.
+    \item \textbf{NN (Not Null):} Dieses Feld darf keinen leeren Wert enthalten.
+    \item \textbf{U (Unique):} Der Wert in diesem Feld muss innerhalb der Tabelle eindeutig sein.
+\end{itemize}
+
+\paragraph{Farblegende zur Normalisierung und Schlüsselstruktur}
+In Anlehnung an die grafische Analyse der Datenbankstruktur werden folgende farbliche Markierungen in den Tabellenschemata verwendet:
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Farbe} & \textbf{Bezeichnung} & \textbf{Beschreibung} \\ \hline
+        \cellcolor[HTML]{A4C2F4} Blau & Primärschlüssel (PK) & Kennzeichnet Felder, die den Datensatz eindeutig identifizieren. \\ \hline
+        \cellcolor[HTML]{F9CB9C} Orange & Verletzung 2. NF & Felder, die funktional von einem Teil des Schlüssels abhängen. \\ \hline
+        \cellcolor[HTML]{B7E1CD} Grün & Fremdschlüssel (FK) & Verweis auf Stammdaten einer anderen DIF-Datei (z.B. Lehrer-ID). \\ \hline
+    \end{tabular}
+    \caption{Legende der verwendeten Notationsfarben}
+    \label{tab:legende_notation}
+\end{table}
+
+\noindent
+Ein Pfeil ($\uparrow$) vor einem Spaltennamen signalisiert zusätzlich einen Fremdschlüsselbezug in der Implementierung.
+\subsection{GPU001 -- Stundenplan}
+Die Datei \texttt{GPU001.TXT} enthält den Stundenplan. Da ein Unterrichtselement (Unterrichtsnummer) für mehrere Klassen gleichzeitig stattfinden kann (z.B. Koppelungen), bildet die Kombination aus Nummer und Klasse den Identifikator.
+
+\paragraph{Schema und Beispieldaten}
+
+    \begin{table}[h]
+        \centering
+        \tiny
+        \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+            \hline
+                               & \textbf{$\uparrow$ Unterrichtsnummer} & \textbf{$\uparrow$ Klasse} & \textbf{$\uparrow$ Lehrer} & \textbf{$\uparrow$ Fach} & \textbf{$\uparrow$ Raum} & \textbf{Tag} & \textbf{Stunde} & \textbf{Stundenlänge} \\ \hline\hline
+            \textbf{Data Type} & INTEGER & TEXT & TEXT & TEXT & TEXT & INTEGER & INTEGER & INTEGER \\
+            \textbf{Constraints}& NN, PK & NN, PK & NN & NN & & NN & NN & \\
+            \textbf{Checks}    & & & & & & $\in \{1..7\}$ & & in Minuten \\ \hline
+            \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{F9CB9C} 2. NF & \cellcolor[HTML]{F9CB9C} 2. NF & \cellcolor[HTML]{F9CB9C} 2. NF & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \\ \hline
+            \textbf{Sample}    & 1 & 07A & SMI & D & B2.16 & 2 & 7 &  \\
+                               & 1 & 08A & AML & M & B2.12 & 1 & 4 &  \\ \hline
+        \end{tabular}
+        \caption{Schema der Relation Stundenplan (GPU001) mit Normalform-Hinweisen und Beispieldaten}
+        \label{schema:gpu001_new}
+    \end{table}
+
