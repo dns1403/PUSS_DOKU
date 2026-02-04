@@ -1,6 +1,23 @@
 \section{Nutzung des lokalen Planungstools}
 Dieses Kapitel beschreibt die Nutzung des Tools zur lokalen Planung als Planer. 
 Insbesondere wird die Übertragung der Daten von Untis auf das lokale Planungstool beschrieben und wie das lokale Planungstool genutzt werden kann, um einen Stundenplan zu erstellen.
+\subsection{Unterschiede zwischen der Schule und der Universität}
+Bevor wir auf die Nutzung des lokalen Planungstools eingehen, wollen wir zunächst kurz die Unterschiede zwischen der Planung an der Schule und der Universität erläutern.
+Dies ist notwendig, da das lokale Planungstool ursprünglich für die Planung an der Universität entwickelt wurde und es daher einige Unterschiede in der Terminologie und den Konzepten gibt.
+Außerdem haben wir uns dazu entschieden die Datenbankstruktur des lokalen Planungstools beizubehalten, um eine Kompatibilität mit zukünftigen Erweiterungen zu gewährleisten.
+Dies Unterschiede wollen wir im Folgenden kurz zusammenfassen und falls notwendig erläutern, wie die Begriffe der Schule in die Terminologie des lokalen Planungstools übersetzt werden können.
+\begin{itemize}
+	\item \textbf{Professor}: Dies entspricht dem Begriff \textbf{Lehrer} an der Schule.
+	\item \textbf{Kurs}: Dies entspricht dem Begriff \textbf{Veranstaltung/Fach} an der Schule.
+	\item \textbf{Studiengang}: Dies entspricht dem Begriff \textbf{Klasse} an der Schule.
+	\item \textbf{Semester (eines Studiengangs)}: Dies entspricht dem Begriff \textbf{Jahrgang} der zum Studiengang gehörigen Klasse.
+	\item \textbf{Nebenfach(NF)}: Dies habe wir nicht verwendet, da an der Schule keine Nebenfächer existieren. Es ist standardmäßig auf Ohne gesetzt.
+	\item \textbf{Prüfungsordnung(PO)}: Dieses wird beim übernehmen eines Stundenplans aus Untis auf die Schulform und Jahrgang bei der zum Studiengang gehörigen Klasse gesetzt. 
+	Bei keinem bestehenden Stundenplan kann dies ignoriert werden und muss nicht gesetzt werden.
+	\item \textbf{Veranstaltungsteil} Dies ist wohl die größte Abweichung in der Terminologie. Um eine Kompatibilität mit importierten UNTIS Stundenplänen zu gewährleisten, haben wir uns dazu entschieden den Begriff Veranstaltungsteil zweckzuentfremden.
+	Ein Veranstaltungsteil ist beim Import eines UNTIS Stundenplans auch der zu dem Studiengang gehörigen Klasse zugeordnet.
+\end{itemize}
+\todo{Um weitere Begriffe ergänzen, wenn uns noch was einfällt.}
 \subsection{Voraussetzung zur Nutzung der Software als Planer}
 \subsubsection{Benötigte zusätzliche Software}
  Um das lokale Planungstool problemlos auszuführen, wird Java 22 oder 23 benötigt.
@@ -12,72 +29,94 @@ Es wird empfohlen, alle Dateien, die während der Planung benötigt oder erzeugt
 Auf Windows kann die jeweilige jar-Dateien  mittels eines Doppelklicks ausgeführt werden. 
 Auf Linux sollte das jeweilige Programm über die Kommandozeile mittels des Befehls \texttt{java -jar Planunungstool.jar} bzw. \texttt{java -jar Paultool.jar} ausgeführt werden. 
 \subsection{Übertragung eines bestehenden Stundenplans von Untis in das lokale Planungstool}
-Falls bereits ein Stundenplan in Untis existiert, so kann dieser in das lokale Planungstool importiert werden.
-Dafür wollen wir den Stundenplan aus UNTIS in sogenannte DIF Dateien exportieren, welche anschließend mit Hilfe eines Importtools in das lokale Planungstool importiert werden können.
-Bei den DIF Dateien handelt es sich um Textdateien, welche die Daten des Stundenplans in einem strukturierten Format speichern.
-Um die DIF Dateien zu erstellen gibt es grundsätzlich zwei verschiedene Möglichkeiten, welche wir im Folgenden erläutern wollen:
+
+Falls bereits ein Stundenplan in Untis existiert, kann dieser importiert werden. Dafür exportieren wir die Daten aus UNTIS in sogenannte DIF-Dateien (Data Interchange Format). Dies sind strukturierte Textdateien, die anschließend vom lokalen Planungstool eingelesen werden.
+
+Es gibt zwei Wege, diese Dateien zu erstellen:
 \begin{enumerate}
-    \item Direkter Export aus der UNTIS GUI (aka. über das UNTIS Programmfenster)
-    \item Export via Command Line Interface (für fortgeschrittene Planer)
+    \item Direkter Export aus der UNTIS Benutzeroberfläche (GUI)
+    \item Export via Command Line Interface (CLI) – für fortgeschrittene Planer
 \end{enumerate}
-Dabei hat die erste Möglichkeit den Vorteil, dass sie in der UNTIS GUI durchführbar ist und keine tiefgehenden technischen Kenntnisse erfordert.
-Die zweite Möglichkeit hingegen hat den Vorteil, dass alle DIF Dateien auf einmal exportiert werden können.
+
+Die erste Methode erfordert keine tiefgehenden technischen Kenntnisse. Die zweite Methode bietet hingegen den Vorteil, dass alle benötigten DIF-Dateien automatisiert in einem Rutsch exportiert werden können.
+
 \subsubsection{Direkter Export aus der UNTIS GUI}
-Wir wollen zunächst die erste Möglichkeit erläutern.
-Dafür muss zunächst UNTIS gestartet und der entsprechende Stundenplan bzw die entsprechende Datenbank geöffnet werden.
-Anschließend navigiert man im Menü im Reiter oben Links zu \textit{Datei} $\rightarrow$ \textit{Import/Exportieren} $\rightarrow$ \textit{Export TXT Dateien} (dies ist auf den folgenden 3 Screenshots dargestellt).
-\begin{figure}[h]
+
+Zunächst muss UNTIS gestartet und die entsprechende Datenbank geöffnet werden. Navigieren Sie anschließend im Menü oben links über \textit{Datei} $\rightarrow$ \textit{Import/Export} $\rightarrow$ \textit{Export TXT Dateien}. Dieser Ablauf ist in \cref{fig:untis_export_steps} dargestellt.
+
+\begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/dif_erstellen_step_1.png}
-    \caption{Navigieren zum Reiter \textit{Datei} in UNTIS}
-    \label{fig:dif_export_1}
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/dif_erstellen_step_1.png}
+        \caption{Klick auf \textit{Datei}}
+        \label{fig:step1}
+    \end{subfigure}
+    \hfill % Fügt flexiblen Abstand zwischen den Bildern ein
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/dif_erstellen_step_2.png}
+        \caption{Klick auf \textit{Import/Export}}
+        \label{fig:step2}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/dif_erstellen_step_3.png}
+        \caption{Klick auf \textit{Export TXT}}
+        \label{fig:step3}
+    \end{subfigure}
+    \caption{Der Navigationspfad zum Export-Menü in UNTIS}
+    \label{fig:untis_export_steps}
 \end{figure}
-\begin{figure}[h]
-    \includegraphics[width=0.5\textwidth]{figures/dif_erstellen_step_2.png}
-    \caption{Navigieren zum Reiter \textit{Import/Exportieren} in UNTIS}
-    \label{fig:dif_export_2}
-\end{figure}
-\begin{figure}[h]
+
+Nach Auswahl von \textit{Export TXT Dateien} erscheint rechts unter „Schnittstellen“ eine Auflistung aller verfügbaren Datentabellen (siehe \cref{fig:dif_export_tables}).
+
+\begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/dif_erstellen_step_3.png}
-    \caption{Navigieren zum Reiter \textit{Export TXT Dateien} in UNTIS}
-    \label{fig:dif_export_3}
+    \includegraphics[width=0.6\textwidth]{figures/dif_erstellen_step_4.png}
+    \caption{Auflistung der verfügbaren Datentabellen in UNTIS}
+    \label{fig:dif_export_tables}
 \end{figure}
-\todo{Position/Größe der Screenshots anpassen}
-Nach dem Klick auf \textit{Export TXT Dateien} öffnet sich auf der rechten Seite unter Schnittstellen ein Auflistung aller verfügbaren Tabellen von Daten (auf dem folgenden Screenshot dargestellt).
-\begin{figure}[h]
+
+Durch Klicken auf eine Tabelle öffnet sich das Fenster für die Exportoptionen. Hierbei sind folgende Einstellungen essenziell, damit Umlaute und Sonderzeichen korrekt übertragen werden:
+
+\begin{itemize}
+    \item \textbf{Trennzeichen:} Komma
+    \item \textbf{Textbegrenzung:} Anführungszeichen (")
+    \item \textbf{Zeichensatz (Encoding):} UTF-8
+\end{itemize}
+
+Standardmäßig ist in UNTIS oft ein anderer Zeichensatz eingestellt; dies muss manuell auf UTF-8 geändert werden. Bestätigen Sie die Einstellungen anschließend mit \textit{OK}.
+
+\begin{figure}[htbp]
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/dif_erstellen_step_4.png}
-    \caption{Auflistung aller verfügbaren Tabellen von Daten in UNTIS}
-    \label{fig:dif_export_4}
+    \includegraphics[width=0.6\textwidth]{figures/dif_erstellen_step_5.png}
+    \caption{Korrekte Exportoptionen (UTF-8) für eine Tabelle}
+    \label{fig:dif_export_options}
 \end{figure}
-\todo{Position/Größe der Screenshots anpassen}
-Beim klicken auf eine der Tabellen öffnet sich ein neues Fenster, in welchem verschiedene Exportoptionen ausgewählt werden können hierbei sollte bei \textit{Trennzeichen zwischen den Feldern} Komma, als \textit{Textbegrenzung} Anführungszeichen und als Encoding UTF-8 ausgewählt werden. 
-Alle diese Einstellungen entsprechen den Standardeinstellungen bei einem Export in UNTIS, bis auf das Encoding, welches manuell auf UTF-8 gesetzt werden muss. 
-Dies ist notwendig, damit Umlaute und Sonderzeichen korrekt in den DIF Dateien dargestellt werden können. Um die Einstellungen vorzunehmen und die Exportierung durchzuführen, klick man dann auf den Button/Knopf \textit{OK}
-Auf dem folgenden Screenshot sind die Exportoptionen für eine ausgewählte Tabelle dargestellt und korrekt eingestellt.
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.7\textwidth]{figures/dif_erstellen_step_5.png}
-    \caption{Exportoptionen für die ausgewählte Tabelle in UNTIS}
-    \label{fig:dif_export_5}
-\end{figure}
-\todo{Besser schreiben}
-Nun wird der Planer aufgefordert, einen Speicherort für die exportierte Datei auszuwählen.
-\todo{Überlegen, wo diese gespeichert werden sollen}
-Nachdem der Speicherort ausgewählt wurde, wird die Datei im DIF Format an dem angegebenen Ort gespeichert und der Export ist abgeschlossen.
-Dieser Vorgang muss für alle benötigten Tabellen wiederholt werden, um alle relevanten Daten für den Stundenplan zu exportieren.
-Die benötigten Tabellen sind im Folgenden aufgelistet oder alternativ auf dem folgenden Screenshot mit roten Kästchen markiert:
+
+Der Planer wird nun aufgefordert, einen Speicherort zu wählen. Sobald dies geschehen ist, wird die Datei im DIF-Format abgelegt. Dieser Vorgang muss für alle relevanten Tabellen wiederholt werden. Die benötigten Tabellen sind:
+
 \begin{itemize}
     \item Klasse
+    \item Lehrer
+    \item Räume
+	\item Fächer
+	\item Studenten
+	\item Unterricht
+	\item Stundenplan
+	\item Stundentafel
+	\item Kurswahl
+	\item Zeitwünsche
 \end{itemize}
-\todo{Nachgucken, welche Datein wir nochmal genau benötigen und hier auflisten}
-\todo{Screenshot mit allen benötigten Tabellen erstellen}
-Wenn alle benötigten Tabellen exportiert wurden, sollten sich die entsprechenden DIF Dateien an dem angegebenen Speicherort befinden und können nun für den Import in das PUSS Tool verwendet werden.
+\todo{Nochmal checken, ob das wirklich alle sind.}
+Sobald alle Tabellen exportiert wurden, können die DIF-Dateien in das Planungstool importiert werden.
+
+\FloatBarrier
+
 \subsubsection{Export via Command Line Interface}
-Für fortgeschrittene Planer besteht die Möglichkeit, die DIF Dateien über das Command Line Interface (CLI) zu exportieren.
-Dies ermöglicht es, direkt alle benötigten Tabellen auf einmal zu exportieren, ohne den manuellen Prozess über die GUI durchlaufen zu müssen.
-\todo{Zuende schrieben}
+Für fortgeschrittene Planer besteht die Möglichkeit, die DIF-Dateien über das Command Line Interface (CLI) zu exportieren...
 
 \subsubsection{Dokumentation der DIF Dateien}
 Da es bereits eine offizielle Dokumentation der DIF Dateien von Untis (siehe: \url{https://www.untis.at/manual/index.html?ti_allgemeine-schnittstellen.htm}) gibt und wir diese nicht weiter direkt verwenden, wollen wir an dieser Stelle nur auf die Dokumentation verweisen und selber keine weiteren Details zu den einzelnen Dateien geben.
@@ -213,7 +252,7 @@ Es besteht die Möglichkeit im Tool per SQL-Query eigene Konflikte zu definieren
 Diese existieren dann zusätzlich zu den standardmäßig unterstützten Konflikttypen. 
 Beispielsweise kann ein Konflikt \textbf{WunschOrt} definiert werden, der auftritt, falls eine Veranstaltung für die Fürstenallee geplant wird, obwohl als Wunschort Campus angegeben ist. \todo{Dieses Beispiel auf Schule anpassen}
 Diese Funktion birgt Risiken für den Benutzer, da die Queries bestimmte Eigenschaften erfüllen müssen. 
-\textbf{Besteht der Wunsch diese Funktion zu nutzen, lesen Sie sich auch die Datenbank Dokumentation durch.} 
+\textbf{Besteht der Wunsch diese Funktion zu nutzen, lesen Sie sich auch die Implementations Dokumentation durch.} 
 Als Beispiel: \texttt{SELECT * FROM Plan WHERE Raumnr NOT LIKE 'F\%' AND Ort = 1 AND Raumnr NOT LIKE 'kein Raum'}. 
 Diese Query wählt alle Plan-Einträge aus, deren Raumnummer nicht mit "F" beginnt (Demnach nicht in der Fürstenallee geplant wurden), jedoch als Wunschort (Ort) die Fürstenalle (Wert 1) angegeben haben. 
 Sollen auch Konflikte angezeigt werden, wenn Veranstaltungen im Campus gewünscht sind, dort jedoch nicht geplant wurden, kann die Query um diese Bedingung erweitert werden. 
@@ -277,7 +316,7 @@ Die Knöpfe haben die folgenden Funktionen (von oben nach unten):
 	\item unignoriert alle Konflikte aus Konflikttabelle 3
 \end{enumerate}
 Die Veränderungen können mittels \textbf{Annehmen} gespeichert oder \textbf{Abbrechen} verworfen werden.
-
+\todo{Screenshots überarbeiten, wenn fertig.}
 \begin{figure}[htbp]
     \centering
     \begin{minipage}{0.45\textwidth}
@@ -311,39 +350,39 @@ In Teil 4 von Abbildung \ref{fig:plt_overview} werden alle momentan ungeplanten 
 Die Tabelle kann mithilfe eines Filters nach Veranstaltungen gefiltert werden. 
 
 \paragraph{Ungeplante Veranstaltungstabelle}\label{par:unplan_table}
-Die Tabelle 1 in \ref{fig:plt_unplanned} zeigt alle momentan ungeplanten Veranstaltungsteile an, also diejenigen, die keinen Raum, Tag und Uhrzeit haben.
-Dabei repräsentiert eine Zeile der Tabelle exakt einen ungeplanten Veranstaltungsteil. 
-Für einen ungeplanten Veranstaltungsteil wird die KursID in der Spalte KursID, der Veranstaltungsteil in der Spalte Teil, der Professor in der Spalte ProfID und die Dauer der Veranstaltung in der Spalte Dauer angezeigt.\\ 
+Die Tabelle 1 in \ref{fig:plt_unplanned} zeigt alle momentan ungeplanten Veranstaltung an, also diejenigen, die keinen Raum, Tag und Uhrzeit haben.
+Dabei repräsentiert eine Zeile der Tabelle exakt einen ungeplante Veranstaltung. 
+Für einen ungeplanten Veranstaltung wird die KursID in der Spalte KursID, der Veranstaltungsteil in der Spalte Teil, der Professor in der Spalte ProfID und die Dauer der Veranstaltung in der Spalte Dauer angezeigt.\\ 
 Die erste Zeile der Tabelle in Abbildung \ref{fig:plt_unplanned} zeigt zum Beispiel die ungeplante Veranstaltung GP Veranstaltungsteil 1 gehalten vom Lehrer mit der ProfID HK. 
-Die Veranstaltung dauert eine Stunde. \todo{Beispiel auf Schule anpassen}
+Die Veranstaltung dauert eine Stunde. \todo{Hier vielleicht anpassung des Beispiels nicht notwendig}
 \paragraph{Filtern der Ungeplanten Veranstaltungstabelle}
 Die Tabelle kann mittels des Filters 2 in \ref{fig:plt_unplanned} gefiltert werden.  
-Es steht ein Veranstaltungsfilter zur Verfügung. 
-Mittels des Veranstaltungsfilters kann eine Veranstaltung ausgewählt werden. 
-Die Tabelle zeigt dann nur ungeplante Veranstaltungsteile an, die zu dieser Veranstaltung gehören.\\
+% Es steht ein Veranstaltungsfilter zur Verfügung. 
+% Mittels des Veranstaltungsfilters kann eine Veranstaltung ausgewählt werden. 
+% Die Tabelle zeigt dann nur ungeplante Veranstaltungsteile an, die zu dieser Veranstaltung gehören.\\
 Ein Filter ist aktiv, sobald der Kippschalter des Filters sich in der rechten Stellung befindet und eine gültige Eingabe für den Wert des Filters ausgewählt wird. 
 Ein Filter ist deaktiviert, sobald sich der Kippschalter des Filters in der linken Stellung befindet. 
 Durch Klicken auf den Kippschalter kann die Stellung verändert werden. 
 In \ref{fig:plt_unplanned} ist zum Beispiel der Veranstaltungsfilter aktiv und es wird nach Veranstaltungsteilen mit der KursID GP gefiltert. \todo{Beispiel überarbeiten}
 
 
-\subsubsection{Planen von Veranstaltungsteilen}
-Das Planen von Veranstaltungsteilen wird mittels des primären und sekundären Stundenplanfensters und der ungeplanten Veranstaltungstabelle durchgeführt. 
+\subsubsection{Planen von Veranstaltungen}
+Das Planen von Veranstaltungen wird mittels des primären und sekundären Stundenplanfensters und der ungeplanten Veranstaltungstabelle durchgeführt. 
 Dazu können die Elemente der Stundenpläne und der ungeplanten Veranstaltungstabelle mittels Drag- and Drop-Gesten zwischen den Stundenplänen und innerhalb eines Stundenplans verschoben werden. 
-Dabei werden die, durch die Verschiebung entstanden Änderungen an Raum und Zeit des Veranstaltungsteils, gespeichert. 
-Das Verschieben eines Veranstaltungsteils zu der ungeplanten Veranstaltungstabelle entfernt die Zeit und den Raum des Veranstaltungsteils. Dieser ist somit ungeplant.
+Dabei werden die, durch die Verschiebung entstanden Änderungen an Raum und Zeit der Veranstaltung, gespeichert. 
+Das Verschieben einer Veranstaltung zu der ungeplanten Veranstaltungstabelle entfernt die Zeit und den Raum der Veranstaltung. Dieser ist somit ungeplant.
 
 \paragraph{Stundenplantypen}\label{par:agenda_types}
 Die Planungssoftware unterstützt 5 verschiedene Stundenplantypen. Jeder Stundenplantyp zeigt verschiedene Veranstaltungsteile an.
 \begin{table}[ht]
 	\begin{tabular}{|p{0.17\textwidth}|p{0.73\textwidth}|}
 		\hline
-		Typ & Angezeigte Veranstaltungsteile\\\hline
-		Raum & Veranstaltungsteile, die in dem Raum stattfinden\\
-		Professor& Veranstaltungsteile, die vom Professor gehalten werden\\
-		Studiengang& Veranstaltungsteile, die Teil des Studiengangs sind\\
-		Veranstaltung & Veranstaltungsteile, die zu der Veranstaltung gehören\\
-		Filter &  beliebige Veranstaltungsteile, die mittels Filtern aus den anderen Stundenplantypen erstellt werden können  \\\hline
+		Typ & Angezeigte Veranstaltungen\\\hline
+		Raum & Veranstaltungen, die in dem Raum stattfinden\\
+		Professor& Veranstaltungen, die vom Professor gehalten werden\\
+		Studiengang& Veranstaltungen, die Teil des Studiengangs sind\\
+		Veranstaltung & Veranstaltungen, die zu der Veranstaltung gehören\\
+		Filter &  beliebige Veranstaltungen, die mittels Filtern aus den anderen Stundenplantypen erstellt werden können  \\\hline
 	\end{tabular}
 \end{table}
 \paragraph{Aufbau des primären und sekundären Stundenplanfensters}
@@ -442,24 +481,23 @@ Die Knöpfe, zu sehen in \ref{fig:plt_agenda_toolbar}, bieten die folgenden Funk
 \end{figure}
 
 Der eigentliche Stundenplan des Objekts ist in  Abbildung \ref{fig:plt_pimary_plan} Teil 4 zu sehen.
-\FloatBarrier
-\paragraph{Veranstaltungsteile im Stundenplan}
-In einem Stundenplan werden je nach Stundenplantyp die jeweiligen Veranstaltungsteile angezeigt. 
-Ein Veranstaltungsteil wird mithilfe eines Rechtecks an der von Tag und Uhrzeit bestimmten Stelle im Stundenplan angezeigt. 
-Die folgenden Informationen werden im Rechteck für einen Veranstaltungsteil in Abbildung \ref{fig:plt_single} angezeigt:
+\paragraph{Veranstaltungen im Stundenplan}
+In einem Stundenplan werden je nach Stundenplantyp die jeweiligen Veranstaltungen angezeigt. 
+Ein Veranstaltung wird mithilfe eines Rechtecks an der von Tag und Uhrzeit bestimmten Stelle im Stundenplan angezeigt. 
+Die folgenden Informationen werden im Rechteck für einen Veranstaltung in Abbildung \ref{fig:plt_single} angezeigt:
 
 \begin{enumerate}
-	\item KursID und Nummer des Veranstaltungsteils
-	\item Raum, in dem der Veranstaltungsteil stattfindet
-	\item ProfID des Professors, der den Veranstaltungsteil gibt
-	\item Studiengänge, zu denen der Veranstaltungsteil gehört. Falls der Veranstaltungsteil zu mehr als einem Studiengang gehört, 
+	\item KursID und Nummer der Veranstaltung
+	\item Raum, in dem die Veranstaltung stattfindet
+	\item ProfID des Professors, der die Veranstaltung hält
+	\item Studiengänge, zu denen die Veranstaltung gehört. Falls der Veranstaltung zu mehr als einem Studiengang gehört, 
 	lässt sich mittels des Pfeils eine Liste aller betroffenen Studiengänge anzeigen 
- \item Anzeige ob für diesen Veranstaltungsteil ein Konflikt existiert, dessen Konflikttyp manuell hinzugefügt wurde. Falls ein Konflikt existiert, wird dieses Feld farblich hervorgehoben
+ \item Anzeige ob für diesen Veranstaltung ein Konflikt existiert, dessen Konflikttyp manuell hinzugefügt wurde. Falls ein Konflikt existiert, wird dieses Feld farblich hervorgehoben
 \end{enumerate}
 
 \begin{figure}[h]
 	\centering
-	\caption{Veranstaltungsteil im Stundenplan}
+	\caption{Veranstaltung im Stundenplan}
 	\begin{subfigure}{0.3\linewidth}
         \centering
 		\caption{}
@@ -486,7 +524,7 @@ Die folgenden Informationen werden im Rechteck für einen Veranstaltungsteil in 
 Je nach Veranstaltungsart wird das Rechteck mit einer anderen Farbe ausgefüllt. 
 Wenn für Raum, Professor oder einen der Studiengänge ein Konflikt vorliegt wird dieser farbig hinterlegt. 
 Standardmäßig  wird  rot für einen schweren und gelb für einen leichten Konflikt genutzt.
-Das Rechteck in Abbildung \ref{fig:plt_single_conflict} visualisiert somit die folgenden Informationen über den Veranstaltungsteil. 
+Das Rechteck in Abbildung \ref{fig:plt_single_conflict} visualisiert somit die folgenden Informationen über die Veranstaltung. 
 Die Verstanstaltung des Veranstaltungsteils ist \textit{DuA-1}. Es ist der zweite Veranstaltungsteil von DuA-1. 
 Der Veranstaltungsteil wird im Raum mit der Raumnummer \textit{L 1} gegeben. 
 Der Veranstaltungsteil wird von dem Professor \textit{ProfDr.SevGha} gegeben. 
@@ -495,12 +533,12 @@ Zudem existiert für den Veranstaltungsteil ein schwerer Raum- und ein schwerer 
 Wenn mehrere Veranstaltungsteile einer Zelle des Stundenplans zugeordnet sind, werden diese nebeneinander angezeigt. So zu sehen in \ref{fig:plt_multiple}. \\
 
 Die Start- und Endzeit des Stundenplans kann frei konfiguriert werden. Mehr dazu in \autoref{par:settings_time}. 
-Daher kann es passieren, dass Veranstaltungsteile nur teilweise oder gar nicht angezeigt werden. 
-Falls ein Veranstaltungsteil nur partiell angezeigt wird, erscheint ein Warndreieck im zugehörigen Rechteck. 
-Zudem erscheint ein rotes Warndreieck in der linken oberen Ecke des Stundenplans, falls ein Veranstaltungsteil existiert der nur partiell oder gar nicht angezeigt wird. 
+Daher kann es passieren, dass Veranstaltungen nur teilweise oder gar nicht angezeigt werden. 
+Falls ein Veranstaltung nur partiell angezeigt wird, erscheint ein Warndreieck im zugehörigen Rechteck. 
+Zudem erscheint ein rotes Warndreieck in der linken oberen Ecke des Stundenplans, falls ein Veranstaltung existiert die nur partiell oder gar nicht angezeigt wird. 
 Beide Indikatoren sind in \autoref{fig:plt_agenda_indicator} zu sehen. 
 Der Veranstaltungsteil \textit{DuA-1 1} geht von 8 bis 10 Uhr. \todo{Beispiel auf Schule anpassen} 
-Da der Stundenplan allerdings erst um 9 Uhr beginnt, wird der Veranstaltungsteil nur partiell angezeigt.
+Da der Stundenplan allerdings erst um 9 Uhr beginnt, wird die Veranstaltung nur partiell angezeigt.
 
 \begin{figure}[ht]
 	\centering
@@ -510,9 +548,9 @@ Da der Stundenplan allerdings erst um 9 Uhr beginnt, wird der Veranstaltungsteil
 	\label{fig:plt_agenda_indicator}
 \end{figure}
 
-Durch Rechtsklick auf einen Veranstaltungsteil öffnet sich ein Kontextmenü. 
+Durch Rechtsklick auf eine Veranstaltung öffnet sich ein Kontextmenü. 
 Mittels des Kontextmenüs kann sofort der Stundenplan der Veranstaltung, des Professors, des Raumes oder des Studiengangs geöffnet werden.\\
-Falls der Stundenplantyp Professor ist, werden zusätzlich zu den Rechtecken für die Veranstaltungsteile, 
+Falls der Stundenplantyp Professor ist, werden zusätzlich zu den Rechtecken für die Veranstaltungen, 
 ebenfalls die Sperrzeiten des Professors im Stundenplan mittels dunkelroten Rechtecken in den jeweiligen Zellen angezeigt. 
 Die Anzeige von Sperrzeiten in einem Stundenplan ist in \ref{fig:plt_plan_wunsch_sperr} zu sehen. 
 
@@ -527,12 +565,12 @@ Die Anzeige von Sperrzeiten in einem Stundenplan ist in \ref{fig:plt_plan_wunsch
 
 Wenn die verfügbaren-Räume-Spalten eingeblendet werden, wird für jeden Tag eine zusätzliche Spalte in dem Stundenplan angezeigt. 
 Für jeden Zeitslot existiert in der Spalte eine Liste. In der Liste wird angezeigt welche Räume für den Tag und die Zeit frei sind. 
-Ein Veranstaltungsteil kann mithilfe einer Drag- and Drop-Geste direkt in die Liste bewegt werden, um den Veranstaltungsteil direkt zu dem Raum zu bewegen. 
+Eine Veranstaltung kann mithilfe einer Drag- and Drop-Geste direkt in die Liste bewegt werden, um die Veranstaltung direkt zu dem Raum zu bewegen. 
 In \autoref{fig:plt_agenda_available_rooms} ist ein Beispiel für die verfügbare-Räume-Spalte zu sehen. 
 In Teil 1 von \autoref{fig:plt_agenda_available_rooms} werden alle verfügbaren Räume für den Zeitslot \textit{Montag 9 Uhr} angezeigt. 
 Das heißt, in den Räumen \textit{F0 530} und \textit{F2 211} findet keine Veranstaltung am \textit{Montag um 9 Uhr} statt. 
 Dasselbe gilt für \textit{F0 530}, \textit{F2 211} und \textit{L 1} am \textit{Montag um 10 Uhr} nach Teil 2 der Abbildung.
-
+\todo{Beispiel überarbeiten}
 \FloatBarrier
 \newpage
 \paragraph{Planen einer Veranstaltung}
@@ -550,7 +588,7 @@ Falls eine Drag- and Drop-Geste für eine verbotene Bewegung durchgeführt wird,
 Falls für den bewegten Veranstaltungsteil Wunschzeiten und für den Lehrer des Veranstaltungsteils Sperrzeiten bekannt sind, werden diese während der Drag- and Drop-Geste in dem Stundenplan, 
 über dem sich die Maus befindet, angezeigt: Wunschzeiten des Veranstaltungsteils in dunkelgrün und Sperrzeiten des Professors dunkelrot. 
 So zu sehen in Abbildung \ref{fig:plt_plan_wunsch_sperr}.
-
+\todo{Ersten Teil überarbeiten}
 \begin{figure}[htbp] %htbp
 	%\centering
     \caption{Angezeigte Informationen bei einer Bewegung}
@@ -580,8 +618,8 @@ So zu sehen in Abbildung \ref{fig:plt_plan_wunsch_sperr}.
 
 \paragraph{Stundenplan für Raum "Ohne Raum"}
 Um die Planung zu erleichtern, gibt es den Raum "Ohne Raum". 
-Veranstaltungsteile, die sich in diesem Raum befinden, haben einen Tag und eine Uhrzeit zugewiesen, jedoch keinen Raum. 
-Dieser Raum dient als Zwischenablage für Veranstaltungsteile, für die schon ein Tag und eine Uhrzeit, aber noch kein Raum geplant ist. 
+Veranstaltungen, die sich in diesem Raum befinden, haben einen Tag und eine Uhrzeit zugewiesen, jedoch keinen Raum. 
+Dieser Raum dient als Zwischenablage für Veranstaltungen, für die schon ein Tag und eine Uhrzeit, aber noch kein Raum geplant ist. 
 \newpage 
 
 
@@ -624,10 +662,12 @@ Falls eine Veranstaltung in einem Raum geplant werden soll, der in der Planungsd
 \FloatBarrier
 
 Ebenfalls können über den Knopf \textbf{Räume aus Datei hinzufügen} Räume aus einer Text-Datei gelesen werden. 
-Die Eintrage der Textdatei müssen dem Format: \texttt{<Raumnummer>-<Gebäude>-<Priorität>-<Hörerzahl>} 
+Die Eintrage der Textdatei müssen dem Format: \\
+ \texttt{<Raumnummer>-<Gebäude>-<Priorität>-<Hörerzahl>} 
 (Beispiel: \texttt{A 1-A-w-250}) entsprechen. Es können auch CSV Dateien gelesen werden. 
 Dabei entspricht jede Zeile einem Raum-Eintrag. 
-Die Formatierung ist ähnlich zu der in der Text-Datei (\texttt{<Raumnummer>;<Gebäude>;} \texttt{<Priorität>;<Hörerzahl>}). 
+Die Formatierung ist ähnlich zu der in der Text-Datei: \\
+ (\texttt{<Raumnummer>;<Gebäude>;} \texttt{<Priorität>;<Hörerzahl>}). 
 In Tabellenform ist jeder Wert in einer eigenen Zelle. Es sollten keine zusätzlichen Texte in der Datei stehen.
 
 \paragraph{Verfügbare Räume}
@@ -654,13 +694,13 @@ Die folgenden Informationen werden angezeigt:
 \begin{enumerate}
 	\item alle Konflikte 
 	\item alle ignorierten Konflikte 
-	\item alle Veranstaltungsteile, die keinen Raum zugewiesen haben
-	\item alle Veranstaltungsteile, die keinen Raum und keinen Tag und keine Uhrzeit zugewiesen haben
+	\item alle Veranstaltungen, die keinen Raum zugewiesen haben
+	\item alle Veranstaltungen, die keinen Raum und keinen Tag und keine Uhrzeit zugewiesen haben
 \end{enumerate}
-Für die Darstellung der Konflikte, ignorierten Konflikte und Veranstaltungsteile werden die bereits erklärten Tabellen aus Abschnitt 
-\ref{par:conf_table} (Konflikttabelle) und \ref{par:unplan_table} (Ungeplante Veranstaltungstabelle) verwendet.
-Ein Stundenplan ist erst bereit für die Veröffentlichung, wenn keine Veranstaltungsteile mehr ohne Raum oder ohne Raum, Tag und Uhrzeit existieren. 
-Der Benutzer kann frei entscheiden, ob er die Phase 4 abschließen möchte, obwohl noch Konflikte zwischen Veranstaltungsteilen existieren.
+Für die Darstellung der Konflikte, ignorierten Konflikte und Veranstaltungen werden die bereits erklärten Tabellen aus Abschnitt 
+\ref{par:conf_table} (Konflikttabelle) und \ref{par:unplan_table} (Ungeplante Veranstaltungen) verwendet.
+Ein Stundenplan ist erst bereit für die Veröffentlichung, wenn keine Veranstaltungen mehr ohne Raum oder ohne Raum, Tag und Uhrzeit existieren. 
+Der Benutzer kann frei entscheiden, ob er die Phase 4 abschließen möchte, obwohl noch Konflikte zwischen Veranstaltungen existieren.
 \begin{figure}[ht]
     \centering
 		\caption{Daten überprüfen}
@@ -692,7 +732,6 @@ Für die Stundenpläne im Stundenplanfenster lässt sich das folgende einstellen
 \end{enumerate}
 In Abbildung \ref{fig:plt_menu_settings_stundenplan} gehen die Stundepläne von 6 Uhr bis 19 Uhr. 
 Die Spalten für Samstag und Sonntag werden nicht angezeigt.
-\FloatBarrier
 \paragraph{Farben}
 Für die Farben der Rechtecke in einem Stundenplan lässt sich das folgende einstellen (zu sehen in \ref{fig:plt_menu_settings_farben}):
 
