@@ -22,13 +22,13 @@ In der Schule gibt es bestimmte Veranstaltungen, die innerhalb eines Jahrgangs p
 Beispiele in der Unter- und Mittelstufe sind die Religionskurse und die zweite Fremdsprache, sofern dort eine Wahlmöglichkeit an der jeweiligen Schule besteht, sowie die sog. Differenzierungskurse.
 In der Oberstufe sind alle Veranstaltungen davon betroffen.
 
-Die konkreten Veranstaltungskopplungen können der DIF-Datei \textit{GPU019.TXT} (Unterrichtsfolge) entnommen werden.
+Die konkreten Veranstaltungskopplungen können der DIF-Datei \texttt{GPU019.TXT} (Unterrichtsfolge) entnommen werden.
 Dort werden jeder Gruppe an parallelen Veranstaltungen die Unterrichtsnummern der betroffenen Veranstaltung zugeordnet.
 Diese Information kann jedoch nicht direkt nach STULP übertragen werden.
-Dazu muss zunächst das Datenbankschmema um eine weitere Relation \textit{Unterrichtsfolge} erweitert werden.
+Dazu muss zunächst das Datenbankschmema um eine weitere Relation \texttt{Unterrichtsfolge} erweitert werden.
 Außerdem gibt es in STULP keine Unterrichtsnummer.
-Daher muss neben den in der DIF-Relation bereits enthaltenen Spalten \textit{Fach} und \textit{Klassen} auch eine Spalte \textit{Lehrer} mit dem entsprechenden Lehrerkürzel integriert werden.
-Darüber hinaus ist zu beachten, dass die Werte in der Spalte \textit{Klassen} nicht atomar sind und eine Normalisierung erfolgen sollte.
+Daher muss neben den in der DIF-Relation bereits enthaltenen Spalten \texttt{Fach} und \texttt{Klassen} auch eine Spalte \texttt{Lehrer} mit dem entsprechenden Lehrerkürzel integriert werden.
+Darüber hinaus ist zu beachten, dass die Werte in der Spalte \texttt{Klassen} nicht atomar sind und eine Normalisierung erfolgen sollte.
 
 Wennn die Informationen über jederzeit parallele Veranstaltungen gespeichert sind, können damit zusätzliche Features realisiert werden.
 Da die Veranstaltungen immer parallel liegen müssen, sollte ein blockweises verschieben ermöglicht werden.
@@ -42,7 +42,7 @@ Nachdem diese festgelegt wurden, würde dann, sofern der oben beschriebene neue 
 
 \subsection{Schwere Studiengangskonflikte bei Wahlpflichtveranstaltungen}
 
-In der aktuellen Modellierung werden Wahlpflichtveranstaltungen, wie z.~B. die zweite Fremdsprache oder Oberstufenkurse, in der Relation \textit{Pflicht} als nicht verpflichtend eingetragen.
+In der aktuellen Modellierung werden Wahlpflichtveranstaltungen, wie z.~B. die zweite Fremdsprache oder Oberstufenkurse, in der Relation \texttt{Pflicht} als nicht verpflichtend eingetragen.
 Es gibt jedoch sowohl in der Unter- und Mittelstufe als auch in der Oberstufe feste Gruppen von Kursen, aus denen jeder Schüler genau eine Veranstaltung besuchen muss.
 Diese Veranstaltungen werden i.~d.~R. parallel gelegt, und so lange die Parallelität nicht aufgehoben wird, muss nicht unterschieden werden, ob eine Veranstaltung aus dieser Gruppe besucht werden muss oder nicht.
 Wenn die Parallelität jedoch aufgehoben wird, sieht das anders aus.
@@ -65,7 +65,7 @@ Alle drei Ursachen können auf unterschiedliche Arten behandelt werden, die nach
 
 \subsubsection{Konflikte durch jederzeit parallele Lehrveranstaltungen}
 
-Dieser Fall ist aktuell durch Einträge in der Konfigurationsdatei \textit{IgnoredConflicts.json} lösbar.
+Dieser Fall ist aktuell durch Einträge in der Konfigurationsdatei \texttt{IgnoredConflicts.json} lösbar.
 Dort müssen manuell alle jederzeit parallelen Veranstaktungen eingetragen werden.
 Sofern die jederzeit parallelen Veranstaltungen jedoch in der STULP-Datenbank gespeichert würden, ist dies nicht mehr erforderlich.
 Dann kann die Konfliktüberprüfung entsprechend angepasst werden, sodass nur Paare von Veranstaltungen berücksichtig werden, die nicht parallel liegen dürfen.
@@ -80,3 +80,23 @@ Um das umzusetzen könnte man beim Mapping nach parallelem Nachmittagsunterricht
 Das setzt allerdings die Annahme voraus, dass der Stundenplan korrekt ist, da die DIF-Dateien keine Informationen über zweiwöchigen Untterricht enthalten.
 Es könnte auch sein, dass mindestens eine der Veranstaltugen wöchentlich stattfinden muss, um auf die nötige Anzahl an Wochenstunden zu kommen.
 Darüber hinaus ist die Startwoche dann zufällig gesetzt und könnte falsch sein.
+
+\subsection{Konflikte durch halbjährlich alternierende Veranstaltugen}
+
+In der Schule gibt es einige Veranstaltungen, die innerhalb eines Jahrgangs nur eine Stunde pro Woche unterricht werden müssen.
+Oftmals werden diese daher nur für ein Halbjahr, dafür aber mit zwei Wochenstunden unterricht.
+Eingetragen sind sie jedoch das ganze Jahr über.
+Dadurch entstehen mitunter gleich mehrere Konflikte.
+Offensichtlich enstehen Studiengangskonflikte, da beide Veranstaltungen belegt werden müssen.
+Dieser Fall kann bereits mit der Konfigurationsdatei gelöst werden.
+
+Es kann aber auch zu Raum- und Professorkonflikten kommen.
+Häufig ist es nämlich so, dass ein Lehrer das gleiche Fach das ganze Jahr hinweg im gleichen Raum unterrichtet, zum Halbjahr jedoch die Klasse wechselt.
+Ein möglicher Lösungsansatz besteht darin, zwei zusätzliche Felder in der Plan-Relation einzuführen, die angeben, ob die Veranstaltung nur ein halbjahr dauert, und in welchem Halbjahr sie liegt.
+Diese Informationen können dann bei der Konfliktüberprüfung ausgelesen und berücksichtigt werden, sodass alle drei Fälle abgedeckt sind.
+
+\subsection{Generelles Ignorieren vorhandener Studiengangskonflikte}
+
+Unter der Annahme, dass der eingelesene Stundenplan korrekt ist, können im Zuge des Mappings auch alle Studiengangskonflikte berechnet und in der Relation \texttt{IgnoredConflict} eingetragen werden.
+Die Konflikte werden dann in STULP nicht mehr angezeigt, aber sollten sie doch relevant sein, kann das Ignorieren in STULP jederzeit rückgängig gemacht werden.
+Mit der aktuellen Modellierung lässt sich diese Variante allerdings nicht realisieren.
