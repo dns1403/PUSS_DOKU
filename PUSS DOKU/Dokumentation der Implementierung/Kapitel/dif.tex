@@ -44,7 +44,7 @@ Die Datei \texttt{GPU001.TXT} enthält den Stundenplan. Da ein Unterrichtselemen
             \hline
                                & \textbf{$\uparrow$ Unterrichtsnummer} & \textbf{$\uparrow$ Klasse} & \textbf{$\uparrow$ Lehrer} & \textbf{$\uparrow$ Fach} & \textbf{$\uparrow$ Raum} & \textbf{Tag} & \textbf{Stunde} & \textbf{Stundenlänge} \\ \hline\hline
             \textbf{Data Type} & INTEGER & TEXT & TEXT & TEXT & TEXT & INTEGER & INTEGER & INTEGER \\
-            \textbf{Constraints}& NN, PK & NN, PK & NN & NN & & NN & NN & \\
+            \textbf{Constraints}& NN, PK & NN, PK & NN & NN, PK & & NN & NN & \\
             \textbf{Checks}    & & & & & & $\in \{1..7\}$ & & in Minuten \\ \hline
             \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{F9CB9C} 2. NF & \cellcolor[HTML]{F9CB9C} 2. NF & \cellcolor[HTML]{F9CB9C} 2. NF & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \\ \hline
             \textbf{Sample}    & 1 & 07A & SMI & D & B2.16 & 2 & 7 &  \\
@@ -69,7 +69,7 @@ Im Kontext des PUSS Tools wird diese Datei primär genutzt, um die \textbf{Stude
         \hline
                        & \textbf{$\uparrow$ Unterrichtsnummer} & \textbf{$\uparrow$ Klasse} & \textbf{$\uparrow$ Lehrer} & \textbf{$\uparrow$ Fach} & \textbf{Studentenzahl} \\ \hline\hline
         \textbf{Data Type} & INTEGER & TEXT & TEXT & TEXT & INTEGER \\
-        \textbf{Constraints}& NN, PK & NN, PK & NN, PK & NN &  \\
+        \textbf{Constraints}& NN, PK & NN, PK & NN & NN, PK &  \\
         \textbf{Checks}    & & & & & $\ge 0$ \\ \hline
         \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK / \cellcolor[HTML]{B7E1CD} FK & \cellcolor[HTML]{A4C2F4} PK / \cellcolor[HTML]{B7E1CD} FK & \cellcolor[HTML]{B7E1CD} FK & \\ \hline
         \textbf{Sample}    & 1 & 07A & SMI & D & 24 \\
