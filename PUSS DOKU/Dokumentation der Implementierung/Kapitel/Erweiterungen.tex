@@ -1,4 +1,5 @@
 \section{Erweiterungen}
+\label{Erweiterungen}
 
 Für das Planungstool sind folgende Erweiterungen vorstellbar, deren mögliche Umsetzung in den nachfolgenden Unterkapiteln beschrieben wird.
 
@@ -17,6 +18,7 @@ Für das Planungstool sind folgende Erweiterungen vorstellbar, deren mögliche U
 \end{itemize}
 
 \subsection{Festlegung von jederzeit parallelen Lehrveranstaltungen}
+\label{parallele_Lehrveranstaltungen}
 
 In der Schule gibt es bestimmte Veranstaltungen, die innerhalb eines Jahrgangs parallel gehalten werden müssen bzw. sollten (vereinzelt kann es Ausnahmen geben).
 Beispiele in der Unter- und Mittelstufe sind die Religionskurse und die zweite Fremdsprache, sofern dort eine Wahlmöglichkeit an der jeweiligen Schule besteht, sowie die sog. Differenzierungskurse.
@@ -29,6 +31,7 @@ Dazu muss zunächst das Datenbankschmema um eine weitere Relation \texttt{Unterr
 Außerdem gibt es in STULP keine Unterrichtsnummer.
 Daher muss neben den in der DIF-Relation bereits enthaltenen Spalten \texttt{Fach} und \texttt{Klassen} auch eine Spalte \texttt{Lehrer} mit dem entsprechenden Lehrerkürzel integriert werden.
 Darüber hinaus ist zu beachten, dass die Werte in der Spalte \texttt{Klassen} nicht atomar sind und eine Normalisierung erfolgen sollte.
+Anschließend muss zudem die Kodierung der Klassennamen angepasst werden.
 
 Wennn die Informationen über jederzeit parallele Veranstaltungen gespeichert sind, können damit zusätzliche Features realisiert werden.
 Da die Veranstaltungen immer parallel liegen müssen, sollte ein blockweises verschieben ermöglicht werden.
@@ -41,6 +44,7 @@ Dazu ist eine neue Ansicht in STULP erforderlich, in der die jederzeit parallele
 Nachdem diese festgelegt wurden, würde dann, sofern der oben beschriebene neue Konflikttyp erstellt worden ist, bei der Stundenplanansicht zu sehen sein, wo die Kurse nicht parallel zueinander liegen.
 
 \subsection{Schwere Studiengangskonflikte bei Wahlpflichtveranstaltungen}
+\label{Studiengangskonflikte_bei_Wahlpflicht}
 
 In der aktuellen Modellierung werden Wahlpflichtveranstaltungen, wie z.~B. die zweite Fremdsprache oder Oberstufenkurse, in der Relation \texttt{Pflicht} als nicht verpflichtend eingetragen.
 Es gibt jedoch sowohl in der Unter- und Mittelstufe als auch in der Oberstufe feste Gruppen von Kursen, aus denen jeder Schüler genau eine Veranstaltung besuchen muss.
@@ -58,20 +62,23 @@ Bei einer Umsetzung dieser Änderung sollte jedoch bedacht werden, dass ein verg
 Wenn die betroffene Wahlpflichtveranstaltung eine Übung ist, kann ein alternativer Übungstermin gewählt werden, wenn es eine Vorlesung ist, kann die Veranstaltung ggf. in einem anderen Semester belegt werden.
 
 \subsection{Automatisches Ignorieren zulässiger Konflikte}
+\label{automatisches_Konfliktignorieren}
 
 Insbesondere im Schulkontext gibt es eine Reihe zulässiger Konflikte.
 Neben jederzeit parallelen (Wahlpflicht-)Veranstaltungen, die bereits im vorherigen Abschnitt thematisiert wurden, trifft dies auf zweiwöchig stattfindenden Nachmittagsunterricht und nur in einem Halbjahr stattfindenden Veranstaltungen zu.
 Alle drei Ursachen können auf unterschiedliche Arten behandelt werden, die nachfolgend beschrieben werden.
 
 \subsubsection{Konflikte durch jederzeit parallele Lehrveranstaltungen}
+\label{Konflikte_durch_parallele_Lehrveranstaltungen}
 
 Dieser Fall ist aktuell durch Einträge in der Konfigurationsdatei \texttt{IgnoredConflicts.json} lösbar.
 Dort müssen manuell alle jederzeit parallelen Veranstaktungen eingetragen werden.
 Sofern die jederzeit parallelen Veranstaltungen jedoch in der STULP-Datenbank gespeichert würden, ist dies nicht mehr erforderlich.
 Dann kann die Konfliktüberprüfung entsprechend angepasst werden, sodass nur Paare von Veranstaltungen berücksichtig werden, die nicht parallel liegen dürfen.
-Alternativ würde dieser Fall auch abgedeckt werden, wenn die jederzeit parallelen Veranstaltungen in der STULP-Datenbank gespeichert würden und die Konfliktüberprüfung entsprechend angepasst wird.
+Alternativ würde dieser Fall auch abgedeckt werden, wenn die jederzeit parallelen Veranstaltungen wie in Kapitel~\ref{parallele_Lehrveranstaltungen} beschrieben in der STULP-Datenbank gespeichert würden und die Konfliktüberprüfung entsprechend angepasst wird.
 
 \subsubsection{Konflikte durch zweiwöchigen Nachmittagsunterricht}
+\label{Konflikte_durch_zweiwöchigen_Nachmittagsunterricht}
 
 Beim Nachmittagsunterricht gibt es oft den Fall, dass dieser statt wöchentlich einstündig zweiwöchentlich doppelstündig gehalten wird.
 In den DIF-Dateien ist der Nachmittagsunterricht jedoch als wöchtlich doppelstündlich eingetragen.
@@ -81,7 +88,8 @@ Das setzt allerdings die Annahme voraus, dass der Stundenplan korrekt ist, da di
 Es könnte auch sein, dass mindestens eine der Veranstaltugen wöchentlich stattfinden muss, um auf die nötige Anzahl an Wochenstunden zu kommen.
 Darüber hinaus ist die Startwoche dann zufällig gesetzt und könnte falsch sein.
 
-\subsection{Konflikte durch halbjährlich alternierende Veranstaltugen}
+\subsubsection{Konflikte durch halbjährlich alternierende Lehrveranstaltugen}
+\label{Konflikte_durch_halbjährlich_alternierende_Lehrveranstaltungen}
 
 In der Schule gibt es einige Veranstaltungen, die innerhalb eines Jahrgangs nur eine Stunde pro Woche unterricht werden müssen.
 Oftmals werden diese daher nur für ein Halbjahr, dafür aber mit zwei Wochenstunden unterricht.
@@ -91,12 +99,52 @@ Offensichtlich enstehen Studiengangskonflikte, da beide Veranstaltungen belegt w
 Dieser Fall kann bereits mit der Konfigurationsdatei gelöst werden.
 
 Es kann aber auch zu Raum- und Professorkonflikten kommen.
-Häufig ist es nämlich so, dass ein Lehrer das gleiche Fach das ganze Jahr hinweg im gleichen Raum unterrichtet, zum Halbjahr jedoch die Klasse wechselt.
-Ein möglicher Lösungsansatz besteht darin, zwei zusätzliche Felder in der Plan-Relation einzuführen, die angeben, ob die Veranstaltung nur ein halbjahr dauert, und in welchem Halbjahr sie liegt.
+Häufig ist es nämlich so, dass ein Lehrer das gleiche Fach das ganze Jahr hinweg im gleichen Raum unterrichtet, zum Halbjahr jedoch die Klasse wechselt.Ein möglicher Lösungsansatz besteht darin, zwei zusätzliche Felder in der Relation \texttt{Plan} einzuführen, die angeben, ob die Veranstaltung nur ein halbjahr dauert, und in welchem Halbjahr sie liegt.
 Diese Informationen können dann bei der Konfliktüberprüfung ausgelesen und berücksichtigt werden, sodass alle drei Fälle abgedeckt sind.
 
-\subsection{Generelles Ignorieren vorhandener Studiengangskonflikte}
+\subsubsection{Generelles Ignorieren vorhandener Studiengangskonflikte}
+\label{generelles_Ignorieren_vorhandener_Studiengangskonflikte}
 
 Unter der Annahme, dass der eingelesene Stundenplan korrekt ist, können im Zuge des Mappings auch alle Studiengangskonflikte berechnet und in der Relation \texttt{IgnoredConflict} eingetragen werden.
 Die Konflikte werden dann in STULP nicht mehr angezeigt, aber sollten sie doch relevant sein, kann das Ignorieren in STULP jederzeit rückgängig gemacht werden.
 Mit der aktuellen Modellierung lässt sich diese Variante allerdings nicht realisieren.
+In STULP wird davon aus gegangen, dass jeder Teil einer Veranstaltung genau einmal geplant wird, weshalb in der Relation \texttt{IgnoredConflict} keine Zeitinformationen gespeichert sind.
+Durch die Verwendung des Veranstaltungsteils als Kodierung für die jeweilige Klasse kommt es jedoch vor, dass der gleiche Veranstaltungsteil der selbe Veranstaltung mehrmals geplant wird, da viele Fächer (Kurse bzw. Veranstaltungen) in einer Klasse mehrmals pro Woche unterrichtet werden.
+Eine Mögliche Lösung liegt in einer Anpassung des Mappings.
+Der Veranstaltungsteil könnte um eine weitere durch Punkt getrennte Stelle erweitert werden, die für jede Ansetzung der gleiche Klasse unterschiedlich ist.
+So würde z.~B. die erste Deutschstunde in der Klasse "5A" den Veranstaltungsteil "5.1.1" bekommen, die zweite den Veranstaltungsteil "5.1.2".
+Alternativ könnten zunächst die beiden Elemente des Veranstaltungsteils zusammengeführt werden, d.~h., der Punkt in der Mitte würde entfallen.
+So würde z.~B. aus "5.1", was die Klasse "5A" repräsentiert "51".
+Anschließend müsste für jedes Ansetzen der jeweiligen Veranstaltung in der gleichen Klasse eine fortlaufende Nummer durch einen Punkt getrennt angefügt.
+So würde die z.~B. die erste Deutschstunde der Klasse "5A" den Veranstaltungsteil "51.1" haben, die zweite den Veranstaltungsteil "51.2".
+Beide Varianten sind mit der Spezifikation von STULP kompatibel.
+
+\subsection{Bessere Berücksichtigung der Wunschzeiten}
+\label{bessere_Berücksichtigung_der_Wunschzeiten}
+
+Aktuell werden die Wunschzeiten zwar bei den Stundenplaneinträgen angezeigt, Wunschzeitverletzungen werden aber nur markiert, wenn der Nutzer einen neuen Konflikttyp mittels entsprechender SQL-Query erstellt.
+Weiterhin ist die Anzahl an Wunschzeiten im Schulkontext deutlich größer als an der Universität.
+Während an der Universität Wunschzeiten i.~d.~R. nur vom jeweiligen Lehrenden stammen und auf einzelne Veranstaltungen bezogen sind, gibt es in der Schule auch Wunschzeiten von den Klassen, Fächern und Räumen.
+Zudem umfassen die Wunschzeiten einen deutlich größeren Zeitraum.
+Beispielsweise haben fünfte Klassen Zeitwünsche für jeden Tag von der ersten bis zur sechsten Stunde.
+Das führt zu einer Vielzahl an Wunschzeiten, die so nicht mehr übersichtlich ist und zwei Teilproblemen.
+
+Bevor konkrete Wunschzeitkonflikte implementiert werden können, sollte die Modellierung der Wunschzeiten an sich angepasst werden.
+Eine Möglichkeit ist, die STULP-Relation \texttt{Timeslot} durch die DIF-Relation \texttt{Zeitwünsche} zu ersetzen (ggf. mit Anpassung der Abkürzungen für Lehrer und Klasse durch entsprechende Abkürzungen für Professor und Studiengang).
+Damit können dann für jede Art und jede Priorität Wunschzeitkonflikte erstellt werden, in dem die Zeitwunsch-Einträge mit den entsprechenden Plan einträgen über das jeweilige Element verknüpft werden.
+Dabei ist allerdings zu beachten, dass die Kodierung der Klassennamen gemäß der verwendeten Modellierung angepasst werden muss.
+
+Übernimmt man die DIF-Relation \texttt{Zeitwünsche} unter Berücksichtigung der beschriebenen Anpassungen und erstellt entsprechende Konflikttypen, kann überlegt werden auf eine Auflistung der Wunschzeiten bei den Planeinträgen zu verzichten.
+Möchte man diese dennoch für jeden Eintrag angezeigt werden, muss jeder Eintrag in der Relation \texttt{Zeitwünsche} mit einem eindeutigen numerischen Index versehen werden, damit er in der Relation \texttt{Plan} wie bisher referenziert werden kann.
+
+\subsection{Normalisierungen im Schulkontext}
+\label{Normalisierungen_im_Schulkontext}
+
+Das Schema der STULP-Datenbank ist mit dem Ziel entwickelt worden, im Universitätskontext normalisiert zu sehen.
+Im Schulkontext entsteht jedoch bei mit der aktuellen Modellierung bei der Relation \texttt{Plan} eine Verletzung der zweiten Normalform.
+Der gleiche Veranstaltungsteil kann für die selbe Veranstaltung mehrmals geplant werden, da er dazu verwendet wird die Klasse zu repräsentieren, und eine Veranstaltung innerhalb einer Klasse mehrmals geplant werden kann, wenn sie an unterschiedlichen Tagen gelehrt werden soll.
+Das führt dazu, dass im Schulkontext auch die Attribute \texttt{Tag} und \texttt{Stunde} Teil des Primärschlüssels sein müssen.
+Gleichzeitig hängt aber das Attribut \texttt{Professor} weiterhin nur vom Veranstaltungsteil und von der Veranstaltung ab, denn das gleiche Fach wird in der selben Klasse nicht von unterschiedlichen Lehrern gelehrt.
+Um die Normalform wiederherzustellen kann eine neue Relation erstellt werden, die genau diese Abhängigkeit abbildet.
+Das Attribut \texttt{Professor} würde dann in der Relation \texttt{Plan} entfallen.
+Alternativ kann der Veranstaltungsteil wie in Kapitel~\ref{generelles_Ignorieren_vorhandener_Studiengangskonflikte} beschrieben angepasst werden.
