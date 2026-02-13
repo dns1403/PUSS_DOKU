@@ -36,7 +36,7 @@ Anschließend muss zudem die Kodierung der Klassennamen angepasst werden.
 Wenn die Informationen über jederzeit parallele Veranstaltungen gespeichert sind, können damit zusätzliche Features realisiert werden.
 Da die Veranstaltungen immer parallel liegen müssen, sollte ein blockweises verschieben ermöglicht werden.
 Außerdem sollte eine Warnung geben, wenn versucht wird, die parallelen Veranstaltungen zu trennen und angezeigt werden, wenn die Parallelität verletzt ist.
-Das kann z.~B. über einen neuen Konflikttyp realisiert werden.
+Das kann zum Beispiel über einen neuen Konflikttyp realisiert werden.
 Darüber hinaus sollten jederzeit parallele Kurse bei Studiengangskonflikten keine Berücksichtigung finden, denn unter der Annahme, dass die Veranstaltungskopplungen fix sind, muss jeder Schüler pro Gruppe paralleler Veranstaltungen maximal eine davon besuchen.
 
 Falls kein fertiger Stundenplan vorhanden ist, oder die Veranstaltungskopplungen neu definiert werden sollen, muss es die Möglichkeit geben, diese zu ändern.
@@ -46,10 +46,11 @@ Nachdem diese festgelegt wurden, würde dann, sofern der oben beschriebene neue 
 \subsection{Schwere Studiengangskonflikte bei Wahlpflichtveranstaltungen}
 \label{Studiengangskonflikte_bei_Wahlpflicht}
 
-In der aktuellen Modellierung werden Wahlpflichtveranstaltungen, wie z.~B. die zweite Fremdsprache oder Oberstufenkurse, in der Relation \texttt{Pflicht} als nicht verpflichtend eingetragen.
+In der aktuellen Modellierung werden Wahlpflichtveranstaltungen, wie zum Beispiel die zweite Fremdsprache oder Oberstufenkurse, in der Relation \texttt{Pflicht} als nicht verpflichtend eingetragen.
 Es gibt jedoch sowohl in der Unter- und Mittelstufe als auch in der Oberstufe feste Gruppen von Kursen, aus denen jeder Schüler genau eine Veranstaltung besuchen muss.
 Diese Veranstaltungen werden im Normalfall parallel angelegt, und so lange die Parallelität nicht aufgehoben wird, muss nicht unterschieden werden, ob eine Veranstaltung aus dieser Gruppe besucht werden muss oder nicht.
-Wenn die Parallelität jedoch aufgehoben wird, sieht das anders aus. Ein Beispiel für einen solchen Fall ist die zweite Fremdsprache in der Unter- und Mittelstufe.
+Wenn die Parallelität jedoch aufgehoben wird, sieht das anders aus.
+Ein Beispiel für einen solchen Fall ist die zweite Fremdsprache in der Unter- und Mittelstufe.
 
 Ab Klasse $7$ muss entweder Latein oder Französisch besucht werden, weshalb die entsprechenden Veranstaltungen klassenübergreifend gehalten werden und (meistens) parallel liegen.
 Gleichzeitig muss auch unter anderem Deutsch besucht werden.
@@ -59,15 +60,14 @@ Aufgrund der Tatsache, dass die oben beschriebene Kombination jedoch unzulässig
 Um dies zu realisieren, müsste die Konfliktüberprüfung in STULP so angepasst werden, dass ein schwerer Studiengangskonflikt vorliegt, sobald eine der betroffenen Veranstaltungen verpflichtend ist.
 
 Bei einer Umsetzung dieser Änderung sollte jedoch bedacht werden, dass ein vergleichbarer Fall in der Uni durchaus zulässig sein kann.
-Wenn die betroffene Wahlpflichtveranstaltung eine Übung ist, kann ein alternativer Übungstermin gewählt werden, wenn es eine Vorlesung ist, kann die Veranstaltung gegebenen falls in einem anderen Semester belegt werden.
+Wenn die betroffene Wahlpflichtveranstaltung eine Übung ist, kann ein alternativer Übungstermin gewählt werden, wenn es eine Vorlesung ist, kann die Veranstaltung gegebenenfalls in einem anderen Semester belegt werden.
 
 \subsection{Automatisches Ignorieren zulässiger Konflikte}
 \label{automatisches_Konfliktignorieren}
 
 Insbesondere im Schulkontext gibt es eine Reihe zulässiger Konflikte.
-Neben jederzeit parallelen (Wahlpflicht-)Veranstaltungen, die bereits im vorherigen Abschnitt thematisiert wurden, trifft dies auch auf andere Fälle zu, zum Beispiel auf zweiwöchig stattfindenden Nachmittagsunterricht oder nur in einem Halbjahr stattfindenden Veranstaltungen.
-Dafür haben wir drei Ursachen \todo{Sind das wirklich nur 3 oder kann ich nicht zählen} identifiziert, die zu solchen Konflikten führen können.
-Alle drei Ursachen können auf unterschiedliche Arten behandelt werden, die wir im Folgenden beschreiben werden.
+Neben jederzeit parallelen (Wahlpflicht-)Veranstaltungen, die bereits im vorherigen Abschnitt thematisiert wurden, trifft dies auch auf andere Fälle zu, zum Beispiel auf zweiwöchig stattfindenden Nachmittagsunterricht oder nur in einem Halbjahr stattfindende Veranstaltungen.
+Im folgenden beschreiben wir einige mögliche Lösungsansätze.
 
 \subsubsection{Konflikte durch jederzeit parallele Lehrveranstaltungen}
 \label{Konflikte_durch_parallele_Lehrveranstaltungen}
@@ -100,8 +100,8 @@ Offensichtlich entstehen Studiengangskonflikte, da beide Veranstaltungen belegt 
 Dieser Fall kann bereits mit der Konfigurationsdatei gelöst werden.
 
 Es kann aber auch zu Raum- und Professorenkonflikten kommen.
-Häufig ist es nämlich so, dass ein Lehrer das gleiche Fach das ganze Jahr hinweg im gleichen Raum unterrichtet, zum Halbjahr jedoch die Klasse wechselt. 
-Ein möglicher Lösungsansatz besteht darin, zwei zusätzliche Felder in der Relation \texttt{Plan} einzuführen, die angeben, ob die Veranstaltung nur ein halbjahr dauert, und in welchem Halbjahr sie liegt.
+Häufig ist es nämlich so, dass ein Lehrer das gleiche Fach das ganze Jahr hinweg im gleichen Raum unterrichtet, zum Halbjahr jedoch die Klasse wechselt.
+Ein möglicher Lösungsansatz besteht darin, zwei zusätzliche Felder in der Relation \texttt{Plan} einzuführen, die angeben, ob die Veranstaltung nur ein Halbjahr dauert, und in welchem Halbjahr sie liegt.
 Diese Informationen können dann bei der Konfliktüberprüfung ausgelesen und berücksichtigt werden, sodass alle drei Fälle abgedeckt sind.
 
 \subsubsection{Generelles Ignorieren vorhandener Studiengangskonflikte}
@@ -112,15 +112,15 @@ Die Konflikte werden dann in STULP nicht mehr angezeigt, aber sollten sie doch r
 Mit der aktuellen Modellierung lässt sich diese Variante allerdings nicht realisieren.
 In STULP wird davon aus gegangen, dass jeder Teil einer Veranstaltung genau einmal geplant wird, weshalb in der Relation \texttt{IgnoredConflict} keine Zeitinformationen gespeichert sind.
 Durch die Verwendung des Veranstaltungsteils als Kodierung für die jeweilige Klasse kommt es jedoch vor, dass der gleiche Veranstaltungsteil der selbe Veranstaltung mehrmals geplant wird, da viele Fächer (Kurse bzw. Veranstaltungen) in einer Klasse mehrmals pro Woche unterrichtet werden.
-Eine Mögliche Lösung liegt in einer Anpassung des Mappings.
+Eine mögliche Lösung liegt in einer Anpassung des Mappings.
 Der Veranstaltungsteil könnte um eine weitere durch Punkt getrennte Stelle erweitert werden, die für jede Ansetzung der gleiche Klasse unterschiedlich ist.
-So würde z.~B. die erste Deutschstunde in der Klasse "5A" den Veranstaltungsteil "5.1.1" bekommen, die zweite den Veranstaltungsteil "5.1.2".
+So würde zum Beispiel die erste Deutschstunde in der Klasse "5A" den Veranstaltungsteil "5.1.1" bekommen, die zweite den Veranstaltungsteil "5.1.2".
 Alternativ könnten zunächst die beiden Elemente des Veranstaltungsteils zusammengeführt werden.
-So würde z.~B. aus "5.1", was die Klasse "5A" repräsentiert "51".
+So würde zum Beispiel aus "5.1", was die Klasse "5A" repräsentiert "51".
 Anschließend müsste für jedes Ansetzen der jeweiligen Veranstaltung in der gleichen Klasse eine fortlaufende Nummer durch einen Punkt getrennt angefügt.
-So würde die z.~B. die erste Deutschstunde der Klasse "5A" den Veranstaltungsteil "51.1" haben, die zweite den Veranstaltungsteil "51.2".
+So würde zum Beispiel die erste Deutschstunde der Klasse "5A" den Veranstaltungsteil "51.1" haben, die zweite den Veranstaltungsteil "51.2".
 Beide Varianten sind mit der Spezifikation von STULP kompatibel.
-\todo{Soll ich das vielleicht ein bisschen Umschreiben? Würde hier auf jeden Fall z.B. auschreiben}
+\todo{Soll ich das vielleicht ein bisschen Umschreiben?}
 
 \subsection{Bessere Berücksichtigung der Wunschzeiten}
 \label{bessere_Berücksichtigung_der_Wunschzeiten}
@@ -155,7 +155,7 @@ Alternativ kann der Veranstaltungsteil wie in Kapitel~\ref{generelles_Ignorieren
 \subsection{Umbennung}
 \label{Umbennung}
 
-Eine weitere Mögliche Erweiterung besteht darin, die Namen der Relationen und Attribute an den Schulkontext anzupassen.
-So könnte Beispielsweise die Relation \texttt{Professor} in \texttt{Lehrer} umbenannt werden, die Relation \texttt{Studiengänge} in \texttt{Klassen} und so weiter. 
+Eine weitere mögliche Erweiterung besteht darin, die Namen der Relationen und Attribute an den Schulkontext anzupassen.
+So könnte Beispielsweise die Relation \texttt{Professor} in \texttt{Lehrer} umbenannt werden, die Relation \texttt{Studiengänge} in \texttt{Klassen} und so weiter.
 Was auch mögliche wäre, ist eine Umbennung von Attributen in der GUI, sodass die Datenbank weiterhin die gleiche Spezifikation hat, aber in der GUI die Namen der Relationen und Attribute an den Schulkontext angepasst werden.
 Wir haben uns jedoch bewusst gegen eine solche Änderung entschieden, da die aktuellen Namen der Relationen und Attribute bereits in der Spezifikation von STULP festgelegt sind und eine Änderung die Kompatibilität mit späteren Versionen von STULP beeinträchtigen könnte.
