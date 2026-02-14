@@ -30,12 +30,14 @@ Auf Windows kann die jeweilige jar-Dateien  mittels eines Doppelklicks ausgefüh
 Auf Linux sollte das jeweilige Programm über die Kommandozeile mittels des Befehls \texttt{java -jar Planunungstool.jar} bzw. \texttt{java -jar Paultool.jar} ausgeführt werden. 
 \subsection{Übertragung eines bestehenden Stundenplans von Untis in das lokale Planungstool}
 
-Falls bereits ein Stundenplan in Untis existiert, kann dieser importiert werden. Dafür exportieren wir die Daten aus UNTIS in sogenannte DIF-Dateien (Data Interchange Format). Dies sind strukturierte Textdateien, die anschließend vom lokalen Planungstool eingelesen werden.
+Falls bereits ein Stundenplan in Untis existiert, kann dieser importiert werden. 
+Dafür exportieren wir die Daten aus UNTIS in sogenannte DIF-Dateien (Data Interchange Format). 
+Dies sind strukturierte Textdateien, die anschließend durch das Skript \todo{Name Einfügen} in das Format der lokalen Planungsdatenbank umgewandelt werden können.
 
 Es gibt zwei Wege, diese Dateien zu erstellen:
 \begin{enumerate}
     \item Direkter Export aus der UNTIS Benutzeroberfläche (GUI)
-    \item Export via Command Line Interface (CLI) – für fortgeschrittene Planer
+    \item Export via Command Line Interface (CLI)
 \end{enumerate}
 
 Die erste Methode erfordert keine tiefgehenden technischen Kenntnisse. Die zweite Methode bietet hingegen den Vorteil, dass alle benötigten DIF-Dateien automatisiert in einem Rutsch exportiert werden können.
@@ -205,11 +207,11 @@ Für den Planer bedeutet das, dass diese Konflikte nicht mehr in der Tabelle und
 \paragraph{Konfliktabelle}\label{par:conf_table}
 Die Tabelle 1 in Abbildung \ref{fig:plt_conflicts} zeigt alle momentan existierenden nicht ignorierten Konflikte an. 
 Dabei repräsentiert eine Zeile der Tabelle exakt einen Konflikt zwischen zwei Veranstaltungen.
-Für einen Konflikt werden jeweils die KursID in der Spalte KursID und der Veranstaltungsteil in der Spalte Teil der beteiligten Veranstaltungsteile angezeigt \todo{Umschreiben}
+Für einen Konflikt werden jeweils die KursID in der Spalte KursID und die Klasse koodiert als Veranstaltungsteil in der Spalte Teil der beteiligten Veranstaltungsteile angezeigt.
 Zusätzlich wird in der Spalte Konflikt das Konfliktobjekt angezeigt. 
 Dieses Konfliktobjekt ist entweder ein Lehrer, ein Raum oder ein Klasse.
-Die erste Zeile der Tabelle in Abbildung \ref{fig:plt_conflicts} Teil 1 zeigt zum Beispiel den Konflikt zwischen der Veranstaltung  \textit{FoC Veranstaltungsteil 1} und der Veranstaltung \textit{KT Veranstaltungsteil 1} an. \todo{Andere Beispiele einfügen}
-Der Konflikt ist ein Raumkonflikt für den Raum mit der Raumnummer \textit{B1}.
+Die erste Zeile der Tabelle in Abbildung \ref{fig:plt_conflicts} Teil 1 zeigt zum Beispiel den Konflikt zwischen der Veranstaltung  \textit{Chemie in der 10A} und der Veranstaltung \textit{Chemie in der 10B} an. 
+Der Konflikt ist ein Raumkonflikt für den Raum mit der Raumnummer \textit{B2.03}.
 Mittels der Konflikttabelle können angezeigte Konflikte ignoriert werden. 
 Dazu muss lediglich mittels eines Rechtsklicks auf die Zeile des Konflikts das Kontextmenü geöffnet werden und der Menüpunkt \textbf{Ignorieren} ausgewählt werden. 
 Zudem kann der Stundenplan des Konfliktobjekts aufgerufen werden. 
@@ -250,21 +252,20 @@ Wenn im Plan nur die Konflikte mit einer Priorität größer als 3 (also Priorit
 \paragraph{Eigene Konflikte}
 Es besteht die Möglichkeit im Tool per SQL-Query eigene Konflikte zu definieren. 
 Diese existieren dann zusätzlich zu den standardmäßig unterstützten Konflikttypen. 
-Beispielsweise kann ein Konflikt \textbf{WunschOrt} definiert werden, der auftritt, falls eine Veranstaltung für die Fürstenallee geplant wird, obwohl als Wunschort Campus angegeben ist. \todo{Dieses Beispiel auf Schule anpassen}
+Beispielsweise kann ein Konflikt \textbf{WunschOrt} definiert werden, der auftritt, falls eine Veranstaltung für das Gebäude F geplant wird, obwohl als Wunschort ein anderes Gebäude angegeben ist.
 Diese Funktion birgt Risiken für den Benutzer, da die Queries bestimmte Eigenschaften erfüllen müssen. 
 \textbf{Besteht der Wunsch diese Funktion zu nutzen, lesen Sie sich auch die Implementations Dokumentation durch.} 
 Als Beispiel: \texttt{SELECT * FROM Plan WHERE Raumnr NOT LIKE 'F\%' AND Ort = 1 AND Raumnr NOT LIKE 'kein Raum'}. 
-Diese Query wählt alle Plan-Einträge aus, deren Raumnummer nicht mit "F" beginnt (Demnach nicht in der Fürstenallee geplant wurden), jedoch als Wunschort (Ort) die Fürstenalle (Wert 1) angegeben haben. 
-Sollen auch Konflikte angezeigt werden, wenn Veranstaltungen im Campus gewünscht sind, dort jedoch nicht geplant wurden, kann die Query um diese Bedingung erweitert werden. 
+Diese Query wählt alle Plan-Einträge aus, deren Raumnummer nicht mit "F" beginnt (Demnach nicht im F Gebäude geplant wurden), jedoch als Wunschort (Ort) das F Gebäude (Wert 1) angegeben haben. 
 Ein solcher Konflikt kann entweder im Konflikt-Menü in Abbildung \ref{fig:plt_conflict_menu} unter \textbf{Eigenen Konflikt hinzufügen} hinzugefügt werden oder in Abbildung \ref{fig:plt_conflicts} über das \textbf{+}. 
 Über das sich öffnende Fenster in Abbildung \ref{fig:plt_add_custom_conflict} kann der Konflikttyp dann eingegeben werden. \\
-
+\todo{Hier überlegen, ob wir als Beispiel vielleicht doch Raum zu klein nehmen sollten}
 \begin{figure}[htbp]
     \centering
     \begin{minipage}{0.5\textwidth}
         \centering
         \caption{Eigenen Konflikttyp erstellen}
-        \includegraphics[scale=0.5]{images/planning_tool/add_custom_conflict.png}
+        \includegraphics[scale=0.4]{images/planning_tool/add_custom_conflict.png}
         
         \label{fig:plt_add_custom_conflict}
     \end{minipage}
@@ -272,7 +273,7 @@ Ein solcher Konflikt kann entweder im Konflikt-Menü in Abbildung \ref{fig:plt_c
     \begin{minipage}{0.4\textwidth}
         \centering
         \caption{Konflikte Menü}
-        \includegraphics[scale=0.5]{images/planning_tool/conflict_menu.png}
+        \includegraphics[scale=0.4]{images/planning_tool/conflict_menu.png}
         
         \label{fig:plt_conflict_menu}
     \end{minipage}
@@ -316,7 +317,6 @@ Die Knöpfe haben die folgenden Funktionen (von oben nach unten):
 	\item unignoriert alle Konflikte aus Konflikttabelle 3
 \end{enumerate}
 Die Veränderungen können mittels \textbf{Annehmen} gespeichert oder \textbf{Abbrechen} verworfen werden.
-\todo{Screenshots überarbeiten, wenn fertig.}
 \begin{figure}[htbp]
     \centering
     \begin{minipage}{0.45\textwidth}
@@ -353,8 +353,8 @@ Die Tabelle kann mithilfe eines Filters nach Veranstaltungen gefiltert werden.
 Die Tabelle 1 in \ref{fig:plt_unplanned} zeigt alle momentan ungeplanten Veranstaltung an, also diejenigen, die keinen Raum, Tag und Uhrzeit haben.
 Dabei repräsentiert eine Zeile der Tabelle exakt einen ungeplante Veranstaltung. 
 Für einen ungeplanten Veranstaltung wird die KursID in der Spalte KursID, der Veranstaltungsteil in der Spalte Teil, der Professor in der Spalte ProfID und die Dauer der Veranstaltung in der Spalte Dauer angezeigt.\\ 
-Die erste Zeile der Tabelle in Abbildung \ref{fig:plt_unplanned} zeigt zum Beispiel die ungeplante Veranstaltung GP Veranstaltungsteil 1 gehalten vom Lehrer mit der ProfID HK. 
-Die Veranstaltung dauert eine Stunde. \todo{Hier vielleicht anpassung des Beispiels nicht notwendig}
+Die erste Zeile der Tabelle in Abbildung \ref{fig:plt_unplanned} zeigt zum Beispiel die ungeplante Veranstaltung D L1 in der Q1 gehalten vom Lehrer mit der ProfID JA. 
+Die Veranstaltung dauert zwei Schulstunden.
 \paragraph{Filtern der Ungeplanten Veranstaltungstabelle}
 Die Tabelle kann mittels des Filters 2 in \ref{fig:plt_unplanned} gefiltert werden.  
 % Es steht ein Veranstaltungsfilter zur Verfügung. 
@@ -363,7 +363,7 @@ Die Tabelle kann mittels des Filters 2 in \ref{fig:plt_unplanned} gefiltert werd
 Ein Filter ist aktiv, sobald der Kippschalter des Filters sich in der rechten Stellung befindet und eine gültige Eingabe für den Wert des Filters ausgewählt wird. 
 Ein Filter ist deaktiviert, sobald sich der Kippschalter des Filters in der linken Stellung befindet. 
 Durch Klicken auf den Kippschalter kann die Stellung verändert werden. 
-In \ref{fig:plt_unplanned} ist zum Beispiel der Veranstaltungsfilter aktiv und es wird nach Veranstaltungsteilen mit der KursID GP gefiltert. \todo{Beispiel überarbeiten}
+In \ref{fig:plt_unplanned} ist zum Beispiel der Veranstaltungsfilter aktiv und es wird nach Veranstaltungsteilen mit der KursID D L1 gefiltert.
 
 
 \subsubsection{Planen von Veranstaltungen}
@@ -379,9 +379,9 @@ Die Planungssoftware unterstützt 5 verschiedene Stundenplantypen. Jeder Stunden
 		\hline
 		Typ & Angezeigte Veranstaltungen\\\hline
 		Raum & Veranstaltungen, die in dem Raum stattfinden\\
-		Professor& Veranstaltungen, die vom Professor gehalten werden\\
-		Studiengang& Veranstaltungen, die Teil des Studiengangs sind\\
-		Veranstaltung & Veranstaltungen, die zu der Veranstaltung gehören\\
+		Professor& Veranstaltungen, die vom Lehrer gehalten werden\\
+		Studiengang& Veranstaltungen, die von einer Klasse besucht werden\\
+		Veranstaltung & Veranstaltungen, die von diesem Typ gehalten werden\\
 		Filter &  beliebige Veranstaltungen, die mittels Filtern aus den anderen Stundenplantypen erstellt werden können  \\\hline
 	\end{tabular}
 \end{table}
@@ -438,13 +438,14 @@ Die Knöpfe, zu sehen in  Abbildung  \ref{fig:plt_menu_plan}, bieten die folgend
 \begin{wrapfigure}{r}{0.4\textwidth}
     \centering
 	\caption{Auswahl Stundenplantab}
-	\includegraphics[scale=0.4]{images/planning_tool/menu_plan_popup.png}
+	\includegraphics[scale=0.6]{images/planning_tool/menu_plan_popup.png}
 	\label{fig:plt_plan_popup}
 \end{wrapfigure}
 
 Beim Öffnen eines Raum-, Professor-, Veranstaltung- oder Studiengang-Stundenplantabs muss zusätzlich mittels eines Menüs, 
 zu sehen in Abbildung \ref{fig:plt_plan_popup}, das Objekt des Stundenplans ausgewählt werden. 
-Dazu muss lediglich das gewünschte Objekt in der Liste ausgewählt werden und die Auswahl mittels des Knopfes \textbf{Öffne Stundenplan} bestätigt werden.\\
+Dazu muss lediglich das gewünschte Objekt in der Liste ausgewählt werden und die Auswahl mittels des Knopfes \textbf{Öffne Stundenplan} bestätigt werden.
+Um die Übersicht zu erleichtern kann über das Suchfeld nach einem speziellen Objekt gesucht werden.\\
 In Abbildung \ref{fig:plt_pimary_plan} ist eine Beispielabbildung für das primäre Stundenplanfenster zu sehen (die Planung mit dem sekundären Stundenplanfenster ist analog).
 Die derzeit geöffneten Stundeplantabs können in der Leiste in 1 gesehen werden. 
 Mittels Klick auf das Tab wird der jeweilige Stundenplan des Objekts geöffnet. 
@@ -489,8 +490,8 @@ Die folgenden Informationen werden im Rechteck für einen Veranstaltung in Abbil
 \begin{enumerate}
 	\item KursID und Nummer der Veranstaltung
 	\item Raum, in dem die Veranstaltung stattfindet
-	\item ProfID des Professors, der die Veranstaltung hält
-	\item Studiengänge, zu denen die Veranstaltung gehört. Falls der Veranstaltung zu mehr als einem Studiengang gehört, 
+	\item ProfID des Lehrers, der die Veranstaltung hält
+	\item Klassen, zu denen die Veranstaltung gehört. Falls der Veranstaltung zu mehr als einem Klasse gehört, 
 	lässt sich mittels des Pfeils eine Liste aller betroffenen Studiengänge anzeigen 
  \item Anzeige ob für diesen Veranstaltung ein Konflikt existiert, dessen Konflikttyp manuell hinzugefügt wurde. Falls ein Konflikt existiert, wird dieses Feld farblich hervorgehoben
 \end{enumerate}
@@ -515,21 +516,18 @@ Die folgenden Informationen werden im Rechteck für einen Veranstaltung in Abbil
 	\begin{subfigure}{0.3\linewidth}
     \centering
 	\caption{}
-	\includegraphics[scale=0.6]%{images/planning_tool/plan_multiple.png}
+	\includegraphics[scale=0.3]%{images/planning_tool/plan_multiple.png}
     {images/planning_tool/pic03.png}
 	\label{fig:plt_multiple}
 \end{subfigure}
 \end{figure}
 
 Je nach Veranstaltungsart wird das Rechteck mit einer anderen Farbe ausgefüllt. 
-Wenn für Raum, Professor oder einen der Studiengänge ein Konflikt vorliegt wird dieser farbig hinterlegt. 
+Wenn für Raum, Lehrer oder ein der Klassen ein Konflikt vorliegt wird dieser farbig hinterlegt. 
 Standardmäßig  wird  rot für einen schweren und gelb für einen leichten Konflikt genutzt.
 Das Rechteck in Abbildung \ref{fig:plt_single_conflict} visualisiert somit die folgenden Informationen über die Veranstaltung. 
-Die Verstanstaltung des Veranstaltungsteils ist \textit{DuA-1}. Es ist der zweite Veranstaltungsteil von DuA-1. 
-Der Veranstaltungsteil wird im Raum mit der Raumnummer \textit{L 1} gegeben. 
-Der Veranstaltungsteil wird von dem Professor \textit{ProfDr.SevGha} gegeben. 
-Der Veranstaltungsteil ist Teil des Studiengangs \textit{CEB-2BPO3}. \todo{Beispiel überarbeiten}
-Zudem existiert für den Veranstaltungsteil ein schwerer Raum- und ein schwerer Studiengangskonflikt.
+Die Veranstaltung \textit{D 9.4} findet im Raum \textit{B1.12} statt, wir von dem Lehrer mit der ProfID \textit{AM} gehalten und gehört zu der Klasse \textit{09D}.
+Zudem existiert für die Veranstaltung ein leichter Studiengangskonflikt.
 Wenn mehrere Veranstaltungsteile einer Zelle des Stundenplans zugeordnet sind, werden diese nebeneinander angezeigt. So zu sehen in \ref{fig:plt_multiple}. \\
 
 Die Start- und Endzeit des Stundenplans kann frei konfiguriert werden. Mehr dazu in \autoref{par:settings_time}. 
@@ -537,7 +535,7 @@ Daher kann es passieren, dass Veranstaltungen nur teilweise oder gar nicht angez
 Falls ein Veranstaltung nur partiell angezeigt wird, erscheint ein Warndreieck im zugehörigen Rechteck. 
 Zudem erscheint ein rotes Warndreieck in der linken oberen Ecke des Stundenplans, falls ein Veranstaltung existiert die nur partiell oder gar nicht angezeigt wird. 
 Beide Indikatoren sind in \autoref{fig:plt_agenda_indicator} zu sehen. 
-Der Veranstaltungsteil \textit{DuA-1 1} geht von 8 bis 10 Uhr. \todo{Beispiel auf Schule anpassen} 
+Der Veranstaltungsteil \textit{M 9.4} geht von 8 bis 10 Uhr.
 Da der Stundenplan allerdings erst um 9 Uhr beginnt, wird die Veranstaltung nur partiell angezeigt.
 
 \begin{figure}[ht]
@@ -551,7 +549,7 @@ Da der Stundenplan allerdings erst um 9 Uhr beginnt, wird die Veranstaltung nur 
 Durch Rechtsklick auf eine Veranstaltung öffnet sich ein Kontextmenü. 
 Mittels des Kontextmenüs kann sofort der Stundenplan der Veranstaltung, des Professors, des Raumes oder des Studiengangs geöffnet werden.\\
 Falls der Stundenplantyp Professor ist, werden zusätzlich zu den Rechtecken für die Veranstaltungen, 
-ebenfalls die Sperrzeiten des Professors im Stundenplan mittels dunkelroten Rechtecken in den jeweiligen Zellen angezeigt. 
+ebenfalls die Sperrzeiten des Lehrers im Stundenplan mittels dunkelroten Rechtecken in den jeweiligen Zellen angezeigt. 
 Die Anzeige von Sperrzeiten in einem Stundenplan ist in \ref{fig:plt_plan_wunsch_sperr} zu sehen. 
 
 \paragraph{Verfügbare Räume Spalten}\label{par:available_rooms}
