@@ -152,6 +152,13 @@ Um die Normalform wiederherzustellen kann eine neue Relation erstellt werden, di
 Das Attribut \texttt{Professor} würde dann in der Relation \texttt{Plan} entfallen.
 Alternativ kann der Veranstaltungsteil wie in Kapitel~\ref{generelles_Ignorieren_vorhandener_Studiengangskonflikte} beschrieben angepasst werden.
 
+\subsection{Hinzufügen von Lehrbefähigungen}
+\label{Hinzufügen_von_Lehrbefähigungen}
+Anders als im Universitätskontext, wo die Lehrenden in der Regel selber entscheiden können, welche Veranstaltungen sie anbieten möchten, ist im Schulkontext oftmals eine feste Anzahl an Lehrveranstaltungen vorgegeben, die von den Lehrenden unterrichtet werden müssen.
+Dementsprechend ist es hier wichtig zu wissen, welche Lehrenden welche Veranstaltungen unterrichten können, um die Stundenplanung entsprechend zu gestalten.
+Dazu könnte eine neue Relation \texttt{Lehrbefähigungen} erstellt werden, die die Lehrenden mit den Fächern verknüpft, die sie unterrichten können.
+Diese Informationen können dann bei der Stundenplanung berücksichtigt werden, indem zum Beispiel eine Konfliktart erstellt wird, die einen Konflikt anzeigt, wenn eine Veranstaltung von einem Lehrenden unterrichtet wird, der nicht über die entsprechende Lehrbefähigung verfügt.
+
 \subsection{Umbennung}
 \label{Umbennung}
 
