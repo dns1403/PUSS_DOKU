@@ -201,7 +201,7 @@ In Abbildung \ref{fig:plt_overview} ist eine Übersicht über das Planungstool z
 	\item Sekundärer Stundenplan für die Veranstaltungsplanung.
     \item Anzeige, welche Datenbank gerade geöffnet ist.
 \end{enumerate}
-Mithilfe der Teile 4, 5, 6 werden die Veranstaltungen geplant. Dazu werden Veranstaltungen mittels "Drag and Drop" zwischen verschiedenen Stundenplänen bewegt und somit zum Beispiel die Uhrzeit oder der Raum geändert. 
+Mithilfe der Teile 4, 5, 6 werden die Veranstaltungen geplant. Dazu werden Veranstaltungen mittels „Drag and Drop" zwischen verschiedenen Stundenplänen bewegt und somit zum Beispiel die Uhrzeit oder der Raum geändert.
 
 
 \subsubsection{Planungsdatenbanken öffnen, aktualisieren und mit dem Webprogramm teilen}
@@ -274,7 +274,7 @@ Es stehen ein Veranstaltungsfilter (Veranstaltung) und ein Konflikttypfilter (Ty
 Mittels des Veranstaltungsfilters kann eine Veranstaltung ausgewählt werden. 
 Die Konflikttabelle zeigt dann nur Konflikte an, die zu dieser Veranstaltung gehören. 
 Mittels des Konflikttypfilters kann ein Konflikttyp ausgewählt werden. 
-Die Konflikttabelle zeigt dann nur Konflikte an, die den ausgewählten Konflikttyp haben. 
+Die Konflikttabelle zeigt dann nur Konflikte an, die den ausgewählten Konflikttyp haben.
 Falls beide Filter aktiv sind, werden in der Konflikttabelle nur die Konflikte angezeigt, die beiden Filtern genügen.\\
 Ein Filter ist aktiv, sobald der Kippschalter des Filters sich in der rechten Stellung befindet und eine gültige Eingabe für den Wert des Filter ausgewählt wird. 
 Ein Filter ist deaktiviert, sobald sich der Kippschalter des Filters in der linken Stellung befindet. 
@@ -307,7 +307,7 @@ Beispielsweise kann ein Konflikt \textbf{WunschOrt} definiert werden, der auftri
 Diese Funktion birgt Risiken für den Benutzer, da die Queries bestimmte Eigenschaften erfüllen müssen. 
 \textbf{Besteht der Wunsch diese Funktion zu nutzen, lesen Sie sich auch die Implementations Dokumentation durch.} 
 Als Beispiel: \texttt{SELECT * FROM Plan WHERE Raumnr NOT LIKE 'F\%' AND Ort = 1 AND Raumnr NOT LIKE 'kein Raum'}. 
-Diese Query wählt alle Plan-Einträge aus, deren Raumnummer nicht mit "F" beginnt (Demnach nicht im F Gebäude geplant wurden), jedoch als Wunschort (Ort) das F Gebäude (Wert 1) angegeben haben. 
+Diese Query wählt alle Plan-Einträge aus, deren Raumnummer nicht mit „F" beginnt (Demnach nicht im F Gebäude geplant wurden), jedoch als Wunschort (Ort) das F Gebäude (Wert 1) angegeben haben.
 Ein solcher Konflikt kann entweder im Konflikt-Menü in Abbildung \ref{fig:plt_conflict_menu} unter \textbf{Eigenen Konflikt hinzufügen} hinzugefügt werden oder in Abbildung \ref{fig:plt_conflicts} über das \textbf{+}. 
 Über das sich öffnende Fenster in Abbildung \ref{fig:plt_add_custom_conflict} kann der Konflikttyp dann eingegeben werden. \\
 \todo{Hier überlegen, ob wir als Beispiel vielleicht doch Raum zu klein nehmen sollten}
@@ -631,7 +631,7 @@ Bei einer Drag- and Drop-Geste wird angezeigt, ob eine Bewegung erlaubt ist oder
 In Abbildung \ref{fig:plt_plan_move_allowed} ist eine erlaubte Bewegung und in Abbildung \ref{fig:plt_plan_move_forbidden} eine verbotene Bewegung zu sehen.  
 Eine erlaubte Bewegung ist eine Bewegung von (ungeplanten) Veranstaltungen in Räume oder in die Ansichten, die zu den Veranstaltungsdaten passen. 
 Eine Veranstaltung die von Lehrerin X gehalten wird, kann nur in die Ansicht von Lehrerin X verschoben werden. 
-Wenn versucht wird eine Veranstaltung in eine abweichende Ansicht (z.B. Lehrerin Y) zu verschieben, handelt es sich um eine verbotene Bewegung. 
+Wenn versucht wird eine Veranstaltung in eine abweichende Ansicht (z.~B. Lehrerin Y) zu verschieben, handelt es sich um eine verbotene Bewegung.
 Darunter fällt auch das Verschieben ungeplanter Veranstaltung in eine Nicht-Raum Ansicht.  
 Falls eine Drag- and Drop-Geste für eine verbotene Bewegung durchgeführt wird, werden keine Veränderungen ausgelöst.
 Falls für den bewegten Veranstaltung Wunschzeiten und für den Lehrer des Veranstaltung Sperrzeiten bekannt sind, werden diese während der Drag- and Drop-Geste in dem Stundenplan, 
@@ -664,8 +664,8 @@ So zu sehen in Abbildung \ref{fig:plt_plan_wunsch_sperr}.
 \end{figure}
 
 
-\paragraph{Stundenplan für Raum "Ohne Raum"}
-Um die Planung zu erleichtern, gibt es den Raum "Ohne Raum". 
+\paragraph{Stundenplan für Raum „Ohne Raum"}
+Um die Planung zu erleichtern, gibt es den Raum „Ohne Raum".
 Veranstaltungen, die sich in diesem Raum befinden, haben einen Tag und eine Uhrzeit zugewiesen, jedoch keinen Raum. 
 Dieser Raum dient als Zwischenablage für Veranstaltungen, für die schon ein Tag und eine Uhrzeit, aber noch kein Raum geplant ist. 
 \newpage 
