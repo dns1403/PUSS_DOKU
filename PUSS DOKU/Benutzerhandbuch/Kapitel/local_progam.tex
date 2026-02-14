@@ -14,8 +14,8 @@ Dies Unterschiede wollen wir im Folgenden kurz zusammenfassen und falls notwendi
 	\item \textbf{Nebenfach(NF)}: Dies habe wir nicht verwendet, da an der Schule keine Nebenfächer existieren. Es ist standardmäßig auf Ohne gesetzt.
 	\item \textbf{Prüfungsordnung(PO)}: Dieses wird beim übernehmen eines Stundenplans aus Untis auf die Schulform und Jahrgang bei der zum Studiengang gehörigen Klasse gesetzt. 
 	Bei keinem bestehenden Stundenplan kann dies ignoriert werden und muss nicht gesetzt werden.
-	\item \textbf{Veranstaltungsteil} Dies ist wohl die größte Abweichung in der Terminologie. Um eine Kompatibilität mit importierten UNTIS Stundenplänen zu gewährleisten, haben wir uns dazu entschieden den Begriff Veranstaltungsteil zweckzuentfremden.
-	Ein Veranstaltungsteil ist beim Import eines UNTIS Stundenplans auch der zu dem Studiengang gehörigen Klasse zugeordnet.
+	\item \textbf{Veranstaltungsteil} Dies ist wohl die größte Abweichung in der Terminologie. Um eine Kompatibilität mit importierten Untis Stundenplänen zu gewährleisten, haben wir uns dazu entschieden den Begriff Veranstaltungsteil zweckzuentfremden.
+	Ein Veranstaltungsteil ist beim Import eines Untis Stundenplans auch der zu dem Studiengang gehörigen Klasse zugeordnet.
 \end{itemize}
 \todo{Um weitere Begriffe ergänzen, wenn uns noch was einfällt.}
 \subsection{Voraussetzung zur Nutzung der Software als Planer}
@@ -27,25 +27,36 @@ Das Planungstool wird als jar-Datei mit dem Namen Planungstool.jar ausgeliefert.
 Eine manuelle Installation ist nicht nötig. 
 Die jar-Dateien können in einem beliebigen Ordner platziert werden.
 Es wird empfohlen, alle Dateien, die während der Planung benötigt oder erzeugt werden, in demselben Ordner wie die jar-Datei zu speichern. 
-Auf Windows kann die jeweilige jar-Dateien  mittels eines Doppelklicks ausgeführt werden. 
-Auf Linux sollte das jeweilige Programm über die Kommandozeile mittels des Befehls \texttt{java -jar Planunungstool.jar} ausgeführt werden. 
+Auf Windows kann die jeweilige jar-Dateien  mittels eines Doppelklicks ausgeführt werden.
+Auf Linux sollte das jeweilige Programm über die Kommandozeile mittels folgendem Befehl ausgeführt werden:
+
+\begin{verbatim}
+    java -jar Planunungstool.jar
+\end{verbatim}
+
 \subsection{Übertragung eines bestehenden Stundenplans von Untis in das lokale Planungstool}
 Falls bereits ein Stundenplan in Untis existiert, kann dieser importiert werden. 
-Dafür exportieren wir die Daten aus UNTIS in sogenannte DIF-Dateien (Data Interchange Format) und übertragen diese anschließend in das Format der lokalen Planungsdatenbank.
+Dafür exportieren wir die Daten aus Untis als Textdateien im Data Interchange Format (DIF) und übertragen diese anschließend in das Format der lokalen Planungsdatenbank.
 Bei den DIF-Dateien handelt es sich um strukturierte Textdateien, die die relevanten Informationen über die Klassen, Lehrer, Räume, Fächer, Unterricht, Stundenplan, Stundentafel und Zeitwünsche enthalten.
-Dabei hat der Planer die folgenden zwei Möglichkeiten, um die Daten von UNTIS in das lokale Planungstool zu übertragen:
+Auf eine genaue Spezifikation des Formates wird an dieser Stelle verzichtet, da es für die Anwendung nicht relevant ist, und bereits eine offizielle Dokumentation von Untis existiert (siehe: \url{https://www.untis.at/manual/index.html?ti_allgemeine-schnittstellen.htm}). 
+Der Planer die folgenden zwei Möglichkeiten, um die Daten von Untis in das lokale Planungstool zu übertragen:
 \begin{itemize}
 	\item Nutzen des Importskripts export\_untis.bat, welches die DIF-Dateien automatisch erstellt und in das Format der lokalen Planungsdatenbank überträgt.
-    \item Manueller Export der DIF-Dateien aus der UNTIS GUI oder mit Hilfe des Command Line Interface (CLI) und anschließendes Ausführen der Importskripte, um die DIF-Dateien in das Format der lokalen Planungsdatenbank zu übertragen.
+    \item Manueller Export der DIF-Dateien aus der Untis-GUI oder mit Hilfe des Command Line Interface (CLI) und anschließendes Ausführen der Importskripte, um die DIF-Dateien in das Format der lokalen Planungsdatenbank zu übertragen.
 \end{itemize}
-Wir empfehlen die erste Methode, da sie einfacher und schneller ist. Die zweite Methode bietet keine Mehrwert gegenüber der Methode, da Sie die Schritte des Importskripts manuell ausführt.
-Wir wollen diese trotzdem beschreiben, um bei möglichen Problemen mit dem Importskript eine alternative Möglichkeit zu bieten, um die Daten von UNTIS in das lokale Planungstool zu übertragen.
+Wir empfehlen die erste Methode, da sie einfacher und schneller ist. Die zweite Methode bietet keinen Mehrwert gegenüber der Methode, da sie die Schritte des Importskripts manuell ausführt.
+Wir wollen diese trotzdem beschreiben, um bei möglichen Problemen mit dem Importskript eine alternative Möglichkeit zu bieten, um die Daten von Untis in das lokale Planungstool zu übertragen.
+
+Da Untis anders als unser lokales Planungstool ausschließlich auf Windows läuft, muss der Datenexport unter Windows vorgenommen werden.
+Die exportierten Daten können anschließend bei Bedarf auf den Linux-PC verschoben werden.
+Der Zeitpunkt und das Vorgehen sind abhängig von der gewählten Export-Variante und werden im jeweiligen Unterkapitel beschrieben.
+
 \subsubsection{Nutzen des Importskripts export\_untis.bat}
 Um das Importskript zu verwenden muss sich der Planer auf einem Computer mit einem Windows System befinden, da das Skript als .bat Datei vorliegt, welche nur auf Windows Systemen ausgeführt werden kann.
 \todo{Beschreiben wo dieses liegt und wie es gestartet wird (Doppelklick oder commandzeile).}
-Nach dem Starten des Skripts wird der Planer aufgefordert den Pfad zu der UNTIS.exe Datei anzugeben (siehe \cref{fig:export_untis_step1}). Hierbei ist es egal, ob der Pfad mit Anführungszeichen oder ohne angegeben wird.
-Im Beispiel in \cref{fig:export_untis_step1} ist der Pfad zur UNTIS.exe Datei Rot markiert und ohne Anführungszeichen angegeben. Sobald der Pfad eingegeben wurde, muss die Eingabe mit Enter bestätigt werden.
-Nach Bestätigung mit Enter, wird der Planer aufgefordert den Pfad zu der .untis Datei anzugeben. Dies ist die Datei, welche von Planer in UNTIS geöffnet wird und alle benötigten Daten für den Stundenplan enthält (siehe \cref{fig:export_untis_step2}). 
+Nach dem Starten des Skripts wird der Planer aufgefordert den Pfad zu der Untis.exe Datei anzugeben (siehe \cref{fig:export_untis_step1}). Hierbei ist es egal, ob der Pfad mit Anführungszeichen oder ohne angegeben wird.
+Im Beispiel in \cref{fig:export_untis_step1} ist der Pfad zur Untis.exe Datei Rot markiert und ohne Anführungszeichen angegeben. Sobald der Pfad eingegeben wurde, muss die Eingabe mit Enter bestätigt werden.
+Nach Bestätigung mit Enter, wird der Planer aufgefordert den Pfad zu der .untis Datei anzugeben. Dies ist die Datei, welche von Planer in Untis geöffnet wird und alle benötigten Daten für den Stundenplan enthält (siehe \cref{fig:export_untis_step2}). 
 Auch hier ist es egal, ob der Pfad mit Anführungszeichen oder ohne angegeben wird. Sobald der Pfad eingegeben wurde, muss die Eingabe mit Enter bestätigt werden (siehe \cref{fig:export_untis_step2}).
 Danach läuft das Skript automatisch durch und führt die benötigten Schritte aus, um die DIF-Dateien zu erstellen und in das Format der lokalen Planungsdatenbank zu übertragen.
 Die beendete Durchführung des Skripts wird mit einer Erfolgsmeldung (siehe \cref{fig:export_untis_step3}) bestätigt.
@@ -54,7 +65,7 @@ Die beendete Durchführung des Skripts wird mit einer Erfolgsmeldung (siehe \cre
     \begin{subfigure}[b]{0.32\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/export_untis_1.png}
-        \caption{Der Pfad zur UNTIS.exe Datei ist Rot markiert. Enter drücken, um fortzufahren.}
+        \caption{Der Pfad zur Untis.exe Datei ist Rot markiert. Enter drücken, um fortzufahren.}
         \label{fig:export_untis_step1}
     \end{subfigure}
     \hfill % Fügt flexiblen Abstand zwischen den Bildern ein
@@ -74,11 +85,17 @@ Die beendete Durchführung des Skripts wird mit einer Erfolgsmeldung (siehe \cre
     \label{fig:untis_export}
 \end{figure}
 Die Resultierende lokale Planungsdatenbank wird im selben Ordner wie das Importskript unter dem Namen \textbf{STULP.db} erstellt.
-Diese Datei kann nun im lokalen Planungstool geöffnet werden und der importierte Stundenplan kann bearbeitet werden.
-\subsubsection{Manueller Export der DIF-Dateien aus der UNTIS GUI}
-Wie bereits erwähnt gibt es die Möglichkeit die benötigten DIF-Dateien manuell aus der UNTIS GUI zu exportieren.
+Diese Datei kann sowohl unter Windows als auch unter Linux im lokalen Planungstool geöffnet werden und der importierte Stundenplan kann bearbeitet werden.
+
+\subsubsection{Manueller Export aus Untis}
+
+Für den manuellen Export aus Untis können entweder das Untis-CLI oder die Untis-GUI verwendet werden.
+Anschließend muss der Inhalt der erzeugten DIF-Dateien mittels Python-Skripten in eine von STULP lesbare SQLite-Datenbank übertragen werden.
+
+\paragraph{Manueller Export der DIF-Dateien aus der Untis-GUI}
+Wie bereits erwähnt gibt es die Möglichkeit die benötigten DIF-Dateien manuell aus der Untis-GUI zu exportieren.
 Wir empfehlen diese Methode nur, wenn es Probleme mit dem Importskript gibt, da sie aufwendig und fehleranfällig ist.
-Zunächst muss UNTIS gestartet und die entsprechende Datenbank geöffnet werden. Navigieren Sie anschließend im Menü oben links über \textit{Datei} $\rightarrow$ \textit{Import/Export} $\rightarrow$ \textit{Export TXT Dateien}. Dieser Ablauf ist in \cref{fig:untis_export_steps} dargestellt.
+Zunächst muss Untis gestartet und die entsprechende Datenbank geöffnet werden. Navigieren Sie anschließend im Menü oben links über \textit{Datei} $\rightarrow$ \textit{Import/Export} $\rightarrow$ \textit{Export TXT Dateien}. Dieser Ablauf ist in \cref{fig:untis_export_steps} dargestellt.
 
 \begin{figure}[htbp]
     \centering
@@ -102,7 +119,7 @@ Zunächst muss UNTIS gestartet und die entsprechende Datenbank geöffnet werden.
         \caption{Klick auf \textit{Export TXT}}
         \label{fig:step3}
     \end{subfigure}
-    \caption{Der Navigationspfad zum Export-Menü in UNTIS}
+    \caption{Der Navigationspfad zum Export-Menü in Untis}
     \label{fig:untis_export_steps}
 \end{figure}
 
@@ -111,7 +128,7 @@ Nach Auswahl von \textit{Export TXT Dateien} erscheint rechts unter „Schnittst
 \begin{figure}[htbp]
     \centering
     \includegraphics[width=0.6\textwidth]{figures/dif_erstellen_step_4.png}
-    \caption{Auflistung der verfügbaren Datentabellen in UNTIS}
+    \caption{Auflistung der verfügbaren Datentabellen in Untis}
     \label{fig:dif_export_tables}
 \end{figure}
 
@@ -123,7 +140,7 @@ Durch Klicken auf eine Tabelle öffnet sich das Fenster für die Exportoptionen.
     \item \textbf{Zeichensatz (Encoding):} UTF-8
 \end{itemize}
 
-Standardmäßig ist in UNTIS oft ein anderer Zeichensatz eingestellt; dies muss manuell auf UTF-8 (andernfalls kommt es zu Fehlern bei der Datenübertragung) geändert werden. 
+Standardmäßig ist in Untis oft ein anderer Zeichensatz eingestellt; dies muss manuell auf UTF-8 (andernfalls kommt es zu Fehlern bei der Datenübertragung) geändert werden. 
 Bestätigen Sie die Einstellungen anschließend mit \textit{OK}.
 
 \begin{figure}[htbp]
@@ -151,7 +168,7 @@ Sobald alle Tabellen exportiert wurden, können die DIF-Dateien in das Planungst
 
 \FloatBarrier
 
-\subsubsection{Export via Command Line Interface}
+\paragraph{Export via Command Line Interface}
 Es gibt auch die Möglichkeit, sich alle DIF-Dateien auf einmal ausgeben zu lassen. 
 Dafür ist folgender Befehl in der Kommandozeile einzugeben:
 \begin{verbatim}
@@ -169,15 +186,22 @@ Untis.exe <Pfad zur .untis Datei> /exp1=<Pfad zur Ausgabedatei>
 Dabei ist zu beachten, dass die Exportfunktion über die Kommandozeile nicht die Möglichkeit bietet, die Zeichensatzkodierung auf UTF-8 zu setzen.
 Dadurch können die im nächsten Unterpunkt beschriebenen Python-Skripte die DIF-Dateien nicht korrekt lesen, da sie nicht auf UTF-8 kodiert sind.
 Um dies zu umgehen, müssen die DIF-Dateien manuell in UTF-8 konvertiert werden. Wie dies funktioniert, ist leicht im Internet zu recherchieren und hängt von dem Betriebssystem ab, welches verwendet wird.
-\subsubsection{Dokumentation der DIF Dateien}
-Da es bereits eine offizielle Dokumentation der DIF Dateien von Untis (siehe: \url{https://www.untis.at/manual/index.html?ti_allgemeine-schnittstellen.htm}) gibt und wir diese nicht weiter direkt verwenden, wollen wir an dieser Stelle nur auf die Dokumentation verweisen und selber keine weiteren Details zu den einzelnen Dateien geben.
 
-\subsubsection{Übertragung der DIF Dateien in das lokale Planungstool}
-Nachdem die DIF Dateien erstellt wurden, können diese in das lokale Planungstool importiert werden in dem man zunächst das Python Skript \textbf{dif-relevant-columns.py} ausführt.
-Dies erstellt eine Datenbank mit dem Namen \textbf{UNTIS.db}, welche die Daten der DIF Dateien in eine Datenbank zusammenfasst.
-Anschließend muss das Skript \textbf{dif-to-stulp.py} ausgeführt werden, um die Daten aus der UNTIS.db in das Format der lokalen Planungsdatenbank zu übertragen.
-Nach der Ausführung dieses Skripts wird die Datei \textbf{STULP.db} erstellt, welche im lokalen Planungstool geöffnet werden kann.
-\todo{Um Linux Anleitung ergänzen und vielleicht überarbeiten :).}
+\paragraph{Übertragung der DIF Dateien in das lokale Planungstool}
+
+Nachdem die DIF Dateien erstellt wurden, müssen nacheinander die mitgelieferten Python-Skripte mit folgenden Befehlen ausgeführt werden:
+
+\begin{verbatim}
+    python dif-relevant-columns.py
+    python dif-to-stulp.py
+\end{verbatim}
+
+Dieser Schritt kann sowohl unter Windows als auch unter Linux durchgeführt werden, wobei wichtig ist, dass die DIF-Dateien im gleichen Verzeichnis wie die Python-Skripte liegen.
+Bei der Ausführung auf debian-basierten Linux-Distributionen (z.~B. Debian, Ubuntu und Mint) ist jedoch zu beachten, dass der Befehl \texttt{python} durch den Befehl \texttt{python3} ersetzt werden muss.
+Alternativ kann unter Linux aber auch das Bash-Skript \textbf{untis-to-stulp.sh} ausgeführt werden.
+
+Nach der Ausführung dieses Skripts wird die Datei \textbf{STULP.db} erstellt.
+Diese kann plattformunabhängig im lokalen Planungstool geöffnet werden.
 
 \subsection{Nutzung der lokalen Planungssoftware}
 Das Planungstool ermöglicht die Zeit- und Raumplanung für die Kurse.

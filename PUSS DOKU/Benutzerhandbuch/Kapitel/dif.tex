@@ -1,37 +1,37 @@
 \section{Import eines bestehenden Stundenplans via DIF Dateien}
-Wie bereits in der Einleitung erwähnt, wird für dieses Kapitel davon ausgegangen, dass bereits ein bestehender Stundenplan in UNTIS vorhanden ist, welcher in das PUSS Tool importiert werden soll.
-Dafür wollen wir den Stundenplan aus UNTIS in sogenannte DIF Dateien exportieren, welche anschließend in das PUSS Tool importiert werden können.
+Wie bereits in der Einleitung erwähnt, wird für dieses Kapitel davon ausgegangen, dass bereits ein bestehender Stundenplan in Untis vorhanden ist, welcher in das PUSS Tool importiert werden soll.
+Dafür wollen wir den Stundenplan aus Untis in sogenannte DIF Dateien exportieren, welche anschließend in das PUSS Tool importiert werden können.
 Dabei wollen wir auch zum einen auf den generellen Aufbau der DIF Dateien eingehen, um dem Anwender ein besseres Verständnis für die Struktur der Dateien zu vermitteln.
-Zum anderen werden wir eine Schritt-für-Schritt Anleitung bereitstellen, welche den Anwender durch den Exportprozess in UNTIS führt.
+Zum anderen werden wir eine Schritt-für-Schritt Anleitung bereitstellen, welche den Anwender durch den Exportprozess in Untis führt.
 \subsection{Erstellen der DIF Dateien}
 Um die DIF Dateien zu erstellen gibt es grundsätzlich zwei verschiedene Möglichkeiten, welche wir im Folgenden erläutern wollen.
 \begin{enumerate}
-    \item Direkter Export aus der UNTIS GUI (aka. über das Units Programmfenster)
+    \item Direkter Export aus der Untis-GUI (aka. über das Units Programmfenster)
     \item Export via Command Line Interface (für fortgeschrittene Anwender)
 \end{enumerate}
 Dabei hat die erste Möglichkeit den Vorteil, dass sie sehr benutzerfreundlich ist und keine tiefgehenden technischen Kenntnisse erfordert.
 Die zweite Möglichkeit hingegen hat den Vorteil, dass alle DIF Dateien auf einmal exportiert werden können.
 \todo{Besser schreiben}
-\subsubsection{Direkter Export aus der UNTIS GUI}
-Die erste Möglichkeiten besteht darin, manuell über die UNTIS GUI die DIF Dateien zu exportieren.
-Dafür muss zunächst UNTIS gestartet und der entsprechende Stundenplan bzw die entsprechende Datenbank geöffnet werden.
+\subsubsection{Direkter Export aus der Untis-GUI}
+Die erste Möglichkeiten besteht darin, manuell über die Untis-GUI die DIF Dateien zu exportieren.
+Dafür muss zunächst Untis gestartet und der entsprechende Stundenplan bzw die entsprechende Datenbank geöffnet werden.
 Anschließend navigiert man im Menü im Reiter oben Links zu \textit{Datei} $\rightarrow$ \textit{Import/Exportieren} $\rightarrow$ \textit{Export TXT Dateien} (dies ist auf den folgenden 3 Screenshots dargestellt).
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.7\textwidth]{figures/dif_erstellen_step_1.png}
-    \caption{Navigieren zum Reiter \textit{Datei} in UNTIS}
+    \caption{Navigieren zum Reiter \textit{Datei} in Untis}
     \label{fig:dif_export_1}
 \end{figure}
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.7\textwidth]{figures/dif_erstellen_step_2.png}
-    \caption{Navigieren zum Reiter \textit{Import/Exportieren} in UNTIS}
+    \caption{Navigieren zum Reiter \textit{Import/Exportieren} in Untis}
     \label{fig:dif_export_2}
 \end{figure}
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.7\textwidth]{figures/dif_erstellen_step_3.png}
-    \caption{Navigieren zum Reiter \textit{Export TXT Dateien} in UNTIS}
+    \caption{Navigieren zum Reiter \textit{Export TXT Dateien} in Untis}
     \label{fig:dif_export_3}
 \end{figure}
 \todo{Position/Größe der Screenshots anpassen}
@@ -39,18 +39,18 @@ Nach dem Klick auf \textit{Export TXT Dateien} öffnet sich auf der rechten Seit
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.7\textwidth]{figures/dif_erstellen_step_4.png}
-    \caption{Auflistung aller verfügbaren Tabellen von Daten in UNTIS}
+    \caption{Auflistung aller verfügbaren Tabellen von Daten in Untis}
     \label{fig:dif_export_4}
 \end{figure}
 \todo{Position/Größe der Screenshots anpassen}
 Beim klicken auf eine der Tabellen öffnet sich ein neues Fenster, in welchem verschiedene Exportoptionen ausgewählt werden können hierbei sollte bei \textit{Trennzeichen zwischen dne Feldern} Komma, als \textit{Textbegrenzung} Anführungszeichen und als Encoding UTF-8 ausgewählt werden. 
-Alle diese Einstellungen entsprechen den Standardeinstellungen bei einem Export in UNTIS, bis auf das Encoding, welches manuell auf UTF-8 gesetzt werden muss. 
+Alle diese Einstellungen entsprechen den Standardeinstellungen bei einem Export in Untis, bis auf das Encoding, welches manuell auf UTF-8 gesetzt werden muss. 
 Dies ist notwendig, damit Umlaute und Sonderzeichen korrekt in den DIF Dateien dargestellt werden können. Um die Einstellungen vorzunehmen und die Exportierung durchzuführen, klick man dann auf den Button/Knopf \textit{OK}
 Auf dem folgenden Screenshot sind die Exportoptionen für eine ausgewählte Tabelle dargestellt und korrekt eingestellt.
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.7\textwidth]{figures/dif_erstellen_step_5.png}
-    \caption{Exportoptionen für die ausgewählte Tabelle in UNTIS}
+    \caption{Exportoptionen für die ausgewählte Tabelle in Untis}
     \label{fig:dif_export_5}
 \end{figure}
 \todo{Besser schreiben}
@@ -67,7 +67,7 @@ oder alternativ auf dem folgenden Screenshot mit roten Kästchen markiert:
 \todo{Screenshot mit allen benötigten Tabellen erstellen}
 Wenn alle benötigten Tabellen exportiert wurden, sollten sich die entsprechenden DIF Dateien an dem angegebenen Speicherort befinden und können nun für den Import in das PUSS Tool verwendet werden.
 \subsubsection{Export via Command Line Interface}
-Für fortgeschrittene Anwender besteht die Möglichkeit, die DIF Dateien über das Command Line Interface (CLI) von UNTIS zu exportieren.
+Für fortgeschrittene Anwender besteht die Möglichkeit, die DIF Dateien über das Command Line Interface (CLI) von Untis zu exportieren.
 Dies ermöglicht es, direkt alle benötigten Tabellen auf einmal zu exportieren, ohne den manuellen Prozess über die GUI durchlaufen zu müssen.
 \todo{Zuende schrieben}
 \subsection{Aufbau der DIF Dateien}
