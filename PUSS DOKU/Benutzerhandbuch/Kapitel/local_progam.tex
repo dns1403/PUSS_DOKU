@@ -21,29 +21,63 @@ Dies Unterschiede wollen wir im Folgenden kurz zusammenfassen und falls notwendi
 \subsection{Voraussetzung zur Nutzung der Software als Planer}
 \subsubsection{Benötigte zusätzliche Software}
  Um das lokale Planungstool problemlos auszuführen, wird Java 22 oder 23 benötigt.
+ Falls außerdem ein bestehender Stundenplan von Untis in das lokale Planungstool übertragen werden soll, wird zusätzlich Python 3 benötigt, um die Dateien von Untis in das Format der lokalen Planungsdatenbank zu übertragen.
 \subsubsection{Korrekte Installation der Software}
 Das Planungstool wird als jar-Datei mit dem Namen Planungstool.jar ausgeliefert.
 Eine manuelle Installation ist nicht nötig. 
 Die jar-Dateien können in einem beliebigen Ordner platziert werden.
 Es wird empfohlen, alle Dateien, die während der Planung benötigt oder erzeugt werden, in demselben Ordner wie die jar-Datei zu speichern. 
 Auf Windows kann die jeweilige jar-Dateien  mittels eines Doppelklicks ausgeführt werden. 
-Auf Linux sollte das jeweilige Programm über die Kommandozeile mittels des Befehls \texttt{java -jar Planunungstool.jar} bzw. \texttt{java -jar Paultool.jar} ausgeführt werden. 
+Auf Linux sollte das jeweilige Programm über die Kommandozeile mittels des Befehls \texttt{java -jar Planunungstool.jar} ausgeführt werden. 
 \subsection{Übertragung eines bestehenden Stundenplans von Untis in das lokale Planungstool}
-
 Falls bereits ein Stundenplan in Untis existiert, kann dieser importiert werden. 
-Dafür exportieren wir die Daten aus UNTIS in sogenannte DIF-Dateien (Data Interchange Format). 
-Dies sind strukturierte Textdateien, die anschließend durch das Skript \todo{Name Einfügen} in das Format der lokalen Planungsdatenbank umgewandelt werden können.
-
-Es gibt zwei Wege, diese Dateien zu erstellen:
-\begin{enumerate}
-    \item Direkter Export aus der UNTIS Benutzeroberfläche (GUI)
-    \item Export via Command Line Interface (CLI)
-\end{enumerate}
-
-Die erste Methode erfordert keine tiefgehenden technischen Kenntnisse. Die zweite Methode bietet hingegen den Vorteil, dass alle benötigten DIF-Dateien automatisiert in einem Rutsch exportiert werden können.
-
-\subsubsection{Direkter Export aus der UNTIS GUI}
-
+Dafür exportieren wir die Daten aus UNTIS in sogenannte DIF-Dateien (Data Interchange Format) und übertragen diese anschließend in das Format der lokalen Planungsdatenbank.
+Bei den DIF-Dateien handelt es sich um strukturierte Textdateien, die die relevanten Informationen über die Klassen, Lehrer, Räume, Fächer, Unterricht, Stundenplan, Stundentafel und Zeitwünsche enthalten.
+Dabei hat der Planer die folgenden zwei Möglichkeiten, um die Daten von UNTIS in das lokale Planungstool zu übertragen:
+\begin{itemize}
+	\item Nutzen des Importskripts export\_untis.bat, welches die DIF-Dateien automatisch erstellt und in das Format der lokalen Planungsdatenbank überträgt.
+    \item Manueller Export der DIF-Dateien aus der UNTIS GUI oder mit Hilfe des Command Line Interface (CLI) und anschließendes Ausführen der Importskripte, um die DIF-Dateien in das Format der lokalen Planungsdatenbank zu übertragen.
+\end{itemize}
+Wir empfehlen die erste Methode, da sie einfacher und schneller ist. Die zweite Methode bietet keine Mehrwert gegenüber der Methode, da Sie die Schritte des Importskripts manuell ausführt.
+Wir wollen diese trotzdem beschreiben, um bei möglichen Problemen mit dem Importskript eine alternative Möglichkeit zu bieten, um die Daten von UNTIS in das lokale Planungstool zu übertragen.
+\subsubsection{Nutzen des Importskripts export\_untis.bat}
+Um das Importskript zu verwenden muss sich der Planer auf einem Computer mit einem Windows System befinden, da das Skript als .bat Datei vorliegt, welche nur auf Windows Systemen ausgeführt werden kann.
+\todo{Beschreiben wo dieses liegt und wie es gestartet wird (Doppelklick oder commandzeile).}
+Nach dem Starten des Skripts wird der Planer aufgefordert den Pfad zu der UNTIS.exe Datei anzugeben (siehe \cref{fig:export_untis_step1}). Hierbei ist es egal, ob der Pfad mit Anführungszeichen oder ohne angegeben wird.
+Im Beispiel in \cref{fig:export_untis_step1} ist der Pfad zur UNTIS.exe Datei Rot markiert und ohne Anführungszeichen angegeben. Sobald der Pfad eingegeben wurde, muss die Eingabe mit Enter bestätigt werden.
+Nach Bestätigung mit Enter, wird der Planer aufgefordert den Pfad zu der .untis Datei anzugeben. Dies ist die Datei, welche von Planer in UNTIS geöffnet wird und alle benötigten Daten für den Stundenplan enthält (siehe \cref{fig:export_untis_step2}). 
+Auch hier ist es egal, ob der Pfad mit Anführungszeichen oder ohne angegeben wird. Sobald der Pfad eingegeben wurde, muss die Eingabe mit Enter bestätigt werden (siehe \cref{fig:export_untis_step2}).
+Danach läuft das Skript automatisch durch und führt die benötigten Schritte aus, um die DIF-Dateien zu erstellen und in das Format der lokalen Planungsdatenbank zu übertragen.
+Die beendete Durchführung des Skripts wird mit einer Erfolgsmeldung (siehe \cref{fig:export_untis_step3}) bestätigt.
+\begin{figure}[htbp]
+    \centering
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/export_untis_1.png}
+        \caption{Der Pfad zur UNTIS.exe Datei ist Rot markiert. Enter drücken, um fortzufahren.}
+        \label{fig:export_untis_step1}
+    \end{subfigure}
+    \hfill % Fügt flexiblen Abstand zwischen den Bildern ein
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/export_untis_2.png}
+        \caption{Der Pfad zur .untis Datei ist Rot markiert. Enter drücken, um fortzufahren.}
+        \label{fig:export_untis_step2}
+    \end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/export_untis_3.png}
+        \caption{Erfolgreiche Durchführung des Skripts}
+        \label{fig:export_untis_step3}
+    \end{subfigure}
+    \label{fig:untis_export}
+\end{figure}
+Die Resultierende lokale Planungsdatenbank wird im selben Ordner wie das Importskript unter dem Namen \textbf{STULP.db} erstellt.
+Diese Datei kann nun im lokalen Planungstool geöffnet werden und der importierte Stundenplan kann bearbeitet werden.
+\subsubsection{Manueller Export der DIF-Dateien aus der UNTIS GUI}
+Wie bereits erwähnt gibt es die Möglichkeit die benötigten DIF-Dateien manuell aus der UNTIS GUI zu exportieren.
+Wir empfehlen diese Methode nur, wenn es Probleme mit dem Importskript gibt, da sie aufwendig und fehleranfällig ist.
 Zunächst muss UNTIS gestartet und die entsprechende Datenbank geöffnet werden. Navigieren Sie anschließend im Menü oben links über \textit{Datei} $\rightarrow$ \textit{Import/Export} $\rightarrow$ \textit{Export TXT Dateien}. Dieser Ablauf ist in \cref{fig:untis_export_steps} dargestellt.
 
 \begin{figure}[htbp]
@@ -89,7 +123,8 @@ Durch Klicken auf eine Tabelle öffnet sich das Fenster für die Exportoptionen.
     \item \textbf{Zeichensatz (Encoding):} UTF-8
 \end{itemize}
 
-Standardmäßig ist in UNTIS oft ein anderer Zeichensatz eingestellt; dies muss manuell auf UTF-8 geändert werden. Bestätigen Sie die Einstellungen anschließend mit \textit{OK}.
+Standardmäßig ist in UNTIS oft ein anderer Zeichensatz eingestellt; dies muss manuell auf UTF-8 (andernfalls kommt es zu Fehlern bei der Datenübertragung) geändert werden. 
+Bestätigen Sie die Einstellungen anschließend mit \textit{OK}.
 
 \begin{figure}[htbp]
     \centering
@@ -112,21 +147,37 @@ Der Planer wird nun aufgefordert, einen Speicherort zu wählen. Sobald dies gesc
 	%\item Kurswahl
 	\item Zeitwünsche
 \end{itemize}
-\todo{Nochmal checken, ob das wirklich alle sind.}
 Sobald alle Tabellen exportiert wurden, können die DIF-Dateien in das Planungstool importiert werden.
 
 \FloatBarrier
 
 \subsubsection{Export via Command Line Interface}
-Für fortgeschrittene Planer besteht die Möglichkeit, die DIF-Dateien über das Command Line Interface (CLI) zu exportieren...
+Es gibt auch die Möglichkeit, sich alle DIF-Dateien auf einmal ausgeben zu lassen. 
+Dafür ist folgender Befehl in der Kommandozeile einzugeben:
+\begin{verbatim}
+Untis.exe <Pfad zur .untis Datei> /exp*
+\end{verbatim}
 
+Die DIF-Dateien werden dann im aktuellen Verzeichnis abgelegt (der Name einer eventuell angegebenen Ausgabedatei wird beim Export aller Dateien ignoriert).
+
+Möchte man hingegen nur eine spezifische Datei an einen bestimmten Ort exportieren (zum Beispiel Lehrerstammdaten), lautet der Befehl:
+
+\begin{verbatim}
+Untis.exe <Pfad zur .untis Datei> /exp1=<Pfad zur Ausgabedatei>
+\end{verbatim}
+
+Dabei ist zu beachten, dass die Exportfunktion über die Kommandozeile nicht die Möglichkeit bietet, die Zeichensatzkodierung auf UTF-8 zu setzen.
+Dadurch können die im nächsten Unterpunkt beschriebenen Python-Skripte die DIF-Dateien nicht korrekt lesen, da sie nicht auf UTF-8 kodiert sind.
+Um dies zu umgehen, müssen die DIF-Dateien manuell in UTF-8 konvertiert werden. Wie dies funktioniert, ist leicht im Internet zu recherchieren und hängt von dem Betriebssystem ab, welches verwendet wird.
 \subsubsection{Dokumentation der DIF Dateien}
 Da es bereits eine offizielle Dokumentation der DIF Dateien von Untis (siehe: \url{https://www.untis.at/manual/index.html?ti_allgemeine-schnittstellen.htm}) gibt und wir diese nicht weiter direkt verwenden, wollen wir an dieser Stelle nur auf die Dokumentation verweisen und selber keine weiteren Details zu den einzelnen Dateien geben.
 
 \subsubsection{Übertragung der DIF Dateien in das lokale Planungstool}
-Nachdem die DIF Dateien erstellt wurden, können diese in das lokale Planungstool importiert werden in dem man das Importtool \todo{Namen hinzufügen} ausführt. 
-Das kann entweder durch einen Doppelklick auf die Datei oder über die Kommandozeile mittels des Befehls ... geschehen \todo{aktualisieren, wenn wirklich fertig}.
-Nach der Ausführung des Importtools wurde die Datei \todo{Name angeben} erstellt, welche dann im lokalen Planungstool geöffnet werden kann.
+Nachdem die DIF Dateien erstellt wurden, können diese in das lokale Planungstool importiert werden in dem man zunächst das Python Skript \textbf{dif-relevant-columns.py} ausführt.
+Dies erstellt eine Datenbank mit dem Namen \textbf{UNTIS.db}, welche die Daten der DIF Dateien in eine Datenbank zusammenfasst.
+Anschließend muss das Skript \textbf{dif-to-stulp.py} ausgeführt werden, um die Daten aus der UNTIS.db in das Format der lokalen Planungsdatenbank zu übertragen.
+Nach der Ausführung dieses Skripts wird die Datei \textbf{STULP.db} erstellt, welche im lokalen Planungstool geöffnet werden kann.
+\todo{Um Linux Anleitung ergänzen und vielleicht überarbeiten :).}
 
 \subsection{Nutzung der lokalen Planungssoftware}
 Das Planungstool ermöglicht die Zeit- und Raumplanung für die Kurse.
@@ -552,25 +603,25 @@ Falls der Stundenplantyp Professor ist, werden zusätzlich zu den Rechtecken fü
 ebenfalls die Sperrzeiten des Lehrers im Stundenplan mittels dunkelroten Rechtecken in den jeweiligen Zellen angezeigt. 
 Die Anzeige von Sperrzeiten in einem Stundenplan ist in \ref{fig:plt_plan_wunsch_sperr} zu sehen. 
 
-\paragraph{Verfügbare Räume Spalten}\label{par:available_rooms}
-\begin{wrapfigure}{}{0.53\linewidth}
-	\centering
-	\caption{Verfügbare Räume Spalten}
-	\includegraphics[scale=0.5]%{images/planning_tool/agenda_available_rooms.png}
-    {images/planning_tool/pic05.png}
-	\label{fig:plt_agenda_available_rooms}
-\end{wrapfigure}
+% \paragraph{Verfügbare Räume Spalten}\label{par:available_rooms}
+% \begin{wrapfigure}{}{0.53\linewidth}
+% 	\centering
+% 	\caption{Verfügbare Räume Spalten}
+% 	\includegraphics[scale=0.5]%{images/planning_tool/agenda_available_rooms.png}
+%     {images/planning_tool/pic05.png}
+% 	\label{fig:plt_agenda_available_rooms}
+% \end{wrapfigure}
 
-Wenn die verfügbaren-Räume-Spalten eingeblendet werden, wird für jeden Tag eine zusätzliche Spalte in dem Stundenplan angezeigt. 
-Für jeden Zeitslot existiert in der Spalte eine Liste. In der Liste wird angezeigt welche Räume für den Tag und die Zeit frei sind. 
-Eine Veranstaltung kann mithilfe einer Drag- and Drop-Geste direkt in die Liste bewegt werden, um die Veranstaltung direkt zu dem Raum zu bewegen. 
-In \autoref{fig:plt_agenda_available_rooms} ist ein Beispiel für die verfügbare-Räume-Spalte zu sehen. 
-In Teil 1 von \autoref{fig:plt_agenda_available_rooms} werden alle verfügbaren Räume für den Zeitslot \textit{Montag 9 Uhr} angezeigt. 
-Das heißt, in den Räumen \textit{F0 530} und \textit{F2 211} findet keine Veranstaltung am \textit{Montag um 9 Uhr} statt. 
-Dasselbe gilt für \textit{F0 530}, \textit{F2 211} und \textit{L 1} am \textit{Montag um 10 Uhr} nach Teil 2 der Abbildung.
-\todo{Beispiel überarbeiten}
-\FloatBarrier
-\newpage
+% Wenn die verfügbaren-Räume-Spalten eingeblendet werden, wird für jeden Tag eine zusätzliche Spalte in dem Stundenplan angezeigt. 
+% Für jeden Zeitslot existiert in der Spalte eine Liste. In der Liste wird angezeigt welche Räume für den Tag und die Zeit frei sind. 
+% Eine Veranstaltung kann mithilfe einer Drag- and Drop-Geste direkt in die Liste bewegt werden, um die Veranstaltung direkt zu dem Raum zu bewegen. 
+% In \autoref{fig:plt_agenda_available_rooms} ist ein Beispiel für die verfügbare-Räume-Spalte zu sehen. 
+% In Teil 1 von \autoref{fig:plt_agenda_available_rooms} werden alle verfügbaren Räume für den Zeitslot \textit{Montag 9 Uhr} angezeigt. 
+% Das heißt, in den Räumen \textit{F0 530} und \textit{F2 211} findet keine Veranstaltung am \textit{Montag um 9 Uhr} statt. 
+% Dasselbe gilt für \textit{F0 530}, \textit{F2 211} und \textit{L 1} am \textit{Montag um 10 Uhr} nach Teil 2 der Abbildung.
+% \todo{Beispiel überarbeiten}
+%\FloatBarrier
+
 \paragraph{Planen einer Veranstaltung}
 Ein Veranstaltungsteil kann innerhalb eines Stundenplans, zwischen zwei Stundenplänen und der ungeplanten Veranstaltungstabelle mittels einer Drag- and Drop-Geste bewegt werden. 
 Wenn ein Veranstaltungsteil innerhalb eines Stundenplans bewegt wird, wird lediglich der Tag und die Uhrzeit entsprechend verändert. 
@@ -583,31 +634,30 @@ Eine Veranstaltung die von Lehrerin X gehalten wird, kann nur in die Ansicht von
 Wenn versucht wird eine Veranstaltung in eine abweichende Ansicht (z.B. Lehrerin Y) zu verschieben, handelt es sich um eine verbotene Bewegung. 
 Darunter fällt auch das Verschieben ungeplanter Veranstaltung in eine Nicht-Raum Ansicht.  
 Falls eine Drag- and Drop-Geste für eine verbotene Bewegung durchgeführt wird, werden keine Veränderungen ausgelöst.
-Falls für den bewegten Veranstaltungsteil Wunschzeiten und für den Lehrer des Veranstaltungsteils Sperrzeiten bekannt sind, werden diese während der Drag- and Drop-Geste in dem Stundenplan, 
-über dem sich die Maus befindet, angezeigt: Wunschzeiten des Veranstaltungsteils in dunkelgrün und Sperrzeiten des Professors dunkelrot. 
+Falls für den bewegten Veranstaltung Wunschzeiten und für den Lehrer des Veranstaltung Sperrzeiten bekannt sind, werden diese während der Drag- and Drop-Geste in dem Stundenplan, 
+über dem sich die Maus befindet, angezeigt: Wunschzeiten des Veranstaltungsteils in dunkelgrün und Sperrzeiten des Lehrers dunkelrot. 
 So zu sehen in Abbildung \ref{fig:plt_plan_wunsch_sperr}.
-\todo{Ersten Teil überarbeiten}
 \begin{figure}[htbp] %htbp
 	%\centering
     \caption{Angezeigte Informationen bei einer Bewegung}
 	\begin{subfigure}{0.33\linewidth}
     \centering
 		\caption{Erlaubte Bewegung}
-		\includegraphics[scale=0.6]%{images/planning_tool/plan_allowed_move.png}
+		\includegraphics[scale=0.4]%{images/planning_tool/plan_allowed_move.png}
         {images/planning_tool/pic06.png}
 		\label{fig:plt_plan_move_allowed}
 	\end{subfigure}
 	\begin{subfigure}{0.33\linewidth}
         \centering
 		\caption{Verbotene Bewegung}
-		\includegraphics[scale=0.6]%{images/planning_tool/plan_forbidden_move.png}
+		\includegraphics[scale=0.4]%{images/planning_tool/plan_forbidden_move.png}
         {images/planning_tool/pic07.png}
 		\label{fig:plt_plan_move_forbidden}
 	\end{subfigure}
 	\begin{subfigure}{.33\linewidth}
 		\centering
 		\caption{Wunsch- und Sperrzeiten}
-		\includegraphics[scale=0.6]{images/planning_tool/plan_wunsch_sperr.png}
+		\includegraphics[scale=0.5]{images/planning_tool/plan_wunsch_sperr.png}
 		\label{fig:plt_plan_wunsch_sperr}
 	\end{subfigure}
  
