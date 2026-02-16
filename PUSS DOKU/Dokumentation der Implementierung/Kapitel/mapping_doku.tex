@@ -1,127 +1,64 @@
 \section{Datentransformation und Mapping (ETL-Prozess)}
 \label{sec:mapping}
-In diesem Kapitel wollen wir zwei Python-Skripte vorstellen, die den Kern des Datenmappings bilden. 
-Das erste Skript \todo{Namen entgültig festlegen} bildet die relevanten Daten aus den Untis-DIF-Textdateien in eine relationale SQLite-Datenbank (\texttt{Untis-DIF.db}) um. 
+In diesem Kapitel wollen wir zwei Python-Skripte vorstellen, die den ETL-Prozess (Extract, Transform, Load) für die Daten aus den Untis-DIF-Textdateien in eine relationale Datenbankstruktur des Planungstools realisieren.
+Das erste Skript \texttt{dif-relevant-columns.py} bildet die relevanten Daten aus den Untis-DIF-Textdateien in eine relationale SQLite-Datenbank (\texttt{Untis-DIF.db}) ab. 
 Es extrahiert die Informationen aus den \texttt{GPUXXX.TXT}-Dateien, bereinigt sie und strukturiert sie in Tabellen, die für die Planung relevant sind.
-Das Mapping-Skript \texttt{dif\_to\_stulp.py} realisiert den ETL-Prozess (Extract, Transform, Load), um die Rohdaten aus der Untis-Export-Datenbank (\texttt{Untis-DIF.db}) in das Zielschema des (lokalen) Planungstools (\texttt{STULP.db}) zu überführen.
-Das Skript verbindet sich mit beiden SQLite-Datenbanken und führt SQL-basierte Transformationen durch. 
-Die Untis-Export-Datenbank wird im Folgenden mit dem SQL-Alias \texttt{dif\_data} referenziert, die Planungstool-Datenbank mit \texttt{stulp}.
+Alle dafür notwendigen Informationen haben wir bereits in Abschnitt \ref{sec:dif} ausführlich dokumentiert, wodurch die technische Umsetzung hier leicht nachvollziehbar sein sollte.
+Dementsprechend wollen wir uns in diesem Kapitel auf die zweite Phase des ETL-Prozesses konzentrieren: die Transformation und das Mapping der Daten aus der \texttt{Untis-DIF.db} in die Struktur des Planungstools (\texttt{STULP.db}).
+Das Mapping-Skript \texttt{dif\_to\_stulp.py} dient genau diesem Zweck. Es führt SQL-basierte Transformationen durchzuführen, um die Daten in das Zielschema des Planungstools zu überführen.
+Dafür verbindet sich das Skript mit beiden SQLite-Datenbanken (\texttt{Untis-DIF.db} und \texttt{STULP.db}) und führt SQL-basierte Transformationen durch, um die Daten entsprechend in eine für das Planungstool einlesbare Form zu bringen. \\
+Im Folgenden wird die Abbildungslogik für die zentralen Entitäten beschrieben und anschließend das in SQL formulierte Mapping erläutert. 
+Die Untis-Export-Datenbank wird hierbei im Folgenden mit dem SQL-Alias \texttt{dif\_data} referenziert, die Planungstool-Datenbank mit \texttt{stulp}. \\
 % \subsection{Datenextraktion und -bereinigung aus Untis}
 % \label{sec:mapping_dif}
 % In diesem kurzen Unterkapitel wollen wir das Python-Skript \todo{Ref} vorstellen, das die DIF-Daten in eine Datenbankstruktur überführt, die wir im Mapping-Prozess verwenden. 
 % Das Skript liest die relevanten \texttt{GPUXXX.TXT}-Dateien ein, extrahiert die benötigten Informationen und füllt damit die Tabellen der Datenbank, die als Grundlage für die Planung dient.
 % Außerdem haben wir einige Hilfstabellen erstellt, um die spätere Transformation zu erleichtern (siehe \ref{schema:weekdaymap} und \ref{schema:hourgrid}).
 % Alle diese Informationen haben wir bereits in Abschnitt \ref{sec:dif} ausführlich dokumentiert, hier wollen wir uns auf die technische Umsetzung konzentrieren.
+% Ziel ist es, die Daten aus den Untis-DIF-Textdateien so zu transformieren, dass sie in die relationalen Tabellen des Planungstools passen und dabei die semantische Integrität der Informationen gewahrt bleibt.
+% Dabei wollen wir das Mapping für jede relation in einem eigenen Unterabschnitt beschreiben, um die Übersicht zu wahren.
 
-\subsection{Mapping der Daten in das Planungstool}
-Im Folgenden wird die Abbildungslogik für die zentralen Entitäten beschrieben und anschließend das in SQL formulierte Mapping erläutert. 
-Ziel ist es, die Daten aus den Untis-DIF-Textdateien so zu transformieren, dass sie in die relationalen Tabellen des Planungstools passen und dabei die semantische Integrität der Informationen gewahrt bleibt.
-Dabei wollen wir das Mapping für jede relation in einem eigenen Unterabschnitt beschreiben, um die Übersicht zu wahren.
-\subsubsection{Schema Professor}
-Die Tabelle \texttt{Professor} wird direkt aus der Lehrer-Datei \texttt{GPU004} (siehe Abschnitt \ref{schema:gpu004}) gespeist.
-\begin{itemize}
-    \item \textbf{Quelle:} \texttt{dif\_data.Lehrer}
-    \item \textbf{Filterung:} Es werden nur Lehrer importiert, deren Kürzel mit einem Buchstaben (A-Z) beginnt, um technische Dummy-Lehrer oder System-User auszuschließen.
-    \item \textbf{Mapping:}
-    \begin{itemize}
-        \item \texttt{Name} $\rightarrow$ \texttt{ProfID}
-        \item \texttt{Name} $\rightarrow$ \texttt{Name} (Vereinfachung, Langname wird aktuell ignoriert)
-        \item Konstante 'Lehrer' $\rightarrow$ \texttt{Fakultaet}
-    \end{itemize}
-\end{itemize}
+\subsection{Professor}
+Die Tabelle \texttt{Professor} bildet die Lehrkräfte ab. 
+In Untis sind diese in der \texttt{GPU005}-Datei (siehe Tabelle \ref{schema:gpu005}) enthalten, wobei die Spalte \texttt{Name} sowohl die ID als auch den Namen der Lehrkraft enthält.
+Die \texttt{WHERE}-Klausel fungiert als Filter. Durch die Prüfung \texttt{BETWEEN 'A' AND 'Z'} auf dem ersten Buchstaben des Kürzels werden rein numerische IDs oder Sonderzeichen-User ausgeblendet. 
+% \begin{itemize}
+%     \item \textbf{Quelle:} \texttt{dif\_data.Lehrer}
+%     \item \textbf{Zuordnung:}
+%     \begin{itemize}
+%         \item \texttt{Name} $\rightarrow$ \texttt{ProfID}
+%         \item \texttt{Name} $\rightarrow$ \texttt{Name} 
+%         \item Konstante 'Lehrer' $\rightarrow$ \texttt{Fakultaet}
+%     \end{itemize}
+% \end{itemize}
 
-
-\subsubsection{Räume}
-Die Tabelle \texttt{Raum} entsteht aus der Raum-Datei \texttt{GPU005} (siehe Abschnitt \ref{schema:gpu005}).
-\begin{itemize}
-    \item \textbf{Quelle:} \texttt{dif\_data.Raeume}
-    \item \textbf{Transformation:} Die Felder \texttt{Gang 1} und \texttt{Gang 2} werden konkateniert (\texttt{|| '/' ||}), um das Gebäude zu definieren.
-    \item \textbf{Mapping:}
-    \begin{itemize}
-        \item \texttt{Name} $\rightarrow$ \texttt{Raumnr}
-        \item \texttt{Kapazität} $\rightarrow$ \texttt{Sitzplatzzahl}
-    \end{itemize}
-\end{itemize}
-
-\subsubsection{Kurse}
-Die Tabelle \texttt{Kurs} basiert auf der Fächer-Datei \texttt{GPU006} (siehe Abschnitt \ref{schema:gpu006}).
-\begin{itemize}
-    \item \textbf{Quelle:} \texttt{dif\_data.Faecher}
-    \item \textbf{Mapping:}
-    \begin{itemize}
-        \item \texttt{Name} $\rightarrow$ \texttt{KursID}
-        \item \texttt{Langname} $\rightarrow$ \texttt{Kursname} und \texttt{KursnameEN}
-        \item Konstante 'Deutsch' $\rightarrow$ \texttt{Sprache}
-    \end{itemize}
-\end{itemize}
-
-\subsubsection{Studiengänge}
-Die Tabelle \texttt{Studiengaenge} wird aus der Klassen-Datei \texttt{GPU003} (siehe Abschnitt \ref{schema:gpu003}) abgeleitet.
-\begin{itemize}
-    \item \textbf{Quelle:} \texttt{dif\_data.Klassen}
-    \item \textbf{Mapping:}
-    \begin{itemize}
-        \item \texttt{Name} $\rightarrow$ \texttt{StudiengangsID}
-        \item \texttt{Schulform} $\rightarrow$ \texttt{Pruefungsordnung}
-        \item \texttt{Schul-Stufe} $\rightarrow$ \texttt{Semester}
-    \end{itemize}
-\end{itemize}
-
-\subsection{Zeit- und Planungsdaten}
-
-\subsubsection{Timeslot}
-Die Tabelle \texttt{Timeslot} normalisiert das Untis-Zeitraster. Sie wird durch einen JOIN der Hilfsrelationen \texttt{HourGrid} (siehe \ref{schema:hourgrid}) und \texttt{WeekdayMap} (siehe \ref{schema:weekdaymap}) mit den existierenden Zeitwünschen (\texttt{GPU016}, siehe \ref{schema:gpu016}) erzeugt. Dies stellt sicher, dass nur relevante Zeitslots angelegt werden.
-
-\subsubsection{Plan (Vorlesungsplan)}
-Die Tabelle \texttt{Plan} ist die komplexeste Transformation im Skript. Sie aggregiert den Untis-Stundenplan (\texttt{GPU001}, siehe \ref{schema:gpu001_new}) und reichert ihn mit Daten aus \texttt{GPU002} (Unterricht) an.
-
-\paragraph{Transformationslogik:}
-\begin{enumerate}
-    \item \textbf{Aggregation von Doppelstunden:} Untis speichert jede Unterrichtsstunde (45 min) als einzelne Zeile. Das Skript gruppiert zusammenhängende Stunden (gleicher Kurs, Lehrer, Raum, Tag) und summiert deren \texttt{Duration} auf. Die Startzeit ist das Minimum (\texttt{MIN(Time)}) des Blocks.
-    \item \textbf{Hörerzahlen:} Die Hörerzahlen aus \texttt{GPU002} werden aggregiert. Da bei gekoppelten Klassen derselbe Schülerpool betroffen ist, wird hierbei das Maximum (\texttt{MAX}) statt der Summe gebildet, um Doppeltzählung innerhalb eines Blocks zu vermeiden.
-    \item \textbf{Veranstaltungsteil \& Pseudo-Kurse:}
-    Kurse, die mit einem Unterstrich beginnen (z.B. \texttt{\_Pa} für Pause oder \texttt{\_Spr} für Springer), erhalten zwangsweise den Veranstaltungsteil '1'. Dies verhindert, dass Hilfskurse in der Planung fragmentiert werden.
-    \item \textbf{Wunschzeiten:} Über eine Sub-Query werden die Zeitwünsche aus \texttt{GPU016} aggregiert und als String-Liste (z.B. \texttt{[3,3,0]}) an den Datensatz angehängt.
-\end{enumerate}
-
-\subsubsection{Pflicht (Curriculum)}
-Die Tabelle \texttt{Pflicht} definiert, welche Kurse für welche Studiengänge obligatorisch sind. Sie wird durch eine \texttt{UNION}-Abfrage aus zwei Quellen gespeist:
-\begin{itemize}
-    \item \textbf{Quelle 1 (Soll):} Die Stundentafel aus \texttt{GPU011} (siehe \ref{schema:gpu011}) definiert die offiziellen Pflichtfächer pro Schulform.
-    \item \textbf{Quelle 2 (Ist):} Ergänzend werden alle Kurse aus dem aktuellen Stundenplan (\texttt{GPU001}), die nicht in der Stundentafel stehen, als \textit{Nicht-Pflichtfach} ('Nein') importiert. Dies fängt Wahlpflichtfächer oder AGs auf, die im Plan existieren, aber nicht im Kerncurriculum definiert sind.
-\end{itemize}
-
-\subsection{Konflikt-Konfiguration}
-Abschließend initialisiert das Skript die Tabellen für das Constraint-Management im PUSS Tool:
-\begin{itemize}
-    \item \texttt{ConflictPriorities}: Definiert Gewichtungen für Konfliktarten (z.B. Raumkonflikt = Prio 1, Wunschort = Prio 5).
-    \item \texttt{IgnoredConflict}: Bleibt initial leer, dient aber zur Definition erlaubter Überlappungen (z.B. Religionsschienen).
-    \item \texttt{CustomConflicts}: Bereitstellung für benutzerdefinierte SQL-Constraints.
-\end{itemize}
-\subsection{Detaillierte Analyse der SQL-Transformationen}
-Dieser Abschnitt dokumentiert die semantische Bedeutung der SQL-Abfragen innerhalb des ETL-Prozesses. Ziel der Transformation ist es nicht nur, Daten zu kopieren, sondern sie von der flachen Untis-Struktur in das relationale Modell des PUSS Tools zu überführen.
-
-\subsubsection{Transformation: Professor (Datenbereinigung)}
-Die Quell-Datenbank enthält neben echten Lehrkräften oft auch technische User oder Platzhalter.
-
-\begin{sqlbox}{SQL-Logik für Professor}
+\begin{sqlbox}{SQL-Implementierung: Professor}
 CREATE TABLE Professor AS
 SELECT
     Name AS ProfID,
     Name AS Name,
     'Lehrer' AS Fakultaet
-FROM dif\_data.Lehrer
+FROM dif_data.Lehrer
 -- Filterung: Nur Namen, die mit einem Buchstaben beginnen
 WHERE UPPER(SUBSTR(Name, 1, 1)) BETWEEN 'A' AND 'Z';
 \end{sqlbox}
 
-\textbf{Bedeutung und Logik:}
-Die \texttt{WHERE}-Klausel dient hier als Qualitätsfilter. Durch die Prüfung \texttt{BETWEEN 'A' AND 'Z'} auf dem ersten Buchstaben des Kürzels werden rein numerische IDs oder Sonderzeichen-User (die oft für Pausenaufsichten oder Systemfunktionen in Untis genutzt werden) ausgeblendet. Nur "echte" Personen werden in das Zielsystem als Professoren importiert.
+\subsection{Raum}
+Die Tabelle \texttt{Raum} bildet die verfügbaren Räume ab.
+Die relevanten Informationen stammen aus der \texttt{GPU006}-Datei (siehe Tabelle \ref{schema:gpu006}).
+In Untis gibt es die Spalten \texttt{Gang 1} und \texttt{Gang 2}, die die Lage eines Raumes beschreiben.
+Diese werden hier semantisch zusammengeführt, um die Gebäudestruktur im Planungstool abzubilden.
+Die Priorität wird hier mit 0 initialisiert, da wir in diesem Schritt noch keine Informationen über die Wichtigkeit der Räume haben.
+% \begin{itemize}
+%     \item \textbf{Quelle:} \texttt{dif\_data.Raeume}
+%     \item \textbf{Zuordnung:}
+%     \begin{itemize}
+%         \item \texttt{Name} $\rightarrow$ \texttt{Raumnr}
+%         \item \texttt{Kapazität} $\rightarrow$ \texttt{Sitzplatzzahl}
+%     \end{itemize}
+% \end{itemize}
 
-\subsubsection{Transformation: Raum (Datenanreicherung)}
-Im Quellsystem ist die Information über das Gebäude oft implizit auf verschiedene Hilfsfelder verteilt.
-
-\begin{sqlbox}{SQL-Logik für Raum}
+\begin{sqlbox}{SQL-Implementierung: Raum}
 CREATE TABLE Raum AS
 SELECT
     Name AS Raumnr,
@@ -129,95 +66,237 @@ SELECT
     `Gang 1` || '/' || `Gang 2` AS Gebaeude,
     Kapazität AS Sitzplatzzahl,
     0 AS Prioritaet
-FROM dif\_data.Raeume
+FROM dif_data.Raeume
 WHERE UPPER(SUBSTR(Name, 1, 1)) BETWEEN 'A' AND 'Z';
 \end{sqlbox}
+\subsection{Kurse}
+Die Tabelle \texttt{Kurs} bildet die angebotenen Kurse ab.
+Die relevanten Informationen stammen aus der \texttt{GPU004}-Datei (siehe Tabelle \ref{schema:gpu004}).
+In Untis gibt es die Spalten \texttt{Name} und \texttt{Langname}, die beide den Namen des Kurses enthalten, jedoch in unterschiedlicher Ausführlichkeit.
+Hier werden beide Spalten genutzt, um die Kursbezeichnung im Planungstool zu füllen, wobei \texttt{Langname} sowohl für die deutsche als auch die englische Bezeichnung verwendet wird.
+Die Sprache wird hier mit der Konstante 'Deutsch' initialisiert, da alle Kurse (bis auf wenige Ausnahmen) auf Deutsch unterrichtet werden.
+% \begin{itemize}
+%     \item \textbf{Quelle:} \texttt{dif\_data.Faecher}
+%     \item \textbf{Mapping:} 
+%     \begin{itemize}
+%         \item \texttt{Name} $\rightarrow$ \texttt{KursID}
+%         \item \texttt{Langname} $\rightarrow$ \texttt{Kursname}
+%         \item \texttt{Langname} $\rightarrow$ \texttt{KursnameEN}
+%         \item Konstante 'Deutsch'  $\rightarrow$ \texttt{Sprache}.
+%     \end{itemize}
+% \end{itemize}
+\begin{sqlbox}{SQL-Implementierung: Kurse}
+CREATE TABLE Kurs AS
+SELECT
+    Name AS KursID,
+    Langname AS Kursname,
+    Langname AS KursnameEN,
+    'Deutsch' AS Sprache
+FROM dif_data.Faecher;
+\end{sqlbox}
+\subsection{Studiengänge}
+Die Tabelle \texttt{Studiengänge} bildet die Klassen ab.
+Die relevanten Informationen stammen aus der \texttt{GPU003}-Datei (siehe Tabelle \ref{schema:gpu003}).
+In Untis gibt es die Spalten \texttt{Name}, \texttt{Schulform} und \texttt{Schul-Stufe}, die die Klasse beschreiben.
+Diese werden hier semantisch zusammengeführt, um die Studiengänge im Planungstool abzubilden.
+Die Spalte \texttt{Name} wird als ID verwendet, da sie die Klassenbezeichnung enthält, die eindeutig ist.
+Die Spalte \texttt{Schulform} wird als Prüfungsordnung interpretiert, da sie die Art der Schule beschreibt (z.B. Gymnasium, Realschule) und den Bildungsgang (z.B. G8, G9).
+Die Spalte \texttt{Schul-Stufe} wird als Semester interpretiert, da sie die Jahrgangsstufe beschreibt, was im Planungstool als Semester abgebildet wird.
+% \begin{itemize}
+%     \item \textbf{Quelle:} \texttt{dif\_data.Klassen}
+%     \item \textbf{Mapping:} \texttt{Name} $\rightarrow$ \texttt{StudiengangsID}, \texttt{Schulform} $\rightarrow$ \texttt{Pruefungsordnung}, \texttt{Schul-Stufe} $\rightarrow$ \texttt{Semester}.
+% \end{itemize}
+\begin{sqlbox}{SQL-Implementierung: Studiengänge}
+CREATE TABLE Studiengaenge AS
+SELECT
+    Name AS StudiengangsID,
+    '' AS Hauptfach,
+    'Ohne' AS Nebenfach,
+    Schulform AS Pruefungsordnung,
+    `Schul-Stufe` AS Semester
+FROM dif_data.Klassen;
+\end{sqlbox}
+% \subsection{Transformation: Timeslot (Zeitraster)}
+% Die Tabelle \texttt{Timeslot} überträgt das Untis-Zeitformat in ein für das Planungstool nutzbares Zeitraster.
+% Die verwendeten Informationen stammen aus der \texttt{GPU016}-Datei (siehe Tabelle \ref{schema:gpu016}), die die Zeitwünsche der Lehrkräfte enthält, sowie aus den Hilfstabellen \texttt{HourGrid} und \texttt{WeekdayMap}, die die Stundenraster und Wochentage abbilden.
+% \todo{Zu Ende schrieben}
 
-\textbf{Bedeutung und Logik:}
-Hier findet eine \textit{Datenanreicherung} statt. Da Untis kein explizites Feld für "Gebäude" besitzt, sondern generische Felder wie "Gang" nutzt, konstruiert die Abfrage mittels String-Konkatenation (\texttt{||}) eine neue, semantisch wertvolle Information ("Gebäude"). Dies ermöglicht im PUSS Tool später eine Filterung nach Campus-Bereichen, die im Quellsystem so nicht direkt möglich wäre.
+\subsection{Zeitfenster (Timeslot)}
+Die Tabelle \texttt{Timeslot} definiert das globale Zeitraster des Planungstools. Sie generiert für jede an der Schule existierende Kombination aus Wochentag und Uhrzeit eine eindeutige ID.
+Da Untis keine zentrale Tabelle für "gültige Zeitfenster" exportiert, sondern diese implizit durch die Verwendung in Stundenplänen oder Zeitwünschen definiert, konstruieren wir diese Tabelle dynamisch.
 
-\subsubsection{Transformation: Timeslot (Normalisierung)}
-Untis arbeitet mit relativen Stunden (1., 2. Stunde). Das Zielsystem benötigt jedoch absolute Zeitfenster.
+Hierfür nutzen wir die Tabelle \texttt{dif\_data.Zeitwuensche}, da diese in der Regel das vollständigste Zeitraster abdeckt (da z.B. Sperrungen für den späten Nachmittag eingetragen sein können, auch wenn dort kein Unterricht stattfindet).
+Durch den \texttt{JOIN} mit den Hilfstabellen \texttt{HourGrid} und \texttt{WeekdayMap} werden die internen Untis-Codes (z.B. Tag 1, Stunde 1) in lesbare Werte (Montag, 08:00 Uhr, 45 Min) übersetzt.
+Die SQL-Fensterfunktion \texttt{ROW\_NUMBER()} erzeugt dabei einen fortlaufenden Primärschlüssel.
 
-\begin{sqlbox}{SQL-Logik für Timeslot}
+\begin{sqlbox}{SQL-Implementierung: Timeslot}
 CREATE TABLE Timeslot AS
 SELECT
-    -- Erzeugung eines künstlichen Primaerschluessels
-    ROW\_NUMBER() OVER () AS Timeslot,
+    ROW_NUMBER() OVER () AS Timeslot,
     TS.Weekday,
     TS.Time,
     TS.Duration
-FROM (
-    SELECT DISTINCT -- Reduktion auf einzigartige Kombinationen
+FROM
+    (SELECT DISTINCT
         WM.Weekday,
         HG.Time,
         HG.Duration
-    FROM dif\_data.Zeitwuensche AS ZW
-    JOIN dif\_data.HourGrid AS HG ON ZW.Stunde = HG.Hour
-    JOIN dif\_data.WeekdayMap AS WM ON ZW.Tag = WM.DIFTag
-) AS TS;
+    FROM
+        dif_data.Zeitwuensche AS ZW
+    JOIN
+        dif_data.HourGrid AS HG ON ZW.Stunde = HG.Hour
+    JOIN
+        dif_data.WeekdayMap AS WM ON ZW.Tag = WM.DIFTag)
+    AS TS;
 \end{sqlbox}
 
-\textbf{Bedeutung und Logik:}
-Diese Abfrage führt eine \textit{Normalisierung} durch. Anstatt Zeiten redundant in jedem Termin zu speichern, wird ein zentraler Katalog aller genutzten Zeitslots erstellt.
+\subsection{Planungsdaten (Plan)}
+Die Tabelle \texttt{Plan} repräsentiert den aktuellen Ist-Zustand des Stundenplans.
+Die Transformation ist hierbei die anspruchsvollste des gesamten ETL-Prozesses, da die Datenstruktur von Untis (atomare Einzelstunden pro Klasse) fundamental von der des Planungstools (zusammenhängende Blöcke pro Veranstaltung) abweicht.
+Um die Logik wartbar und verständlich zu halten, erfolgt die Transformation mittels einer verschachtelten Abfrage (Nested Query) in zwei logischen Schritten: der Vorverarbeitung (\texttt{InnerPlan}) und der Aggregation (\texttt{OuterPlan}).
+
+\subsubsection{Schritt 1: Vorverarbeitung und Anreicherung (Inner Plan)}
+In der inneren Abfrage (\texttt{InnerPlan}) werden die Rohdaten aus dem \texttt{Stundenplan} zunächst mit Informationen aus \texttt{Unterricht}, \texttt{HourGrid} und \texttt{WeekdayMap} angereichert.
+Zwei Aspekte sind hierbei besonders hervorzuheben:
+
+\begin{enumerate}
+    \item \textbf{Behandlung von \_Kursen:} Klassenübergreifende Kurse (z.B. Religion, Wahlpflicht) sind in Untis oft durch ein führendes Unterstrich-Zeichen im Fachkürzel markiert (z.B. \texttt{\_REL}). Würde man hier das reguläre Mapping anwenden, entstünden für jede teilnehmende Klasse separate Einträge. Das Skript erkennt dies und erzwingt für solche Fächer den \texttt{Veranstaltungsteil} '1'.
+    \item \textbf{Berechnung der Wunschzeit:} Die Spalte \texttt{Wunschzeit} wird durch eine korrelierte Unterabfrage ermittelt. Diese prüft, ob für den Lehrer, den Raum oder das Fach an diesem spezifischen Zeitslot eine Priorität in der Tabelle \texttt{Zeitwuensche} hinterlegt ist.
+\end{enumerate}
+
+\subsubsection{Schritt 2: Aggregation von Zeitblöcken (Outer Query)}
+Die äußere Abfrage gruppiert die vorverarbeiteten Datensätze. Während Untis eine Doppelstunde als zwei separate Zeilen speichert (z.B. 1. Stunde und 2. Stunde), benötigt das Planungstool einen einzigen Eintrag mit addierter Dauer.
+Die Aggregationslogik gestaltet sich wie folgt:
 \begin{itemize}
-    \item \texttt{DISTINCT}: Stellt sicher, dass jeder Zeitpunkt (z.B. "Montag 08:00") physikalisch nur einmal in der Datenbank existiert.
-    \item \texttt{ROW\_NUMBER()}: Generiert eine effiziente numerische ID für die interne Referenzierung, was die Performance bei der Konfliktprüfung im PUSS Tool erhöht.
+    \item \textbf{Startzeit:} \texttt{MIN(Time)} ermittelt den Beginn des Blocks.
+    \item \textbf{Dauer:} \texttt{SUM(Duration)} addiert die Längen der Einzelstunden.
+    \item \textbf{Hörerzahl:} Hier wird \texttt{SUM(Studentenzahl)} aus der inneren Abfrage verwendet, um alle Schüler aller gekoppelten Klassen zu erfassen, aber in der äußeren Abfrage gruppieren wir so, dass wir die maximale Belegung des Blocks erhalten.
 \end{itemize}
 
-\subsubsection{Transformation: Plan (Aggregation und Blockbildung)}
-Dies ist die komplexeste Transformation. Sie wandelt die granulare Sichtweise von Untis (45-Minuten-Scheiben) in die Block-Sichtweise (Vorlesungseinheiten) um.
-
-\begin{sqlbox}{SQL-Logik für Plan (Auszug)}
+\begin{sqlbox}{SQL-Implementierung: Plan (Auszug)}
 CREATE TABLE Plan AS
 SELECT
     Fach AS KursID,
-    -- ...
-    -- 1. Ermittlung des Startzeitpunkts des Blocks
-    MIN(Time) AS Uhrzeit,
-    -- 2. Berechnung der Gesamtblockdauer
-    SUM(Duration) AS Dauer,
-    
-    -- 3. Aggregation der Zeitwuensche
-    (SELECT '[' || GROUP\_CONCAT(T.Timeslot) || ']' ...) AS Wunschzeit,
-
-    -- 4. Korrekte Hoererzahl bei Koppelungen
-    MAX(Hoererzahl) AS Hoererzahl
+    Veranstaltungsteil,
+    Weekday AS Tag,
+    MIN(Time) AS Uhrzeit,   -- Beginn des Blocks (frueheste Stunde)
+    SUM(Duration) AS Dauer, -- Gesamtdauer (Summe der Einzelstunden)
+    CASE WHEN Lehrer IS NOT NULL THEN Lehrer ELSE 'Dummy' END AS ProfID,
+    Raum AS Raumnr,
+    'Vorlesung' as Veranstaltungsart,
+    Wunschzeit,             -- Aus InnerPlan durchgereicht
+    Hoererzahl,
+    -- ... (Konstante Default-Werte fuer Ausstattung wie Beamer etc.) ...
 FROM (
-    -- Subquery bereinigt erst die Rohdaten ...
-    SELECT ... FROM dif\_data.Stundenplan ...
+    -- INNER PLAN: Vorverarbeitung
+    SELECT
+        SP.Fach, SP.Lehrer, SP.Raum, WM.Weekday, HG.Time, HG.Duration,
+        -- Logik fuer _Kurse und ClassEncoding
+        MAX(CASE
+            WHEN SUBSTR(SP.Fach, 1, 1) = '_' THEN '1'
+            WHEN SP.Klasse IS NOT NULL THEN CE.Veranstaltungsteil
+            ELSE '1'
+        END) AS Veranstaltungsteil,
+        -- Summe der Studenten aller Klassen in DIESER Stunde
+        SUM(U.Studentenzahl) AS Hoererzahl,
+        -- ... (Komplexe Subquery fuer Wunschzeiten) ...
+    FROM dif_data.Stundenplan AS SP
+    -- ... (Joins mit Unterricht, HourGrid, WeekdayMap, ClassEncoding) ...
+    GROUP BY SP.Unterrichtsnummer, SP.Fach, SP.Lehrer, SP.Tag, SP.Stunde
 ) AS InnerPlan
--- ... und gruppiert sie dann zu Bloecken
+-- OUTER PLAN: Gruppierung zu Bloecken
 GROUP BY KursID, Veranstaltungsteil, Tag, ProfID, Raumnr;
 \end{sqlbox}
 
-\textbf{Bedeutung und Logik:}
-Die Abfrage implementiert die Geschäftslogik der Stundenplanung:
-\begin{enumerate}
-    \item \textbf{Blockbildung (\texttt{SUM}/\texttt{MIN}):} Eine 90-minütige Vorlesung steht in Untis als zwei Datensätze (z.B. 1. Stunde und 2. Stunde). Diese Abfrage erkennt die Zusammengehörigkeit und verschmilzt sie zu einem einzigen Eintrag im Zielsystem mit Startzeit der 1. Stunde und Dauer = 2.
-    \item \textbf{Hörerzahl-Logik (\texttt{MAX}):} Bei gekoppelten Klassen (z.B. Religion für 5A und 5B gemeinsam) sind die Schülerzahlen in jeder Untis-Zeile identisch. Eine \texttt{SUM} würde die Schülerzahl fälschlicherweise verdoppeln. \texttt{MAX} wählt den korrekten Wert für den Raum-Kapazitätsabgleich.
-\end{enumerate}
+\subsection{Pflichtbindungen (Pflicht)}
+Die Tabelle \texttt{Pflicht} verknüpft Kurse mit Studiengängen (Klassen) und definiert, ob es sich um Pflichtveranstaltungen handelt. Diese Information ist essenziell für die Konflikterkennung (z.B. "StudiengangSchwer").
+Die Befüllung erfolgt durch eine \texttt{UNION}-Operation aus zwei Quellen, um sowohl die theoretische Stundentafel als auch die faktische Verplanung abzubilden.
 
-\subsubsection{Transformation: Pflicht (Soll-Ist-Abgleich)}
-Das System muss wissen, welche Kurse im Curriculum vorgeschrieben sind. Da die Stundentafel oft theoretischer Natur ist, muss sie mit der Realität abgeglichen werden.
+\subsubsection{Quelle 1: Curriculare Vorgaben}
+Der erste Teil der Abfrage bezieht sich auf die Tabelle \texttt{dif\_data.Stundentafel}. Alle hier gelisteten Fächer sind per Definition Pflichtfächer (\texttt{Pflichtfach = 'Ja'}).
+Über die Schulform der Klasse (z.B. "G9" aus \texttt{dif\_data.Klassen}) wird die Verbindung zwischen der Klasse (StudiengangsID) und der Stundentafel hergestellt.
 
-\begin{sqlbox}{SQL-Logik für Pflicht}
+\subsubsection{Quelle 2: Faktischer Unterricht}
+Da Schulplanung oft dynamisch ist, existieren häufig Kurse im Stundenplan, die nicht explizit in der Stundentafel stehen (z.B. AGs, Förderunterricht oder kurzfristige Änderungen).
+Der zweite Teil der Abfrage extrahiert daher alle Kurse aus dem aktuellen \texttt{Stundenplan}, die \textit{nicht} in der Stundentafel enthalten sind.
+Diese werden als Nicht-Pflichtfächer (\texttt{Pflichtfach = 'Nein'}) importiert. Dies stellt sicher, dass der Plan im Planungstool vollständig dargestellt wird, auch wenn die curricularen Daten unvollständig sind.
+
+\begin{sqlbox}{SQL-Implementierung: Pflicht}
 CREATE TABLE Pflicht AS
--- Schritt 1: Das offizielle Curriculum (Soll)
-SELECT DISTINCT ..., 'Ja' AS Pflichtfach
-FROM dif\_data.Stundentafel AS STF ...
+-- Teil 1: Daten aus der Stundentafel (Pflicht = Ja)
+SELECT DISTINCT
+    STF.Fach AS KursID,
+    CASE WHEN SUBSTR(STF.Fach, 1, 1) = '_' THEN '1' 
+         ELSE CE.Veranstaltungsteil END AS Veranstaltungsteil,
+    KLA.Name AS StudiengangsID, 
+    'Ja' AS Pflichtfach,
+    '-' AS Alternativgruppe
+FROM dif_data.Stundentafel AS STF
+JOIN dif_data.Klassen AS KLA ON STF.Name = KLA.Schulform
+JOIN dif_data.ClassEncoding AS CE ON CE.Klassenname = KLA.Name
 
 UNION
 
--- Schritt 2: Die gelebte Realitaet (Ist)
-SELECT DISTINCT ..., 'Nein' AS Pflichtfach
-FROM dif\_data.Stundenplan AS SP ...
-WHERE SP.Fach NOT IN (SELECT DISTINCT Fach FROM dif\_data.Stundentafel);
+-- Teil 2: Ergaenzungen aus dem Stundenplan (Pflicht = Nein)
+SELECT DISTINCT
+    SP.Fach AS KursID,
+    P.Veranstaltungsteil,
+    SP.Klasse AS StudiengangsID,
+    'Nein' AS Pflichtfach,
+    '-' AS Alternativgruppe
+FROM dif_data.Stundenplan AS SP
+-- ... (Joins mit HG, WM, CE und Plan) ...
+WHERE SP.Fach NOT IN (SELECT DISTINCT Fach FROM dif_data.Stundentafel);
 \end{sqlbox}
-
-\textbf{Bedeutung und Logik:}
-Diese Abfrage realisiert einen \textit{Hybrid-Ansatz}:
+\subsection{Konflikt-Konfiguration}
+Abschließend initialisiert das Skript die Tabellen für das Constraint-Management im Planungstool:
 \begin{itemize}
-    \item Der erste Teil (\texttt{Soll}) importiert alle offiziellen Pflichtfächer, damit das PUSS Tool weiß, was geplant werden \textit{muss}.
-    \item Der zweite Teil (\texttt{Ist}) fängt "Ausreißer" auf: Fächer, die im Stundenplan auftauchen (z.B. AGs, neue Wahlfächer), aber noch nicht in der offiziellen Stundentafel gepflegt wurden. Diese werden als \textit{nicht-Pflicht} markiert, aber dennoch importiert, um Datenverlust zu vermeiden.
+    \item \texttt{ConflictPriorities}: Definiert Gewichtungen
+    \item \texttt{IgnoredConflict}: Definition erlaubter Überlappungen.
+    \item \texttt{CustomConflicts}: Bereitstellung für benutzerdefinierte SQL-Constraints. 
 \end{itemize}
+Die letzten beiden Tabellen werden nur initialisiert, aber nicht mit Daten gefüllt, da sie für die spätere manuelle Anpassung durch die Nutzer vorgesehen sind.
+Wir wollen diese zur Vervollständigung der Dokumentation hier dennoch kurz deren SQL-Implementierung erwähnen.
+\subsubsection{ConflictPriorities}
+Die Tabelle \texttt{ConflictPriorities} definiert die Prioritäten der verschiedenen Konflikttypen, die bei der Planung auftreten können.
+\begin{sqlbox}{SQL-Implementierung: ConflictPriorities}
+CREATE TABLE ConflictPriorities (
+    ConflictType TEXT NOT NULL PRIMARY KEY,
+    Priority INTEGER NOT NULL);
+\end{sqlbox}
+Nach der Initialisierung wird die Tabelle mit den folgenden Standardwerten gefüllt. 
+Diese sind aus STULP übernommen und können von den Nutzern später angepasst werden, um die Planung an ihre spezifischen Bedürfnisse anzupassen.
+\begin{sqlbox}{SQL-Implementierung: ConflictPriorities (Daten)}
+INSERT INTO ConflictPriorities (ConflictType, Priority)
+VALUES ('Raum', 1);
+INSERT INTO ConflictPriorities (ConflictType, Priority)
+VALUES ('Professor', 2);
+INSERT INTO ConflictPriorities (ConflictType, Priority)
+VALUES ('StudiengangLeicht', 3)
+INSERT INTO ConflictPriorities (ConflictType, Priority)
+VALUES ('StudiengangSchwer', 1),
+INSERT INTO ConflictPriorities (ConflictType, Priority)
+VALUES ('WunschOrt', 5)
+\end{sqlbox}
+\subsubsection{IgnoredConflicts}
+\begin{sqlbox}{SQL-Implementierung: IgnoredConflict}
+CREATE TABLE IgnoredConflict (
+KursID1 TEXT NOT NULL,
+KursID2 TEXT NOT NULL,
+Veranstaltungsteil1 TEXT NOT NULL,
+Veranstaltungsteil2 TEXT NOT NULL,
+Type TEXT NOT NULL,
+Heavy INTEGER NOT NULL CHECK (Heavy IN (0, 1)),
+StudiengangsID TEXT NOT NULL,
+      
+PRIMARY KEY (KursID1, KursID2, Veranstaltungsteil1, Veranstaltungsteil2, Type, Heavy, StudiengangsID));
+\end{sqlbox}
+\subsection{CustomConflicts}
+\begin{sqlbox}{SQL-Implementierung: CustomConflicts}
+CREATE TABLE CustomConflicts (
+ConflictType TEXT NOT NULL PRIMARY KEY,
+Query TEXT NOT NULL,
+Active INTEGER NOT NULL CHECK (Active IN (0, 1)),
+        
+FOREIGN KEY (ConflictType) REFERENCES ConflictPriorities (ConflictType));
+\end{sqlbox}
