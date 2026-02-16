@@ -1,12 +1,40 @@
 \section{Datentransformation und Mapping (ETL-Prozess)}
 \label{sec:mapping}
-Das Mapping-Skript (Python) realisiert den ETL-Prozess (Extract, Transform, Load), um die Rohdaten aus der Untis-Export-Datenbank (\texttt{Untis-DIF.db}) in das Zielschema des PUSS Tools (\texttt{STULP.db}) zu überführen.
+In diesem Kapitel wollen wir zwei Python-Skripte vorstellen, die den Kern des Datenmappings bilden. 
+Das erste Skript \todo{Namen entgültig festlegen} bildet die relevanten Daten aus den Untis-DIF-Textdateien in eine relationale SQLite-Datenbank (\texttt{Untis.db}) um. 
+Es extrahiert die Informationen aus den \texttt{GPUXXX.TXT}-Dateien, bereinigt sie und strukturiert sie in Tabellen, die für die Planung relevant sind.
+Das Mapping-Skript \texttt{dif\_to\_stulp.py} realisiert den ETL-Prozess (Extract, Transform, Load), um die Rohdaten aus der Untis-Export-Datenbank (\texttt{Untis-DIF.db}) in das Zielschema des (lokalen) Planungstools (\texttt{STULP.db}) zu überführen.
+Der Prozess verbindet sich mit beiden SQLite-Datenbanken und führt SQL-basierte Transformationen durch.
+\subsection{Datenextraktion und -bereinigung aus Untis-DIF}
+\label{sec:mapping_dif}
+In diesem kurzen Unterkapitel wollen wir das Python-Skript \todo{Ref} vorstellen, das die DIF-Daten in eine Datenbankstruktur überführt, die wir im Mapping-Prozess verwenden. 
+Das Skript liest die relevanten \texttt{GPUXXX.TXT}-Dateien ein, extrahiert die benötigten Informationen und füllt damit die Tabellen der Datenbank, die als Grundlage für die Planung dient.
+Außerdem haben wir einige Hilfstabellen erstellt, um die spätere Transformation zu erleichtern (siehe \ref{schema:weekdaymap} und \ref{schema:hourgrid}).
+Alle diese Informationen haben wir bereits in Abschnitt \ref{sec:dif} ausführlich dokumentiert, hier wollen wir uns auf die technische Umsetzung konzentrieren.
+\todo{Skript wenn fertig fertig hier einfügen}
 
-Der Prozess verbindet sich mit beiden SQLite-Datenbanken und führt SQL-basierte Transformationen durch. Im Folgenden wird die Abbildungslogik für die zentralen Entitäten beschrieben.
-
-\subsection{Stammdaten-Mapping}
-
-\subsubsection{Professoren}
+\subsection{Mapping der Daten in das Planungstool}
+Im Folgenden wird die Abbildungslogik für die zentralen Entitäten beschrieben und anschließend das in SQL formulierte Mapping erläutert. 
+Ziel ist es, die Daten aus den Untis-DIF-Textdateien so zu transformieren, dass sie in die relationalen Tabellen des Planungstools passen und dabei die semantische Integrität der Informationen gewahrt bleibt.
+Dabei wollen wir das Mapping für jede relation in einem eigenen Unterabschnitt beschreiben, um die Übersicht zu wahren.
+\subsubsection{Schema Professor}
+\begin{minted}[
+    frame=lines,                % Rahmen oben und unten
+    framesep=2mm,               % Abstand zum Rahmen
+    baselinestretch=1.2,        % Zeilenabstand
+    fontsize=\footnotesize,     % Schriftgröße
+    linenos,                    % Zeilennummern
+    label={SQL-Logik für Professor} % Die Überschrift des Kastens
+]{sql}
+CREATE TABLE Professor AS
+SELECT
+    Name AS ProfID,
+    Name AS Name,
+    'Lehrer' AS Fakultaet
+FROM dif_data.Lehrer
+-- Filterung: Nur Namen, die mit einem Buchstaben beginnen
+WHERE UPPER(SUBSTR(Name, 1, 1)) BETWEEN 'A' AND 'Z';
+\end{minted}
 Die Tabelle \texttt{Professor} wird direkt aus der Lehrer-Datei \texttt{GPU004} (siehe Abschnitt \ref{schema:gpu004}) gespeist.
 \begin{itemize}
     \item \textbf{Quelle:} \texttt{dif\_data.Lehrer}
@@ -18,6 +46,7 @@ Die Tabelle \texttt{Professor} wird direkt aus der Lehrer-Datei \texttt{GPU004} 
         \item Konstante 'Lehrer' $\rightarrow$ \texttt{Fakultaet}
     \end{itemize}
 \end{itemize}
+
 
 \subsubsection{Räume}
 Die Tabelle \texttt{Raum} entsteht aus der Raum-Datei \texttt{GPU005} (siehe Abschnitt \ref{schema:gpu005}).
@@ -86,126 +115,126 @@ Abschließend initialisiert das Skript die Tabellen für das Constraint-Manageme
     \item \texttt{IgnoredConflict}: Bleibt initial leer, dient aber zur Definition erlaubter Überlappungen (z.B. Religionsschienen).
     \item \texttt{CustomConflicts}: Bereitstellung für benutzerdefinierte SQL-Constraints.
 \end{itemize}
-\subsection{Detaillierte Analyse der SQL-Transformationen}
-Dieser Abschnitt dokumentiert die semantische Bedeutung der SQL-Abfragen innerhalb des ETL-Prozesses. Ziel der Transformation ist es nicht nur, Daten zu kopieren, sondern sie von der flachen Untis-Struktur in das relationale Modell des PUSS Tools zu überführen.
+% \subsection{Detaillierte Analyse der SQL-Transformationen}
+% Dieser Abschnitt dokumentiert die semantische Bedeutung der SQL-Abfragen innerhalb des ETL-Prozesses. Ziel der Transformation ist es nicht nur, Daten zu kopieren, sondern sie von der flachen Untis-Struktur in das relationale Modell des PUSS Tools zu überführen.
 
-\subsubsection{Transformation: Professor (Datenbereinigung)}
-Die Quell-Datenbank enthält neben echten Lehrkräften oft auch technische User oder Platzhalter.
+% \subsubsection{Transformation: Professor (Datenbereinigung)}
+% Die Quell-Datenbank enthält neben echten Lehrkräften oft auch technische User oder Platzhalter.
 
-\begin{sqlbox}{SQL-Logik für Professor}
-CREATE TABLE Professor AS
-SELECT
-    Name AS ProfID,
-    Name AS Name,
-    'Lehrer' AS Fakultaet
-FROM dif\_data.Lehrer
--- Filterung: Nur Namen, die mit einem Buchstaben beginnen
-WHERE UPPER(SUBSTR(Name, 1, 1)) BETWEEN 'A' AND 'Z';
-\end{sqlbox}
+% \begin{sqlbox}{SQL-Logik für Professor}
+% CREATE TABLE Professor AS
+% SELECT
+%     Name AS ProfID,
+%     Name AS Name,
+%     'Lehrer' AS Fakultaet
+% FROM dif\_data.Lehrer
+% -- Filterung: Nur Namen, die mit einem Buchstaben beginnen
+% WHERE UPPER(SUBSTR(Name, 1, 1)) BETWEEN 'A' AND 'Z';
+% \end{sqlbox}
 
-\textbf{Bedeutung und Logik:}
-Die \texttt{WHERE}-Klausel dient hier als Qualitätsfilter. Durch die Prüfung \texttt{BETWEEN 'A' AND 'Z'} auf dem ersten Buchstaben des Kürzels werden rein numerische IDs oder Sonderzeichen-User (die oft für Pausenaufsichten oder Systemfunktionen in Untis genutzt werden) ausgeblendet. Nur "echte" Personen werden in das Zielsystem als Professoren importiert.
+% \textbf{Bedeutung und Logik:}
+% Die \texttt{WHERE}-Klausel dient hier als Qualitätsfilter. Durch die Prüfung \texttt{BETWEEN 'A' AND 'Z'} auf dem ersten Buchstaben des Kürzels werden rein numerische IDs oder Sonderzeichen-User (die oft für Pausenaufsichten oder Systemfunktionen in Untis genutzt werden) ausgeblendet. Nur "echte" Personen werden in das Zielsystem als Professoren importiert.
 
-\subsubsection{Transformation: Raum (Datenanreicherung)}
-Im Quellsystem ist die Information über das Gebäude oft implizit auf verschiedene Hilfsfelder verteilt.
+% \subsubsection{Transformation: Raum (Datenanreicherung)}
+% Im Quellsystem ist die Information über das Gebäude oft implizit auf verschiedene Hilfsfelder verteilt.
 
-\begin{sqlbox}{SQL-Logik für Raum}
-CREATE TABLE Raum AS
-SELECT
-    Name AS Raumnr,
-    -- Semantische Zusammenfuehrung der Lage-Informationen
-    `Gang 1` || '/' || `Gang 2` AS Gebaeude,
-    Kapazität AS Sitzplatzzahl,
-    0 AS Prioritaet
-FROM dif\_data.Raeume
-WHERE UPPER(SUBSTR(Name, 1, 1)) BETWEEN 'A' AND 'Z';
-\end{sqlbox}
+% \begin{sqlbox}{SQL-Logik für Raum}
+% CREATE TABLE Raum AS
+% SELECT
+%     Name AS Raumnr,
+%     -- Semantische Zusammenfuehrung der Lage-Informationen
+%     `Gang 1` || '/' || `Gang 2` AS Gebaeude,
+%     Kapazität AS Sitzplatzzahl,
+%     0 AS Prioritaet
+% FROM dif\_data.Raeume
+% WHERE UPPER(SUBSTR(Name, 1, 1)) BETWEEN 'A' AND 'Z';
+% \end{sqlbox}
 
-\textbf{Bedeutung und Logik:}
-Hier findet eine \textit{Datenanreicherung} statt. Da Untis kein explizites Feld für "Gebäude" besitzt, sondern generische Felder wie "Gang" nutzt, konstruiert die Abfrage mittels String-Konkatenation (\texttt{||}) eine neue, semantisch wertvolle Information ("Gebäude"). Dies ermöglicht im PUSS Tool später eine Filterung nach Campus-Bereichen, die im Quellsystem so nicht direkt möglich wäre.
+% \textbf{Bedeutung und Logik:}
+% Hier findet eine \textit{Datenanreicherung} statt. Da Untis kein explizites Feld für "Gebäude" besitzt, sondern generische Felder wie "Gang" nutzt, konstruiert die Abfrage mittels String-Konkatenation (\texttt{||}) eine neue, semantisch wertvolle Information ("Gebäude"). Dies ermöglicht im PUSS Tool später eine Filterung nach Campus-Bereichen, die im Quellsystem so nicht direkt möglich wäre.
 
-\subsubsection{Transformation: Timeslot (Normalisierung)}
-Untis arbeitet mit relativen Stunden (1., 2. Stunde). Das Zielsystem benötigt jedoch absolute Zeitfenster.
+% \subsubsection{Transformation: Timeslot (Normalisierung)}
+% Untis arbeitet mit relativen Stunden (1., 2. Stunde). Das Zielsystem benötigt jedoch absolute Zeitfenster.
 
-\begin{sqlbox}{SQL-Logik für Timeslot}
-CREATE TABLE Timeslot AS
-SELECT
-    -- Erzeugung eines künstlichen Primaerschluessels
-    ROW\_NUMBER() OVER () AS Timeslot,
-    TS.Weekday,
-    TS.Time,
-    TS.Duration
-FROM (
-    SELECT DISTINCT -- Reduktion auf einzigartige Kombinationen
-        WM.Weekday,
-        HG.Time,
-        HG.Duration
-    FROM dif\_data.Zeitwuensche AS ZW
-    JOIN dif\_data.HourGrid AS HG ON ZW.Stunde = HG.Hour
-    JOIN dif\_data.WeekdayMap AS WM ON ZW.Tag = WM.DIFTag
-) AS TS;
-\end{sqlbox}
+% \begin{sqlbox}{SQL-Logik für Timeslot}
+% CREATE TABLE Timeslot AS
+% SELECT
+%     -- Erzeugung eines künstlichen Primaerschluessels
+%     ROW\_NUMBER() OVER () AS Timeslot,
+%     TS.Weekday,
+%     TS.Time,
+%     TS.Duration
+% FROM (
+%     SELECT DISTINCT -- Reduktion auf einzigartige Kombinationen
+%         WM.Weekday,
+%         HG.Time,
+%         HG.Duration
+%     FROM dif\_data.Zeitwuensche AS ZW
+%     JOIN dif\_data.HourGrid AS HG ON ZW.Stunde = HG.Hour
+%     JOIN dif\_data.WeekdayMap AS WM ON ZW.Tag = WM.DIFTag
+% ) AS TS;
+% \end{sqlbox}
 
-\textbf{Bedeutung und Logik:}
-Diese Abfrage führt eine \textit{Normalisierung} durch. Anstatt Zeiten redundant in jedem Termin zu speichern, wird ein zentraler Katalog aller genutzten Zeitslots erstellt.
-\begin{itemize}
-    \item \texttt{DISTINCT}: Stellt sicher, dass jeder Zeitpunkt (z.B. "Montag 08:00") physikalisch nur einmal in der Datenbank existiert.
-    \item \texttt{ROW\_NUMBER()}: Generiert eine effiziente numerische ID für die interne Referenzierung, was die Performance bei der Konfliktprüfung im PUSS Tool erhöht.
-\end{itemize}
+% \textbf{Bedeutung und Logik:}
+% Diese Abfrage führt eine \textit{Normalisierung} durch. Anstatt Zeiten redundant in jedem Termin zu speichern, wird ein zentraler Katalog aller genutzten Zeitslots erstellt.
+% \begin{itemize}
+%     \item \texttt{DISTINCT}: Stellt sicher, dass jeder Zeitpunkt (z.B. "Montag 08:00") physikalisch nur einmal in der Datenbank existiert.
+%     \item \texttt{ROW\_NUMBER()}: Generiert eine effiziente numerische ID für die interne Referenzierung, was die Performance bei der Konfliktprüfung im PUSS Tool erhöht.
+% \end{itemize}
 
-\subsubsection{Transformation: Plan (Aggregation und Blockbildung)}
-Dies ist die komplexeste Transformation. Sie wandelt die granulare Sichtweise von Untis (45-Minuten-Scheiben) in die Block-Sichtweise (Vorlesungseinheiten) um.
+% \subsubsection{Transformation: Plan (Aggregation und Blockbildung)}
+% Dies ist die komplexeste Transformation. Sie wandelt die granulare Sichtweise von Untis (45-Minuten-Scheiben) in die Block-Sichtweise (Vorlesungseinheiten) um.
 
-\begin{sqlbox}{SQL-Logik für Plan (Auszug)}
-CREATE TABLE Plan AS
-SELECT
-    Fach AS KursID,
-    -- ...
-    -- 1. Ermittlung des Startzeitpunkts des Blocks
-    MIN(Time) AS Uhrzeit,
-    -- 2. Berechnung der Gesamtblockdauer
-    SUM(Duration) AS Dauer,
+% \begin{sqlbox}{SQL-Logik für Plan (Auszug)}
+% CREATE TABLE Plan AS
+% SELECT
+%     Fach AS KursID,
+%     -- ...
+%     -- 1. Ermittlung des Startzeitpunkts des Blocks
+%     MIN(Time) AS Uhrzeit,
+%     -- 2. Berechnung der Gesamtblockdauer
+%     SUM(Duration) AS Dauer,
     
-    -- 3. Aggregation der Zeitwuensche
-    (SELECT '[' || GROUP\_CONCAT(T.Timeslot) || ']' ...) AS Wunschzeit,
+%     -- 3. Aggregation der Zeitwuensche
+%     (SELECT '[' || GROUP\_CONCAT(T.Timeslot) || ']' ...) AS Wunschzeit,
 
-    -- 4. Korrekte Hoererzahl bei Koppelungen
-    MAX(Hoererzahl) AS Hoererzahl
-FROM (
-    -- Subquery bereinigt erst die Rohdaten ...
-    SELECT ... FROM dif\_data.Stundenplan ...
-) AS InnerPlan
--- ... und gruppiert sie dann zu Bloecken
-GROUP BY KursID, Veranstaltungsteil, Tag, ProfID, Raumnr;
-\end{sqlbox}
+%     -- 4. Korrekte Hoererzahl bei Koppelungen
+%     MAX(Hoererzahl) AS Hoererzahl
+% FROM (
+%     -- Subquery bereinigt erst die Rohdaten ...
+%     SELECT ... FROM dif\_data.Stundenplan ...
+% ) AS InnerPlan
+% -- ... und gruppiert sie dann zu Bloecken
+% GROUP BY KursID, Veranstaltungsteil, Tag, ProfID, Raumnr;
+% \end{sqlbox}
 
-\textbf{Bedeutung und Logik:}
-Die Abfrage implementiert die Geschäftslogik der Stundenplanung:
-\begin{enumerate}
-    \item \textbf{Blockbildung (\texttt{SUM}/\texttt{MIN}):} Eine 90-minütige Vorlesung steht in Untis als zwei Datensätze (z.B. 1. Stunde und 2. Stunde). Diese Abfrage erkennt die Zusammengehörigkeit und verschmilzt sie zu einem einzigen Eintrag im Zielsystem mit Startzeit der 1. Stunde und Dauer = 2.
-    \item \textbf{Hörerzahl-Logik (\texttt{MAX}):} Bei gekoppelten Klassen (z.B. Religion für 5A und 5B gemeinsam) sind die Schülerzahlen in jeder Untis-Zeile identisch. Eine \texttt{SUM} würde die Schülerzahl fälschlicherweise verdoppeln. \texttt{MAX} wählt den korrekten Wert für den Raum-Kapazitätsabgleich.
-\end{enumerate}
+% \textbf{Bedeutung und Logik:}
+% Die Abfrage implementiert die Geschäftslogik der Stundenplanung:
+% \begin{enumerate}
+%     \item \textbf{Blockbildung (\texttt{SUM}/\texttt{MIN}):} Eine 90-minütige Vorlesung steht in Untis als zwei Datensätze (z.B. 1. Stunde und 2. Stunde). Diese Abfrage erkennt die Zusammengehörigkeit und verschmilzt sie zu einem einzigen Eintrag im Zielsystem mit Startzeit der 1. Stunde und Dauer = 2.
+%     \item \textbf{Hörerzahl-Logik (\texttt{MAX}):} Bei gekoppelten Klassen (z.B. Religion für 5A und 5B gemeinsam) sind die Schülerzahlen in jeder Untis-Zeile identisch. Eine \texttt{SUM} würde die Schülerzahl fälschlicherweise verdoppeln. \texttt{MAX} wählt den korrekten Wert für den Raum-Kapazitätsabgleich.
+% \end{enumerate}
 
-\subsubsection{Transformation: Pflicht (Soll-Ist-Abgleich)}
-Das System muss wissen, welche Kurse im Curriculum vorgeschrieben sind. Da die Stundentafel oft theoretischer Natur ist, muss sie mit der Realität abgeglichen werden.
+% \subsubsection{Transformation: Pflicht (Soll-Ist-Abgleich)}
+% Das System muss wissen, welche Kurse im Curriculum vorgeschrieben sind. Da die Stundentafel oft theoretischer Natur ist, muss sie mit der Realität abgeglichen werden.
 
-\begin{sqlbox}{SQL-Logik für Pflicht}
-CREATE TABLE Pflicht AS
--- Schritt 1: Das offizielle Curriculum (Soll)
-SELECT DISTINCT ..., 'Ja' AS Pflichtfach
-FROM dif\_data.Stundentafel AS STF ...
+% \begin{sqlbox}{SQL-Logik für Pflicht}
+% CREATE TABLE Pflicht AS
+% -- Schritt 1: Das offizielle Curriculum (Soll)
+% SELECT DISTINCT ..., 'Ja' AS Pflichtfach
+% FROM dif\_data.Stundentafel AS STF ...
 
-UNION
+% UNION
 
--- Schritt 2: Die gelebte Realitaet (Ist)
-SELECT DISTINCT ..., 'Nein' AS Pflichtfach
-FROM dif\_data.Stundenplan AS SP ...
-WHERE SP.Fach NOT IN (SELECT DISTINCT Fach FROM dif\_data.Stundentafel);
-\end{sqlbox}
+% -- Schritt 2: Die gelebte Realitaet (Ist)
+% SELECT DISTINCT ..., 'Nein' AS Pflichtfach
+% FROM dif\_data.Stundenplan AS SP ...
+% WHERE SP.Fach NOT IN (SELECT DISTINCT Fach FROM dif\_data.Stundentafel);
+% \end{sqlbox}
 
-\textbf{Bedeutung und Logik:}
-Diese Abfrage realisiert einen \textit{Hybrid-Ansatz}:
-\begin{itemize}
-    \item Der erste Teil (\texttt{Soll}) importiert alle offiziellen Pflichtfächer, damit das PUSS Tool weiß, was geplant werden \textit{muss}.
-    \item Der zweite Teil (\texttt{Ist}) fängt "Ausreißer" auf: Fächer, die im Stundenplan auftauchen (z.B. AGs, neue Wahlfächer), aber noch nicht in der offiziellen Stundentafel gepflegt wurden. Diese werden als \textit{nicht-Pflicht} markiert, aber dennoch importiert, um Datenverlust zu vermeiden.
-\end{itemize}
+% \textbf{Bedeutung und Logik:}
+% Diese Abfrage realisiert einen \textit{Hybrid-Ansatz}:
+% \begin{itemize}
+%     \item Der erste Teil (\texttt{Soll}) importiert alle offiziellen Pflichtfächer, damit das PUSS Tool weiß, was geplant werden \textit{muss}.
+%     \item Der zweite Teil (\texttt{Ist}) fängt "Ausreißer" auf: Fächer, die im Stundenplan auftauchen (z.B. AGs, neue Wahlfächer), aber noch nicht in der offiziellen Stundentafel gepflegt wurden. Diese werden als \textit{nicht-Pflicht} markiert, aber dennoch importiert, um Datenverlust zu vermeiden.
+% \end{itemize}

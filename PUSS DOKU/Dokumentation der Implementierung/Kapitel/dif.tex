@@ -1,7 +1,8 @@
 \section{Dokumentation der Dif Dateien}
 \label{sec:dif}
-In diesem Kapitel werden die relevanten Dif Dateien beschrieben, die im PUSS Tool verwendet werden.
-Diese basiert auf einer Dokumentation von Untis\footnote{siehe \url{https://www.untis.at/manual/index.html?ti_allgemeine-schnittstellen.htm}} welche ergänzt und an die Bedürfnisse des PUSS Tools angepasst wurde.
+In diesem Kapitel werden die relevanten Dif Dateien beschrieben, die wir für die Datenmigration von Untis in das Planungstool verwendet haben. 
+Diese Dateien enthalten die Rohdaten, die aus Untis exportiert wurden, und bilden die Grundlage für die Erstellung der Planungsdatenbank im lokalen Planungstool.
+Diese Dokumentation basiert auf der Dokumentation von Untis\footnote{siehe \url{https://www.untis.at/manual/index.html?ti_allgemeine-schnittstellen.htm}} welche ergänzt und an die Bedürfnisse des im Rahmen dieses Projekts entwickelten Mapping-Skripts angepasst wurde.
 Außerdem kann in dieser Dokumentation eine vollständige Liste aller Dif Dateien gefunden werden, insbesondere auch jene, die wir im folgenden nicht beschreiben.
 
 \subsection{Notationshinweise und Legende}
@@ -34,7 +35,8 @@ In Anlehnung an die grafische Analyse der Datenbankstruktur werden folgende farb
 \noindent
 Ein Pfeil ($\uparrow$) vor einem Spaltennamen signalisiert zusätzlich einen Fremdschlüsselbezug in der Implementierung.
 \subsection{GPU001 -- Stundenplan}
-Die Datei \texttt{GPU001.TXT} enthält den Stundenplan. Da ein Unterrichtselement (Unterrichtsnummer) für mehrere Klassen gleichzeitig stattfinden kann (z.B. Koppelungen), bildet die Kombination aus Nummer und Klasse den Identifikator.
+Die Datei \texttt{GPU001.TXT} enthält den Stundenplan. Da ein Unterrichtselement (Unterrichtsnummer) für mehrere Klassen gleichzeitig stattfinden kann (z.B. Koppelungen), bildet die Kombination aus Unterrichtsnummer, Klasse und Fach den Identifikator. 
+\todo{Anderes Wort als Identifikator finden}
 
 \paragraph{Schema und Beispieldaten}
 
@@ -57,9 +59,9 @@ Die Datei \texttt{GPU001.TXT} enthält den Stundenplan. Da ein Unterrichtselemen
 \subsection{GPU002 -- Unterricht}
 Die Datei \texttt{GPU002.TXT} enthält die Unterrichts-Stammdaten. Sie definiert die grundlegenden Eigenschaften einer Unterrichtseinheit, unabhängig von ihrer zeitlichen Verplanung.
 
-Da ein Unterricht (identifiziert über die Unterrichtsnummer) aus mehreren Zeilen bestehen kann (z.B. bei Klassenkopellungen oder Team-Teaching), ist die Unterrichtsnummer allein nicht eindeutig. Ein Datensatz wird durch die Kombination aus Unterrichtsnummer, Klasse und Lehrer eindeutig bestimmt.
+Da ein Unterricht (identifiziert über die Unterrichtsnummer) aus mehreren Zeilen bestehen kann (z.B. bei Klassenkopellungen), ist die Unterrichtsnummer allein nicht eindeutig. Ein Datensatz wird durch die Kombination aus Unterrichtsnummer, Klasse und Lehrer eindeutig bestimmt.
 
-Im Kontext des PUSS Tools wird diese Datei primär genutzt, um die \textbf{Studentenzahl} (Hörerzahl) für die Berechnung der Raumauslastung zu ermitteln.
+Im Kontext des Mappings wird diese Datei primär genutzt, um die \textbf{Studentenzahl} (Hörerzahl) für die Berechnung der Raumauslastung zu ermitteln.
 
 \paragraph{Schema und Beispieldaten}
 
@@ -84,10 +86,11 @@ Im Kontext des PUSS Tools wird diese Datei primär genutzt, um die \textbf{Stude
 \begin{itemize}
     \item \textbf{Unterrichtsnummer:} Die eindeutige ID der Unterrichtseinheit. Sie dient als Verbindungsschlüssel zum Stundenplan (\texttt{GPU001}).
     \item \textbf{Klasse \& Lehrer:} Dienen als Fremdschlüssel auf die Dateien \texttt{GPU003} (Klassen) und \texttt{GPU004} (Lehrer). Zusammen mit der Unterrichtsnummer bilden sie den Primärschlüssel dieser Datei.
-    \item \textbf{Studentenzahl:} Gibt an, wie viele Schüler an diesem spezifischen Unterrichtsteil teilnehmen. Dies ist essenziell für die Kapazitätsplanung der Räume im Zielsystem.
+    \item \textbf{Studentenzahl:} Gibt an, wie viele Schüler an diesem spezifischen Unterrichtsteil teilnehmen. Dies ist essenziell für die Kapazitätsplanung der Räume im Planungstool.
 \end{itemize}
+\todo{Fix dafür finden, dass die Tabellen nicht an der richtigen Stelle angezeigt werden}
 \subsection{GPU003 -- Klassen}
-Die Datei \texttt{GPU003.TXT} enthält die Stammdaten der Klassen. Im Kontext des PUSS Tools werden diese Daten auf die Entität \texttt{Studiengaenge} abgebildet. Eine Klasse entspricht dabei einer Kohorte oder einem Studiengangs-Jahrgang.
+Die Datei \texttt{GPU003.TXT} enthält die Stammdaten der Klassen. Im Kontext des Mappings werden diese Daten auf die Entität \texttt{Studiengaenge} abgebildet. Eine Klasse entspricht dabei einer Kohorte oder einem Studiengangs-Jahrgang.
 
 Der eindeutige Identifikator ist der Klassenname. Die Datei liefert zudem wichtige Informationen über die Schulstufe (Semester) und die Schulform (Prüfungsordnung).
 
@@ -112,15 +115,15 @@ Der eindeutige Identifikator ist der Klassenname. Die Datei liefert zudem wichti
 
 \paragraph{Erläuterung der relevanten Felder:}
 \begin{itemize}
-    \item \textbf{Name:} Das Kürzel der Klasse (z.B. "05A"). Dient als Primärschlüssel und wird im Zielsystem zur \texttt{StudiengangsID}.
+    \item \textbf{Name:} Das Kürzel der Klasse (z.B. "05A"). Dient als Primärschlüssel und wird im Planungstool zur \texttt{StudiengangsID}.
     \item \textbf{Schul-Stufe:} Gibt den Jahrgang an (z.B. 5, 6, 12). Dies wird auf das \texttt{Semester} gemappt.
     \item \textbf{Schulform:} Beschreibt den Zweig oder die Prüfungsordnung (z.B. G9-Gymnasium). Dies dient als Verknüpfung zur Stundentafel (\texttt{GPU011}).
 \end{itemize}
 
 \subsection{GPU004 -- Lehrer}
-Die Datei \texttt{GPU004.TXT} beinhaltet die Lehrer-Stammdaten. Diese werden im Zielsystem als \texttt{Professor} interpretiert.
+Die Datei \texttt{GPU004.TXT} beinhaltet die Lehrer-Stammdaten. Diese werden im Planungstool als \texttt{Professor} interpretiert.
 
-Der Identifikator ist das Lehrerkürzel (\texttt{Name}). Obwohl die Datei viele Attribute für die statistische Auswertung und Abrechnung enthält (z.B. Hohlstunden, Sollarbeitszeit), sind für die Raum- und Zeitplanung im PUSS Tool primär das Kürzel und der Klarname relevant.
+Der Identifikator ist das Lehrerkürzel (\texttt{Name}). Obwohl die Datei viele Attribute für die statistische Auswertung und Abrechnung enthält (z.B. Hohlstunden, Sollarbeitszeit), sind für die Raum- und Zeitplanung im Mapping primär das Kürzel und der Klarname relevant.
 
 \paragraph{Schema und Beispieldaten}
 
@@ -144,10 +147,10 @@ Der Identifikator ist das Lehrerkürzel (\texttt{Name}). Obwohl die Datei viele 
 \paragraph{Erläuterung der relevanten Felder:}
 \begin{itemize}
     \item \textbf{Name:} Das eindeutige Lehrerkürzel. Dient als Primärschlüssel und wird als \texttt{ProfID} verwendet.
-    \item \textbf{Langname, Vorname, Titel:} Dienen der Anzeige im Zielsystem (z.B. "Dr. Hans Müller"). Im aktuellen Mapping-Skript wird vereinfachend oft nur das Kürzel verwendet, die Stammdaten stehen hier jedoch für eine Erweiterung bereit.
+    \item \textbf{Langname, Vorname, Titel:} Dienen der Anzeige im Planungstool (z.B. "Dr. Hans Müller"). Im aktuellen Mapping-Skript wird vereinfachend oft nur das Kürzel verwendet, die Stammdaten stehen hier jedoch für eine Erweiterung bereit.
 \end{itemize}
 \subsection{GPU005 -- Räume}
-Die Datei \texttt{GPU005.TXT} enthält die Stammdaten der Räume. Im PUSS Tool werden diese Daten auf die Entität \texttt{Raum} abgebildet.
+Die Datei \texttt{GPU005.TXT} enthält die Stammdaten der Räume. Im Mapping werden diese Daten auf die Entität \texttt{Raum} abgebildet.
 
 Der eindeutige Identifikator ist der Raumname (z.B. Raumnummer). Für die Planung sind insbesondere die Kapazität (Sitzplätze) zur Prüfung von Überfüllung und die Lage-Informationen (Gang 1/2) zur Bestimmung des Gebäudes relevant.
 
@@ -172,12 +175,12 @@ Der eindeutige Identifikator ist der Raumname (z.B. Raumnummer). Für die Planun
 
 \paragraph{Erläuterung der relevanten Felder:}
 \begin{itemize}
-    \item \textbf{Name:} Die eindeutige Bezeichnung des Raumes (z.B. "R101"). Dient als Primärschlüssel und wird im Zielsystem zur \texttt{Raumnr}.
+    \item \textbf{Name:} Die eindeutige Bezeichnung des Raumes (z.B. "R101"). Dient als Primärschlüssel und wird im Planungstool zur \texttt{Raumnr}.
     \item \textbf{Kapazität:} Die maximale Anzahl an Personen (Sitzplätze). Dies wird auf \texttt{Sitzplatzzahl} gemappt.
-    \item \textbf{Gang 1 / Gang 2:} Diese Felder enthalten oft Informationen über das Gebäude oder das Stockwerk. Im Mapping-Prozess werden diese beiden Felder kombiniert (konkateniert), um das Attribut \texttt{Gebaeude} im Zielsystem zu befüllen.
+    \item \textbf{Gang 1 / Gang 2:} Diese Felder enthalten oft Informationen über das Gebäude oder das Stockwerk. Im Mapping-Prozess werden diese beiden Felder kombiniert (konkateniert), um das Attribut \texttt{Gebaeude} im Planungstool zu befüllen.
 \end{itemize}
 \subsection{GPU006 -- Fächer}
-Die Datei \texttt{GPU006.TXT} enthält die Stammdaten der Unterrichtsfächer. Im PUSS Tool werden diese Daten auf die Entität \texttt{Kurs} abgebildet.
+Die Datei \texttt{GPU006.TXT} enthält die Stammdaten der Unterrichtsfächer. Im Mapping werden diese Daten auf die Entität \texttt{Kurs} abgebildet.
 
 Der eindeutige Identifikator ist das Fachkürzel (Name). Neben der Bezeichnung (Langname) kann hier auch ein fachgebundener Stammraum hinterlegt sein (z.B. Physik-Saal für Physik-Unterricht), was für die Raumplanung relevant sein kann.
 
@@ -202,14 +205,14 @@ Der eindeutige Identifikator ist das Fachkürzel (Name). Neben der Bezeichnung (
 
 \paragraph{Erläuterung der relevanten Felder:}
 \begin{itemize}
-    \item \textbf{Name:} Das eindeutige Kürzel des Faches (z.B. "M" für Mathematik). Dient als Primärschlüssel und wird im Zielsystem zur \texttt{KursID}.
+    \item \textbf{Name:} Das eindeutige Kürzel des Faches (z.B. "M" für Mathematik). Dient als Primärschlüssel und wird im Planungstool zur \texttt{KursID}.
     \item \textbf{Langname:} Die ausgeschriebene Bezeichnung des Faches. Wird auf \texttt{Kursname} und \texttt{KursnameEN} gemappt.
     \item \textbf{Raum:} Definiert optional einen festen Fachraum. Dies ist ein Fremdschlüssel auf die Datei \texttt{GPU005} (Räume). Auch wenn das aktuelle Mapping-Skript dieses Feld in der Tabelle \texttt{Kurs} noch nicht explizit übernimmt, ist es in den Rohdaten als "wichtig" klassifiziert.
 \end{itemize}
 \subsection{GPU011 -- Stundentafel}
 Die Datei \texttt{GPU011.TXT} enthält die Definitionen der Stundentafeln. Eine Stundentafel legt fest, welche Fächer in welchem Jahrgang und in welchem Zweig (Schulform) unterrichtet werden müssen.
 
-Im PUSS Tool wird diese Datei verwendet, um die Tabelle \texttt{Pflicht} zu generieren. Durch den Abgleich des Stundentafel-Namens mit der Schulform einer Klasse kann ermittelt werden, welche Kurse für einen Studiengang obligatorisch sind.
+Im Mapping wird diese Datei verwendet, um die Tabelle \texttt{Pflicht} zu generieren. Durch den Abgleich des Stundentafel-Namens mit der Schulform einer Klasse kann ermittelt werden, welche Kurse für einen Studiengang obligatorisch sind.
 
 \paragraph{Schema und Beispieldaten}
 
@@ -233,13 +236,13 @@ Im PUSS Tool wird diese Datei verwendet, um die Tabelle \texttt{Pflicht} zu gene
 \paragraph{Erläuterung der relevanten Felder:}
 \begin{itemize}
     \item \textbf{Name:} Der Identifikator der Stundentafel (z.B. "G9-05"). Dieser Wert korrespondiert mit dem Feld \texttt{Schulform} in der Datei \texttt{GPU003} (Klassen).
-    \item \textbf{Fach:} Das Kürzel des Unterrichtsfaches. Dies ist ein Fremdschlüssel auf die Datei \texttt{GPU006} (Fächer) und wird im Zielsystem zur \texttt{KursID}.
+    \item \textbf{Fach:} Das Kürzel des Unterrichtsfaches. Dies ist ein Fremdschlüssel auf die Datei \texttt{GPU006} (Fächer) und wird im Planungstool zur \texttt{KursID}.
     \item \textbf{Stundenzahl min./max.:} Gibt den vorgesehenen Stundenumfang (Wochenstunden) für das Fach in dieser Stufe an. Obwohl diese Werte im aktuellen Mapping-Skript nicht direkt übertragen werden, sind sie für die Vollständigkeitsprüfung der Planung relevant.
 \end{itemize}
 \subsection{GPU016 -- Zeitwünsche}
 Die Datei \texttt{GPU016.TXT} enthält die Zeitwünsche und -sperren. Hier können Präferenzen für Lehrer, Klassen, Räume oder Fächer hinterlegt werden (z.B. "Lehrer Müller kann montags in der 1. Stunde nicht").
 
-Im PUSS Tool ist diese Datei essenziell für die Berechnung der Spalte \texttt{Wunschzeit} in der Tabelle \texttt{Plan}. Ein Datensatz definiert dabei für eine bestimmte Entität und einen bestimmten Zeitschlitz (Tag + Stunde) einen Prioritätswert.
+Im Mapping ist diese Datei essenziell für die Berechnung der Spalte \texttt{Wunschzeit} in der Tabelle \texttt{Plan}. Ein Datensatz definiert dabei für eine bestimmte Entität und einen bestimmten Zeitschlitz (Tag + Stunde) einen Prioritätswert.
 
 Besonderheit: Diese Tabelle verwendet einen \textit{polymorphen Fremdschlüssel}. Das Feld \texttt{Kurzname} verweist je nach Inhalt des Feldes \texttt{Art} auf unterschiedliche Stammdatentabellen (Lehrer, Klassen, Räume oder Fächer).
 
@@ -279,8 +282,8 @@ Besonderheit: Diese Tabelle verwendet einen \textit{polymorphen Fremdschlüssel}
             \item \texttt{+3}: Dringender Wunsch (Unterricht bevorzugt)
         \end{itemize}
 \end{itemize}
-\subsection{Hilfsrelationen (Generiert)}
-Die folgenden Relationen existieren nicht als physische DIF-Dateien. Sie werden während des Importprozesses generiert, um proprietäre Untis-Kodierungen (wie numerische Wochentage oder Unterrichtsstunden) in das Format der Zieldatenbank (STULP/PUSS) zu übersetzen.
+\subsection{Hilfsrelationen}
+Die folgenden Relationen existieren nicht als physische DIF-Dateien. Sie werden während des Importprozesses generiert, um proprietäre Untis-Kodierungen (wie numerische Wochentage oder Unterrichtsstunden) in das Format der Zieldatenbank des Planungstools zu übersetzen.
 
 \subsubsection{HourGrid -- Zeitraster}
 Die Tabelle \texttt{HourGrid} definiert das Zeitraster der Schule. Sie bildet die abstrakte "Stunde" aus Untis (1. Stunde, 2. Stunde etc.) auf eine konkrete Startzeit und Dauer ab.
@@ -314,7 +317,7 @@ Diese Relation ist notwendig, um in der Zieltabelle \texttt{Timeslot} korrekte U
 \end{itemize}
 
 \subsubsection{WeekdayMap -- Wochentage}
-Die Tabelle \texttt{WeekdayMap} dient der Übersetzung der numerischen Wochentags-Repräsentation aus Untis in lesbare Textformate für das Zielsystem.
+Die Tabelle \texttt{WeekdayMap} dient der Übersetzung der numerischen Wochentags-Repräsentation aus Untis in lesbare Textformate für das Planungstool.
 
 \paragraph{Schema und Beispieldaten}
 
@@ -342,7 +345,7 @@ Die Tabelle \texttt{WeekdayMap} dient der Übersetzung der numerischen Wochentag
 \end{itemize}
 
 \subsubsection{ClassEncoding -- Klassenkodierung}
-Die Tabelle \texttt{ClassEncoding} ist eine spezifische Hilfstabelle für das PUSS Tool. Sie ordnet den Untis-Klassennamen (z.B. "05A") einer logischen Veranstaltungsgruppe (Veranstaltungsteil) zu. Dies ermöglicht es, Parallelklassen (05A, 05B etc.) im Zielsystem sauber zu trennen oder Oberstufenkurse (Q1, Q2) spezifisch zu mappen.
+Die Tabelle \texttt{ClassEncoding} ist eine spezifische Hilfstabelle für das Mapping. Sie ordnet den Untis-Klassennamen (z.B. "05A") einer logischen Veranstaltungsgruppe (Veranstaltungsteil) zu. Dies ermöglicht es, Parallelklassen (05A, 05B etc.) im Planungstool sauber zu trennen oder Oberstufenkurse (Q1, Q2) spezifisch zu mappen.
 
 \paragraph{Schema und Beispieldaten}
 
@@ -367,5 +370,5 @@ Die Tabelle \texttt{ClassEncoding} ist eine spezifische Hilfstabelle für das PU
 \paragraph{Erläuterung der Felder:}
 \begin{itemize}
     \item \textbf{Klassenname:} Der Name der Klasse wie in \texttt{GPU003} definiert. Dient als Join-Schlüssel.
-    \item \textbf{Veranstaltungsteil:} Ein interner Identifikator für das Zielsystem, der hilft, Kurse eindeutig Studiengangs-Instanzen zuzuordnen (z.B. wird die Klasse 05A zum Veranstaltungsteil 5.1).
+    \item \textbf{Veranstaltungsteil:} Ein interner Identifikator für das Planungstool, der hilft, Kurse eindeutig Studiengangs-Instanzen zuzuordnen (z.B. wird die Klasse 05A zum Veranstaltungsteil 5.1).
 \end{itemize}
