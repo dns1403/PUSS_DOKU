@@ -429,7 +429,7 @@ Die Veränderungen können mittels \textbf{Annehmen} gespeichert oder \textbf{Ab
 
 \paragraph{Unwiederufliches Ignorieren von Konflikten mittels Konfigurationsdatei}
 
-Es gibt auch die Möglichkeit, Konflikte unwiederruflich durch Einträge in der Konfigurationsdatei \texttt{IgnoredConflicts.json} zu ignorieren.
+Es gibt auch die Möglichkeit, Konflikte durch Einträge in der Konfigurationsdatei \texttt{IgnoredConflicts.json} unwiederruflich zu ignorieren.
 Eine Beispieldatei wurde mit der Software ausgeliefert.
 Sie ist im JSON-Format geschrieben und enthält die folgenden drei Elemente, die nachfolgend erläutert werden.
 Dabei ist zu beachten, dass sowohl die Datei als auch die jeweiligen Elemente nicht existieren müssen bzw. leer gelassen werden können.
@@ -444,15 +444,15 @@ Dabei ist zu beachten, dass sowohl die Datei als auch die jeweiligen Elemente ni
 
 \end{itemize}
 
-\subparagraph{StudiengangLeicht und StudiengangSchwer}
+\subparagraph{Die Elemente \textit{StudiengangLeicht} und \textit{StudiengangSchwer} in der Konfigurationsdatei}
 
-Die Elemente \textit{StudiengangLeicht} und \textit{StudiengangSchwer} enthalten beide jeweils die Unterelemente \textit{KonfliktfreieStudiengaenge} und \textit{ParalleleKurse}, welche jeweils eine Liste enthalten.
+Diese Elemente enthalten jeweils die Unterelemente \textit{KonfliktfreieStudiengaenge} und \textit{ParalleleKurse}, welche jeweils eine Liste enthalten.
 Bei dem Element \texttt{KonfliktfreieStudiengaenge} handelt es sich um eine Liste der Studiengänge, bei denen leichte bzw. schwere Studiengangskonflikte dauerhaft ignoriert werden sollen.
 Das Element \texttt{ParalleleKurse} besteht aus Listen (paralleler) Kurse, bei denen die resultierenden leichten bzw. schweren Studiengangskonflikte dauerhaft ignoriert werden sollen.
 
-\subparagraph{AlternierendeKurseProVeranstaltungsteil}
+\subparagraph{Das Element \textit{AlternierendeKurseProVeranstaltungsteil} in der Konfigurationsdatei}
 
-Das Element \texttt{AlternierendeKurseProVeranstaltungsteil} enthält eine Liste von Listen.
+Dieses Element enthält eine Liste von Listen.
 Jede der enthaltenen Listen besteht aus genau zwei Unterlisten, von denen die erste Veranstaltungsteile und die zweite immer genau zwei Kurse enthält.
 Pro Eintrag gilt, dass alle Konflikte zwischen den beiden Kursen ignoriert werden, sofern sie den gleichen Veranstaltungsteil haben, und der Veranstaltungsteil in der zugehörigen Veranstatltungsteilliste ist.
 
