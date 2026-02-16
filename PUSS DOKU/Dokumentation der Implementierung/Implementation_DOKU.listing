@@ -1,0 +1,11 @@
+CREATE TABLE Pflicht AS
+-- Schritt 1: Das offizielle Curriculum (Soll)
+SELECT DISTINCT ..., 'Ja' AS Pflichtfach
+FROM dif\_data.Stundentafel AS STF ...
+
+UNION
+
+-- Schritt 2: Die gelebte Realitaet (Ist)
+SELECT DISTINCT ..., 'Nein' AS Pflichtfach
+FROM dif\_data.Stundenplan AS SP ...
+WHERE SP.Fach NOT IN (SELECT DISTINCT Fach FROM dif\_data.Stundentafel);
