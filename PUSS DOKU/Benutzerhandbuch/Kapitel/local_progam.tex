@@ -14,10 +14,19 @@ Dies Unterschiede wollen wir im Folgenden kurz zusammenfassen und falls notwendi
 	\item \textbf{Nebenfach(NF)}: Dies habe wir nicht verwendet, da an der Schule keine Nebenfächer existieren. Es ist standardmäßig auf Ohne gesetzt.
 	\item \textbf{Prüfungsordnung(PO)}: Dieses wird beim übernehmen eines Stundenplans aus Untis auf die Schulform und Jahrgang bei der zum Studiengang gehörigen Klasse gesetzt. 
 	Bei keinem bestehenden Stundenplan kann dies ignoriert werden und muss nicht gesetzt werden.
-	\item \textbf{Veranstaltungsteil} Dies ist wohl die größte Abweichung in der Terminologie. Um eine Kompatibilität mit importierten Untis Stundenplänen zu gewährleisten, haben wir uns dazu entschieden den Begriff Veranstaltungsteil zweckzuentfremden.
-	Ein Veranstaltungsteil ist beim Import eines Untis Stundenplans auch der zu dem Studiengang gehörigen Klasse zugeordnet.
+	\item \textbf{Veranstaltungsteil} Dies ist wohl die größte Abweichung in der Terminologie. Da es keine Veranstaltungsteile an der Schule gibt, haben wir diesen Begriff zweckentfremdet, um die Zuordnung von Kursen zu Klassen zu ermöglichen.
+	Dabei ist der VeranstaltungsteilID eine koodierte Klasse zugeordnet. Dabei haben wir folgende Kodierung verwendet:
 \end{itemize}
-\todo{Um weitere Begriffe ergänzen, wenn uns noch was einfällt.}
+\begin{tabular}{|l|l|p{6cm}|l|}
+	\hline
+	\textbf{Bereich} & \textbf{Muster} & \textbf{Regel / Logik} & \textbf{Beispiel} \\
+	\hline
+	Sekundarstufe I & 05A -- 10G & Jahrgang + Punkt + Index \newline (A=1, B=2 \dots G=7) & 05C $\to$ 5.3 \\
+	\hline
+	Oberstufe & EF, Q1, Q2 & Fortlaufende IDs (nach Klasse 10) & EF $\to$ 11 \\
+	\hline
+\end{tabular}
+	
 \subsection{Voraussetzung zur Nutzung der Software als Planer}
 \subsubsection{Benötigte zusätzliche Software}
  Um das lokale Planungstool problemlos auszuführen, wird Java 22 oder 23 benötigt.
@@ -35,11 +44,12 @@ Auf Linux sollte das jeweilige Programm über die Kommandozeile mittels folgende
 \end{verbatim}
 
 \subsection{Übertragung eines bestehenden Stundenplans von Untis in das lokale Planungstool}
+\label{Stundenplanübertragung}
 Falls bereits ein Stundenplan in Untis existiert, kann dieser importiert werden. 
 Dafür exportieren wir die Daten aus Untis als Textdateien im Data Interchange Format (DIF) und übertragen diese anschließend in das Format der lokalen Planungsdatenbank.
 Bei den DIF-Dateien handelt es sich um strukturierte Textdateien, die die relevanten Informationen über die Klassen, Lehrer, Räume, Fächer, Unterricht, Stundenplan, Stundentafel und Zeitwünsche enthalten.
 Auf eine genaue Spezifikation des Formates wird an dieser Stelle verzichtet, da es für die Anwendung nicht relevant ist, und bereits eine offizielle Dokumentation von Untis existiert (siehe: \url{https://www.untis.at/manual/index.html?ti_allgemeine-schnittstellen.htm}). 
-Der Planer die folgenden zwei Möglichkeiten, um die Daten von Untis in das lokale Planungstool zu übertragen:
+Der Planer hat die folgenden zwei Möglichkeiten, um die Daten von Untis in das lokale Planungstool zu übertragen:
 \begin{itemize}
 	\item Nutzen des Importskripts export\_untis.bat, welches die DIF-Dateien automatisch erstellt und in das Format der lokalen Planungsdatenbank überträgt.
     \item Manueller Export der DIF-Dateien aus der Untis-GUI oder mit Hilfe des Command Line Interface (CLI) und anschließendes Ausführen der Importskripte, um die DIF-Dateien in das Format der lokalen Planungsdatenbank zu übertragen.
@@ -157,11 +167,9 @@ Der Planer wird nun aufgefordert, einen Speicherort zu wählen. Sobald dies gesc
     \item Lehrer
     \item Räume
 	\item Fächer
-	%\item Studenten
 	\item Unterricht
 	\item Stundenplan
 	\item Stundentafel
-	%\item Kurswahl
 	\item Zeitwünsche
 \end{itemize}
 Sobald alle Tabellen exportiert wurden, können die DIF-Dateien in das Planungstool importiert werden.
@@ -204,15 +212,17 @@ Nach der Ausführung dieses Skripts wird die Datei \textbf{STULP.db} erstellt.
 Diese kann plattformunabhängig im lokalen Planungstool geöffnet werden.
 
 \subsection{Nutzung der lokalen Planungssoftware}
+\label{STULP_Doku}
 Das Planungstool ermöglicht die Zeit- und Raumplanung für die Kurse.
 
 \subsubsection{Übersicht über die Planungssoftware}
 
-\begin{sidewaysfigure}[ht]
-	\includegraphics[scale=0.65]{images/planning_tool/overview.png}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=1\textwidth, angle=90]{images/planning_tool/overview.png}
 	\caption{Übersicht Planungssoftware}
 	\label{fig:plt_overview}
-\end{sidewaysfigure}
+\end{figure}
 \FloatBarrier
 \newpage 
 In Abbildung \ref{fig:plt_overview} ist eine Übersicht über das Planungstool zu sehen. Das Planungstool besteht aus 6 Teilen. Diese sind: 
@@ -228,9 +238,7 @@ In Abbildung \ref{fig:plt_overview} ist eine Übersicht über das Planungstool z
 Mithilfe der Teile 4, 5, 6 werden die Veranstaltungen geplant. Dazu werden Veranstaltungen mittels „Drag and Drop“ zwischen verschiedenen Stundenplänen bewegt und somit zum Beispiel die Uhrzeit oder der Raum geändert.
 
 
-\subsubsection{Planungsdatenbanken öffnen, aktualisieren und mit dem Webprogramm teilen}
-
-\paragraph{Lokale Planungsdatenbank öffnen}
+\subsubsection{Planungsdatenbanken öffnen}
 Der Knopf \textbf{Aus Datei} im Menüabschnitt \textbf{Datenbank} ermöglicht das Öffnen einer lokalen Planungsdatenbank. 
 Diese muss auf dem System des Benutzers erreichbar sein. Das Öffnen hat den folgenden Ablauf:
 \begin{enumerate} 
@@ -238,7 +246,7 @@ Diese muss auf dem System des Benutzers erreichbar sein. Das Öffnen hat den fol
 	\item Auswählen der lokalen Planungsdatenbank aus dem Dateisystem des Computers 
 	\item Knopf \textbf{Öffnen} drücken
 \end{enumerate}
-
+\todo{Anordnung hier anpassen, dass das neue Kaptel auf der nächsten Seite beginnt, aber nicht }
 \begin{wrapfigure}{R}{0.35\textwidth}
 	\includegraphics[scale=0.5]{images/planning_tool/before_opening_db.png}
     \caption{Datenbanken öffnen}
@@ -267,7 +275,6 @@ Diese muss auf dem System des Benutzers erreichbar sein. Das Öffnen hat den fol
 
 % \paragraph{Lokalen Planungsstand hochladen}
 % Im  p2tool (Webserver)  lässt sich der Planungsstand  in der Rolle des Planenden oder Admins  unter \textbf{Planungsstand importieren/exportieren} hochladen und auch wieder herunterladen.
-
 \subsubsection{Anzeige der Konflikte}\label{subsubsec:plt_conf}
 \begin{wrapfigure}{R}{0.35\textwidth}
     \centering
@@ -282,7 +289,7 @@ Für den Planer bedeutet das, dass diese Konflikte nicht mehr in der Tabelle und
 \paragraph{Konfliktabelle}\label{par:conf_table}
 Die Tabelle 1 in Abbildung \ref{fig:plt_conflicts} zeigt alle momentan existierenden nicht ignorierten Konflikte an. 
 Dabei repräsentiert eine Zeile der Tabelle exakt einen Konflikt zwischen zwei Veranstaltungen.
-Für einen Konflikt werden jeweils die KursID in der Spalte KursID und die Klasse koodiert als Veranstaltungsteil in der Spalte Teil der beteiligten Veranstaltungsteile angezeigt.
+Für einen Konflikt werden jeweils die KursID in der Spalte KursID und die Koodierte KursID als Veranstaltungsteil in der Spalte Teil der beteiligten Veranstaltungsteile angezeigt.
 Zusätzlich wird in der Spalte Konflikt das Konfliktobjekt angezeigt. 
 Dieses Konfliktobjekt ist entweder ein Lehrer, ein Raum oder ein Klasse.
 Die erste Zeile der Tabelle in Abbildung \ref{fig:plt_conflicts} Teil 1 zeigt zum Beispiel den Konflikt zwischen der Veranstaltung  \textit{Chemie in der 10A} und der Veranstaltung \textit{Chemie in der 10B} an. 
