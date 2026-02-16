@@ -1,17 +1,18 @@
 \section{Nutzung des lokalen Planungstools}
+\label{lokales_Planungstool}
 Dieses Kapitel beschreibt die Nutzung des Tools zur lokalen Planung als Planer. 
 Insbesondere wird die Übertragung der Daten von Untis auf das lokale Planungstool beschrieben und wie das lokale Planungstool genutzt werden kann, um einen Stundenplan zu erstellen.
 \subsection{Unterschiede zwischen der Schule und der Universität}
 Bevor wir auf die Nutzung des lokalen Planungstools eingehen, wollen wir zunächst kurz die Unterschiede zwischen der Planung an der Schule und der Universität erläutern.
 Dies ist notwendig, da das lokale Planungstool ursprünglich für die Planung an der Universität entwickelt wurde und es daher einige Unterschiede in der Terminologie und den Konzepten gibt.
 Außerdem haben wir uns dazu entschieden die Datenbankstruktur des lokalen Planungstools beizubehalten, um eine Kompatibilität mit zukünftigen Erweiterungen zu gewährleisten.
-Dies Unterschiede wollen wir im Folgenden kurz zusammenfassen und falls notwendig erläutern, wie die Begriffe der Schule in die Terminologie des lokalen Planungstools übersetzt werden können.
+Die resultierenden Unterschiede werden wir im Folgenden kurz zusammenfassen, und falls notwendig erläutern, wie die Begriffe der Schule in die Terminologie des lokalen Planungstools übersetzt werden können.
 \begin{itemize}
 	\item \textbf{Professor}: Dies entspricht dem Begriff \textbf{Lehrer} an der Schule.
 	\item \textbf{Kurs}: Dies entspricht dem Begriff \textbf{Veranstaltung/Fach} an der Schule.
 	\item \textbf{Studiengang}: Dies entspricht dem Begriff \textbf{Klasse} an der Schule.
 	\item \textbf{Semester (eines Studiengangs)}: Dies entspricht dem Begriff \textbf{Jahrgang} der zum Studiengang gehörigen Klasse.
-	\item \textbf{Nebenfach(NF)}: Dies habe wir nicht verwendet, da an der Schule keine Nebenfächer existieren. Es ist standardmäßig auf Ohne gesetzt.
+	\item \textbf{Nebenfach(NF)}: Dies haben wir nicht verwendet, da an der Schule keine Nebenfächer existieren. Es ist standardmäßig auf „Ohne“ gesetzt.
 	\item \textbf{Prüfungsordnung(PO)}: Dieses wird beim übernehmen eines Stundenplans aus Untis auf die Schulform und Jahrgang bei der zum Studiengang gehörigen Klasse gesetzt. 
 	Bei keinem bestehenden Stundenplan kann dies ignoriert werden und muss nicht gesetzt werden.
 	\item \textbf{Veranstaltungsteil} Dies ist wohl die größte Abweichung in der Terminologie. Da es keine Veranstaltungsteile an der Schule gibt, haben wir diesen Begriff zweckentfremdet, um die Zuordnung von Kursen zu Klassen zu ermöglichen.
@@ -426,6 +427,34 @@ Die Veränderungen können mittels \textbf{Annehmen} gespeichert oder \textbf{Ab
 %	\label{fig:plt_unplanned}
 %\end{wrapfigure}
 
+\paragraph{Unwiederufliches Ignorieren von Konflikten mittels Konfigurationsdatei}
+
+Es gibt auch die Möglichkeit, Konflikte unwiederruflich durch Einträge in der Konfigurationsdatei \texttt{IgnoredConflicts.json} zu ignorieren.
+Eine Beispieldatei wurde mit der Software ausgeliefert.
+Sie ist im JSON-Format geschrieben und enthält die folgenden drei Elemente, die nachfolgend erläutert werden.
+Dabei ist zu beachten, dass sowohl die Datei als auch die jeweiligen Elemente nicht existieren müssen bzw. leer gelassen werden können.
+
+\begin{itemize}
+
+    \item \textit{StudiengangLeicht}
+
+    \item \textit{StudiengangSchwer}
+
+    \item \textit{AlternierendeKurseProVeranstaltungsteil}
+
+\end{itemize}
+
+\subparagraph{StudiengangLeicht und StudiengangSchwer}
+
+Die Elemente \textit{StudiengangLeicht} und \textit{StudiengangSchwer} enthalten beide jeweils die Unterelemente \textit{KonfliktfreieStudiengaenge} und \textit{ParalleleKurse}, welche jeweils eine Liste enthalten.
+Bei dem Element \texttt{KonfliktfreieStudiengaenge} handelt es sich um eine Liste der Studiengänge, bei denen leichte bzw. schwere Studiengangskonflikte dauerhaft ignoriert werden sollen.
+Das Element \texttt{ParalleleKurse} besteht aus Listen (paralleler) Kurse, bei denen die resultierenden leichten bzw. schweren Studiengangskonflikte dauerhaft ignoriert werden sollen.
+
+\subparagraph{AlternierendeKurseProVeranstaltungsteil}
+
+Das Element \texttt{AlternierendeKurseProVeranstaltungsteil} enthält eine Liste von Listen.
+Jede der enthaltenen Listen besteht aus genau zwei Unterlisten, von denen die erste Veranstaltungsteile und die zweite immer genau zwei Kurse enthält.
+Pro Eintrag gilt, dass alle Konflikte zwischen den beiden Kursen ignoriert werden, sofern sie den gleichen Veranstaltungsteil haben, und der Veranstaltungsteil in der zugehörigen Veranstatltungsteilliste ist.
 
 \subsubsection{Ungeplante Veranstaltungen}
 In Teil 4 von Abbildung \ref{fig:plt_overview} werden alle momentan ungeplanten Veranstaltungen in einer Tabelle angezeigt. 
