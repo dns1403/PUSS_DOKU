@@ -163,7 +163,7 @@ Zwei Aspekte sind hierbei besonders hervorzuheben:
     \item \textbf{Behandlung von \_Kursen:} In Untis werden AGs und andere außerunterrichtliche Veranstaltungen oft mit einem führenden Unterstrich im Fachkürzel markiert (z.B. \texttt{\_Theater}). 
     Diese sind in der Regel nicht klassenbezogen, sondern für alle Schüler einer Jahrgangsstufe oder sogar der gesamten Schule zugänglich.
     Dadurch würden für diese Veranstaltungen mit der regulären Gruppierung jeweils ein Eintrag pro Klasse in Plan entstehen, was die Planung unnötig verkompliziert, da bei einer Verschiebung des Kurses für jede Klasse eine Anpassung notwendig wäre.
-    Um dies zu vermeiden, werden alle Fächer, die mit einem Unterstrich beginnen zu einer einzigen Veranstaltung zusammengefasst, die von den betroffenen Klassen gemeinsam besucht wird (siehe Pflicht \ref{SQL:Pflicht} für die Implementierung der Logik zum belegen von \_Kursen).
+    Um dies zu vermeiden, werden alle Fächer, die mit einem Unterstrich beginnen zu einer einzigen Veranstaltung zusammengefasst, die von den betroffenen Klassen gemeinsam besucht wird (siehe Zeile 5.6 SQL von Pflicht \ref{SQL:Pflicht} für die Implementierung der Logik zum belegen von \_Kursen).
     \item \textbf{Berechnung der Wunschzeit:} Die Spalte \texttt{Wunschzeit} wird durch eine korrelierte Unterabfrage ermittelt. Diese prüft, ob für den Lehrer, den Raum oder das Fach an diesem spezifischen Zeitslot eine Priorität in der Tabelle \texttt{Zeitwuensche} hinterlegt ist.
 \end{enumerate}
 
@@ -224,7 +224,7 @@ Der erste Teil der Abfrage bezieht sich auf die Tabelle \texttt{dif\_data.Stunde
 Über die Schulform der Klasse (z.B. "G9-2 Stufe 05" aus \texttt{dif\_data.Klassen}) wird die Verbindung zwischen der Klasse (StudiengangsID) und der Stundentafel hergestellt.
 
 \subsubsection{Quelle 2: Faktischer Unterricht}
-Da Schulplanung oft dynamisch ist, existieren häufig Kurse im Stundenplan, die nicht explizit in der Stundentafel stehen (z.B. AGs, Förderunterricht oder kurzfristige Änderungen).
+Da Schulplanung oft dynamisch ist, existieren häufig Kurse im Stundenplan, die nicht explizit in der Stundentafel stehen (zum Beispiel AGs, Förderunterricht oder kurzfristige Änderungen).
 Der zweite Teil der Abfrage extrahiert daher alle Kurse aus dem aktuellen \texttt{Stundenplan}, die \textit{nicht} in der Stundentafel enthalten sind.
 Diese werden als Nicht-Pflichtfächer (\texttt{Pflichtfach = 'Nein'}) importiert. Dies stellt sicher, dass der Plan im Planungstool vollständig dargestellt wird, auch wenn die curricularen Daten unvollständig sind.
 

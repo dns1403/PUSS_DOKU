@@ -73,7 +73,8 @@ Im Kontext des Mappings wird diese Datei primär genutzt, um die \textbf{Student
 
 \paragraph{Schema und Beispiel\-daten}
 
-\begin{table}[h]
+\paragraph{Erläuterung der relevanten Felder}
+\begin{table}[H]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|c|c|c|}
@@ -89,14 +90,11 @@ Im Kontext des Mappings wird diese Datei primär genutzt, um die \textbf{Student
     \caption{Schema der Relation Unterricht (\texttt{GPU002}) mit Normalform-Hinweisen und Beispiel\-daten}
     \label{schema:gpu002}
 \end{table}
-
-\paragraph{Erläuterung der relevanten Felder:}
 \begin{itemize}
     \item \textbf{Unterrichtsnummer:} Die eindeutige ID der Unterrichtseinheit. Sie dient als Verbindungsschlüssel zum Stundenplan (\texttt{GPU001}).
     \item \textbf{Klasse \& Lehrer:} Dienen als Fremdschlüssel auf die Dateien \texttt{GPU003} (Klassen) und \texttt{GPU004} (Lehrer). Zusammen mit der Unterrichtsnummer bilden sie den Primärschlüssel dieser Datei.
     \item \textbf{Studentenzahl:} Gibt an, wie viele Schüler an diesem spezifischen Unterrichtsteil teilnehmen. Dies ist essenziell für die Kapazitätsplanung der Räume im Planungstool.
 \end{itemize}
-\todo{Fix dafür finden, dass die Tabellen nicht an der richtigen Stelle angezeigt werden}
 \subsection{\texttt{GPU003} -- Klassen}
 Die Datei \texttt{GPU003.TXT} enthält die Stammdaten der Klassen. Im Kontext des Mappings werden diese Daten auf die Entität \texttt{Studiengaenge} abgebildet. Eine Klasse entspricht dabei einer Kohorte oder einem Studiengangs-Jahrgang.
 
@@ -104,7 +102,8 @@ Der eindeutige Identifikator ist der Klassenname. Die Datei liefert zudem wichti
 
 \paragraph{Schema und Beispiel\-daten}
 
-\begin{table}[h]
+\paragraph{Erläuterung der relevanten Felder}
+\begin{table}[H]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|c|c|}
@@ -120,8 +119,6 @@ Der eindeutige Identifikator ist der Klassenname. Die Datei liefert zudem wichti
     \caption{Schema der Relation Klassen (\texttt{GPU003}) mit Normalform-Hinweisen und Beispiel\-daten}
     \label{schema:gpu003}
 \end{table}
-
-\paragraph{Erläuterung der relevanten Felder:}
 \begin{itemize}
     \item \textbf{Name:} Das Kürzel der Klasse (z.B. "05A"). Dient als Primärschlüssel und wird im Planungstool zur \texttt{StudiengangsID}.
     \item \textbf{Schul-Stufe:} Gibt den Jahrgang an (z.B. 5, 6, 12). Dies wird auf das \texttt{Semester} gemappt.
@@ -135,7 +132,8 @@ Der Identifikator ist das Lehrerkürzel (\texttt{Name}). Obwohl die Datei viele 
 
 \paragraph{Schema und Beispiel\-daten}
 
-\begin{table}[h]
+\paragraph{Erläuterung der relevanten Felder}
+\begin{table}[H]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|c|c|}
@@ -151,8 +149,6 @@ Der Identifikator ist das Lehrerkürzel (\texttt{Name}). Obwohl die Datei viele 
     \caption{Schema der Relation Lehrer (\texttt{GPU004}) mit Normalform-Hinweisen und Beispiel\-daten}
     \label{schema:gpu004}
 \end{table}
-
-\paragraph{Erläuterung der relevanten Felder:}
 \begin{itemize}
     \item \textbf{Name:} Das eindeutige Lehrerkürzel. Dient als Primärschlüssel und wird als \texttt{ProfID} verwendet.
     \item \textbf{Langname, Vorname, Titel:} Dienen der Anzeige im Planungstool (z.B. "Dr. Hans Müller"). Im aktuellen Mapping-Skript wird vereinfachend oft nur das Kürzel verwendet, die Stammdaten stehen hier jedoch für eine Erweiterung bereit.
@@ -165,7 +161,8 @@ Der eindeutige Identifikator ist der Raumname (z.B. Raumnummer). Für die Planun
 
 \paragraph{Schema und Beispiel\-daten}
 
-\begin{table}[h]
+\paragraph{Erläuterung der relevanten Felder}
+\begin{table}[H]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|c|c|c|}
@@ -181,8 +178,6 @@ Der eindeutige Identifikator ist der Raumname (z.B. Raumnummer). Für die Planun
     \caption{Schema der Relation Räume (\texttt{GPU005}) mit Normalform-Hinweisen und Beispiel\-daten}
     \label{schema:gpu005}
 \end{table}
-
-\paragraph{Erläuterung der relevanten Felder:}
 \begin{itemize}
     \item \textbf{Name:} Die eindeutige Bezeichnung des Raumes (z.B. "R101"). Dient als Primärschlüssel und wird im Planungstool zur \texttt{Raumnr}.
     \item \textbf{Kapazität:} Die maximale Anzahl an Personen (Sitzplätze). Dies wird auf \texttt{Sitzplatzzahl} gemappt.
@@ -196,7 +191,8 @@ Der eindeutige Identifikator ist das Fachkürzel (Name). Neben der Bezeichnung (
 
 \paragraph{Schema und Beispiel\-daten}
 
-\begin{table}[h]
+\paragraph{Erläuterung der relevanten Felder}
+\begin{table}[H]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|c|}
@@ -212,8 +208,6 @@ Der eindeutige Identifikator ist das Fachkürzel (Name). Neben der Bezeichnung (
     \caption{Schema der Relation Fächer (\texttt{GPU006}) mit Normalform-Hinweisen und Beispiel\-daten}
     \label{schema:gpu006}
 \end{table}
-
-\paragraph{Erläuterung der relevanten Felder:}
 \begin{itemize}
     \item \textbf{Name:} Das eindeutige Kürzel des Faches (z.B. "M" für Mathematik). Dient als Primärschlüssel und wird im Planungstool zur \texttt{KursID}.
     \item \textbf{Langname:} Die ausgeschriebene Bezeichnung des Faches. Wird auf \texttt{Kursname} und \texttt{KursnameEN} gemappt.
@@ -227,7 +221,8 @@ Im Mapping wird diese Datei verwendet, um die Tabelle \texttt{Pflicht} zu generi
 
 \paragraph{Schema und Beispiel\-daten}
 
-\begin{table}[h]
+\paragraph{Erläuterung der relevanten Felder}
+\begin{table}[H]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|c|c|c|}
@@ -243,8 +238,6 @@ Im Mapping wird diese Datei verwendet, um die Tabelle \texttt{Pflicht} zu generi
     \caption{Schema der Relation Stundentafel (\texttt{GPU011}) mit Normalform-Hinweisen und Beispiel\-daten}
     \label{schema:gpu011}
 \end{table}
-
-\paragraph{Erläuterung der relevanten Felder:}
 \begin{itemize}
     \item \textbf{Name:} Der Identifikator der Stundentafel (z.B. "G9-05"). Dieser Wert korrespondiert mit dem Feld \texttt{Schulform} in der Datei \texttt{GPU003} (Klassen).
     \item \textbf{Fach:} Das Kürzel des Unterrichtsfaches. Dies ist ein Fremdschlüssel auf die Datei \texttt{GPU006} (Fächer) und wird im Planungstool zur \texttt{KursID}.
@@ -260,7 +253,8 @@ Besonderheit: Diese Tabelle verwendet einen \textit{polymorphen Fremdschlüssel}
 
 \paragraph{Schema und Beispiel\-daten}
 
-\begin{table}[h]
+\paragraph{Erläuterung der relevanten Felder}
+\begin{table}[H]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|c|c|c|}
@@ -276,8 +270,6 @@ Besonderheit: Diese Tabelle verwendet einen \textit{polymorphen Fremdschlüssel}
     \caption{Schema der Relation Zeitwünsche (\texttt{GPU016}) mit Normalform-Hinweisen und Beispiel\-daten}
     \label{schema:gpu016}
 \end{table}
-
-\paragraph{Erläuterung der relevanten Felder:}
 \begin{itemize}
     \item \textbf{Art des Elements:} Unterscheidet, auf welche Entität sich der Wunsch bezieht:
         \begin{itemize}
@@ -304,7 +296,8 @@ Diese Relation ist notwendig, um in der Zieltabelle \texttt{Timeslot} korrekte U
 
 \paragraph{Schema und Beispiel\-daten}
 
-\begin{table}[h]
+\paragraph{Erläuterung der Felder}
+\begin{table}[H]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|c|}
@@ -320,8 +313,6 @@ Diese Relation ist notwendig, um in der Zieltabelle \texttt{Timeslot} korrekte U
     \caption{Schema der Hilfsrelation HourGrid}
     \label{schema:hourgrid}
 \end{table}
-
-\paragraph{Erläuterung der Felder:}
 \begin{itemize}
     \item \textbf{Hour:} Die Nummer der Unterrichtsstunde laut Untis (z.B. 1). Dient als Join-Schlüssel zur Tabelle \texttt{Stundenplan} (Spalte \texttt{Stunde}).
     \item \textbf{Time:} Die Startzeit der Stunde als Ganzzahl (z.B. 8 für 08:00 Uhr).
@@ -333,7 +324,8 @@ Die Tabelle \texttt{WeekdayMap} dient der Übersetzung der numerischen Wochentag
 
 \paragraph{Schema und Beispiel\-daten}
 
-\begin{table}[h]
+\paragraph{Erläuterung der Felder}
+\begin{table}[H]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|}
@@ -349,8 +341,6 @@ Die Tabelle \texttt{WeekdayMap} dient der Übersetzung der numerischen Wochentag
     \caption{Schema der Hilfsrelation WeekdayMap}
     \label{schema:weekdaymap}
 \end{table}
-
-\paragraph{Erläuterung der Felder:}
 \begin{itemize}
     \item \textbf{DIFTag:} Die numerische Repräsentation des Tages in den DIF-Dateien (1 = Montag). Dient als Join-Schlüssel zur Tabelle \texttt{Stundenplan} (Spalte \texttt{Tag}).
     \item \textbf{Weekday:} Der ausgeschriebene Name des Wochentags.
@@ -361,7 +351,8 @@ Die Tabelle \texttt{ClassEncoding} ist eine spezifische Hilfstabelle für das Ma
 
 \paragraph{Schema und Beispiel\-daten}
 
-\begin{table}[h]
+\paragraph{Erläuterung der Felder}
+\begin{table}[H]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|}
@@ -378,8 +369,6 @@ Die Tabelle \texttt{ClassEncoding} ist eine spezifische Hilfstabelle für das Ma
     \caption{Schema der Hilfsrelation ClassEncoding}
     \label{schema:classencoding}
 \end{table}
-
-\paragraph{Erläuterung der Felder:}
 \begin{itemize}
     \item \textbf{Klassenname:} Der Name der Klasse wie in \texttt{GPU003} definiert. Dient als Join-Schlüssel.
     \item \textbf{Veranstaltungsteil:} Ein interner Identifikator für das Planungstool, der hilft, Kurse eindeutig Studiengangs-Instanzen zuzuordnen (z.B. wird die Klasse 05A zum Veranstaltungsteil 5.1).
