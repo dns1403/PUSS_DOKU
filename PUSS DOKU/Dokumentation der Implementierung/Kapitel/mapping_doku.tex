@@ -5,7 +5,7 @@ Das erste Skript \texttt{dif-relevant-columns.py} bildet die relevanten Daten au
 Es extrahiert die Informationen aus den \texttt{GPUXXX.TXT}-Dateien, bereinigt sie und strukturiert sie in Tabellen, die für die Planung relevant sind.
 Alle dafür notwendigen Informationen haben wir bereits in Abschnitt \ref{sec:dif} ausführlich dokumentiert, wodurch die technische Umsetzung hier leicht nachvollziehbar sein sollte.
 Dementsprechend wollen wir uns in diesem Kapitel auf die zweite Phase des ETL-Prozesses konzentrieren: die Transformation und das Mapping der Daten aus der \texttt{Untis-DIF.db} in die Struktur des Planungstools (\texttt{STULP.db}).
-Das Mapping-Skript \texttt{dif\_to\_stulp.py} dient genau diesem Zweck. Es führt SQL-basierte Transformationen durchzuführen, um die Daten in das Zielschema des Planungstools zu überführen.
+Das Mapping-Skript \texttt{dif\_to\_stulp.py} dient genau diesem Zweck. Es führt SQL-basierte Transformationen durch, um die Daten in das Zielschema des Planungstools zu überführen.
 Dafür verbindet sich das Skript mit beiden SQLite-Datenbanken (\texttt{Untis-DIF.db} und \texttt{STULP.db}) und führt SQL-basierte Transformationen durch, um die Daten entsprechend in eine für das Planungstool einlesbare Form zu bringen. \\
 Im Folgenden wird die Abbildungslogik für die zentralen Entitäten beschrieben und anschließend das in SQL formulierte Mapping erläutert. 
 Die Untis-Export-Datenbank wird hierbei im Folgenden mit dem SQL-Alias \texttt{dif\_data} referenziert, die Planungstool-Datenbank mit \texttt{stulp}. \\
@@ -127,7 +127,7 @@ Da Untis keine zentrale Tabelle für "gültige Zeitfenster" exportiert, sondern 
 
 Hierfür nutzen wir die Tabelle \texttt{dif\_data.Zeitwuensche}, da diese in der Regel das vollständigste Zeitraster abdeckt (da z.B. Sperrungen für den späten Nachmittag eingetragen sein können, auch wenn dort kein Unterricht stattfindet).
 Durch den \texttt{JOIN} mit den Hilfstabellen \texttt{HourGrid} und \texttt{WeekdayMap} werden die internen Untis Codierungen für Stunden und Wochentage in das Format überführt, das wir im Planungstool benötigen.
-Die SQL-Fensterfunktion \texttt{ROW\_NUMBER()} erzeugt dabei einen fortlaufenden Primärschlüssel.
+Die SQL-Funktion \texttt{ROW\_NUMBER()} erzeugt dabei einen fortlaufenden Primärschlüssel.\footnote{In in der SQL Implementierung sind Time und Hour markiert, da es diese auch als SQL Keywords gibt. Wir meinen hier die Spaltennamen, aus den Hilfstabellen, die wir für die Konstruktion des Zeitrasters benötigen.}
 
 \begin{sqlbox}{SQL-Implementierung: Timeslot}
 CREATE TABLE Timeslot AS
@@ -149,10 +149,9 @@ FROM
         dif_data.WeekdayMap AS WM ON ZW.Tag = WM.DIFTag)
     AS TS;
 \end{sqlbox}
-\todo{Keyword Problem lösen: Time und Hour sind in der SQL-Implementierung als Spaltennamen verwendet, was zu Konflikten mit reservierten SQL-Keywords führt.}
 \subsection{Plan}
 Die Tabelle \texttt{Plan} repräsentiert den aktuellen Ist-Zustand des Stundenplans.
-Die Transformation ist hierbei die anspruchsvollste des gesamten ETL-Prozesses, da die Datenstruktur von Untis (atomare Einzelstunden pro Klasse) fundamental von der des Planungstools (zusammenhängende Blöcke pro Veranstaltung) abweicht.
+Die Transformation ist hierbei die anspruchsvollste des gesamten ETL-Prozesses, da die Datenstruktur von Untis fundamental von der des Planungstools abweicht.
 Um die Logik wartbar und verständlich zu halten, erfolgt die Transformation mittels einer verschachtelten Abfrage (Nested Query) in zwei logischen Schritten: der Vorverarbeitung (\texttt{InnerPlan}) und der Aggregation (\texttt{OuterPlan}).
 
 \subsubsection{Schritt 1: Vorverarbeitung und Anreicherung (Inner Plan)}
@@ -163,7 +162,7 @@ Zwei Aspekte sind hierbei besonders hervorzuheben:
     \item \textbf{Behandlung von \_Kursen:} In Untis werden AGs und andere außerunterrichtliche Veranstaltungen oft mit einem führenden Unterstrich im Fachkürzel markiert (z.B. \texttt{\_Theater}). 
     Diese sind in der Regel nicht klassenbezogen, sondern für alle Schüler einer Jahrgangsstufe oder sogar der gesamten Schule zugänglich.
     Dadurch würden für diese Veranstaltungen mit der regulären Gruppierung jeweils ein Eintrag pro Klasse in Plan entstehen, was die Planung unnötig verkompliziert, da bei einer Verschiebung des Kurses für jede Klasse eine Anpassung notwendig wäre.
-    Um dies zu vermeiden, werden alle Fächer, die mit einem Unterstrich beginnen zu einer einzigen Veranstaltung zusammengefasst, die von den betroffenen Klassen gemeinsam besucht wird (siehe Zeile 5.6 SQL von Pflicht \ref{SQL:Pflicht} für die Implementierung der Logik zum belegen von \_Kursen).
+    Um dies zu vermeiden, werden alle Fächer, die mit einem Unterstrich beginnen zu einer einzigen Veranstaltung zusammengefasst, die von den betroffenen Klassen gemeinsam besucht wird (siehe Zeile 5 und 6 SQL von Pflicht \ref{SQL:Pflicht} für die Implementierung der Logik zum belegen von \_Kursen).
     \item \textbf{Berechnung der Wunschzeit:} Die Spalte \texttt{Wunschzeit} wird durch eine korrelierte Unterabfrage ermittelt. Diese prüft, ob für den Lehrer, den Raum oder das Fach an diesem spezifischen Zeitslot eine Priorität in der Tabelle \texttt{Zeitwuensche} hinterlegt ist.
 \end{enumerate}
 

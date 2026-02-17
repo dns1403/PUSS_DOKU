@@ -186,7 +186,7 @@ Der eindeutige Identifikator ist der Raumname (z.B. Raumnummer). Für die Planun
 \subsection{\texttt{GPU006} -- Fächer}
 Die Datei \texttt{GPU006.TXT} enthält die Stammdaten der Unterrichtsfächer. Im Mapping werden diese Daten auf die Entität \texttt{Kurs} abgebildet.
 
-Der eindeutige Identifikator ist das Fachkürzel (Name). Neben der Bezeichnung (Langname) kann hier auch ein fachgebundener Stammraum hinterlegt sein (z.B. Physik-Saal für Physik-Unterricht), was für die Raumplanung relevant sein kann.
+Der eindeutige Identifikator ist das Fachkürzel (Name). Neben der Bezeichnung (Langname) kann hier auch ein fachgebundener Stammraum hinterlegt sein (z.B. Physikraum für Physik-Unterricht), was für die Raumplanung relevant sein kann.
 
 \paragraph{Schema und Beispiel\-daten}
 
@@ -246,7 +246,7 @@ Im Mapping wird diese Datei verwendet, um die Tabelle \texttt{Pflicht} zu generi
 \subsection{\texttt{GPU016} -- Zeitwünsche}
 Die Datei \texttt{GPU016.TXT} enthält die Zeitwünsche und -sperren. Hier können Präferenzen für Lehrer, Klassen, Räume oder Fächer hinterlegt werden (z.B. "Lehrer Müller kann montags in der 1. Stunde nicht").
 
-Im Mapping ist diese Datei essenziell für die Berechnung der Spalte \texttt{Wunschzeit} in der Tabelle \texttt{Plan}. Ein Datensatz definiert dabei für eine bestimmte Entität und einen bestimmten Zeitschlitz (Tag + Stunde) einen Prioritätswert.
+Im Mapping ist diese Datei essenziell für die Berechnung der Spalte \texttt{Wunschzeit} in der Tabelle \texttt{Plan}. Ein Datensatz definiert dabei für eine bestimmte Entität und einen bestimmten Zeitslot (Tag + Stunde) einen Prioritätswert.
 
 Besonderheit: Diese Tabelle verwendet einen \textit{polymorphen Fremdschlüssel}. Das Feld \texttt{Kurzname} verweist je nach Inhalt des Feldes \texttt{Art} auf unterschiedliche Stammdatentabellen (Lehrer, Klassen, Räume oder Fächer).
 

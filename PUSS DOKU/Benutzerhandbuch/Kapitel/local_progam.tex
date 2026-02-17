@@ -31,8 +31,7 @@ Die resultierenden Unterschiede werden wir im Folgenden kurz zusammenfassen, und
 \subsection{Voraussetzung zur Nutzung der Software als Planer}
 \subsubsection{Benötigte zusätzliche Software}
  Um das lokale Planungstool problemlos auszuführen, wird Java 22 oder 23 benötigt.
- Falls außerdem ein bestehender Stundenplan von Untis in das lokale Planungstool übertragen werden soll, wird zusätzlich Python 3 benötigt, um die Dateien von Untis in das Format der lokalen Planungsdatenbank zu übertragen.
- Dabei wird außerdem die Python-Bibliothek \texttt{pandas} benötigt, um die Daten zu verarbeiten\footnote{Die Installation von Pandas hängt vom Betriebssystem ab und kann leicht recherchiert werden.}.
+ Falls außerdem ein bestehender Stundenplan von Untis in das lokale Planungstool übertragen werden soll, wird zusätzlich Python 3 und die Python-Bibliothek \texttt{pandas}\footnote{Die Installation von Pandas hängt vom Betriebssystem ab und kann leicht recherchiert werden.} benötigt, um die Dateien von Untis in das Format der lokalen Planungsdatenbank zu übertragen.
 \subsubsection{Korrekte Installation der Software}
 Das Planungstool wird als jar-Datei mit dem Namen Planungstool.jar ausgeliefert.
 Eine manuelle Installation ist nicht nötig. 
@@ -56,7 +55,7 @@ Der Planer hat die folgenden zwei Möglichkeiten, um die Daten von Untis in das 
 	\item Nutzen des Importskripts export\_untis.bat, welches die DIF-Dateien automatisch erstellt und in das Format der lokalen Planungsdatenbank überträgt.
     \item Manueller Export der DIF-Dateien aus der Untis-GUI oder mit Hilfe des Command Line Interface (CLI) und anschließendes Ausführen der Importskripte, um die DIF-Dateien in das Format der lokalen Planungsdatenbank zu übertragen.
 \end{itemize}
-Wir empfehlen die erste Methode, da sie einfacher und schneller ist. Die zweite Methode bietet keinen Mehrwert gegenüber der Methode, da sie die Schritte des Importskripts manuell ausführt.
+Wir empfehlen die erste Methode, da sie einfacher und schneller ist. Die zweite Methode bietet keinen Mehrwert gegenüber der ersten Methode, da sie die Schritte des Importskripts manuell ausführt.
 Wir wollen diese trotzdem beschreiben, um bei möglichen Problemen mit dem Importskript eine alternative Möglichkeit zu bieten, um die Daten von Untis in das lokale Planungstool zu übertragen.
 
 Da Untis anders als unser lokales Planungstool ausschließlich auf Windows läuft, muss der Datenexport unter Windows vorgenommen werden.
@@ -65,7 +64,6 @@ Der Zeitpunkt und das Vorgehen sind abhängig von der gewählten Export-Variante
 
 \subsubsection{Nutzen des Importskripts export\_untis.bat}
 Um das Importskript zu verwenden muss sich der Planer auf einem Computer mit einem Windows System befinden, da das Skript als .bat Datei vorliegt, welche nur auf Windows Systemen ausgeführt werden kann.
-\todo{Beschreiben wo dieses liegt und wie es gestartet wird (Doppelklick oder commandzeile).}
 Nach dem Starten des Skripts wird der Planer aufgefordert den Pfad zu der Untis.exe Datei anzugeben (siehe \cref{fig:export_untis_step1}). Hierbei ist es egal, ob der Pfad mit Anführungszeichen oder ohne angegeben wird.
 Im Beispiel in \cref{fig:export_untis_step1} ist der Pfad zur Untis.exe Datei Rot markiert und ohne Anführungszeichen angegeben. Sobald der Pfad eingegeben wurde, muss die Eingabe mit Enter bestätigt werden.
 Nach Bestätigung mit Enter, wird der Planer aufgefordert den Pfad zu der .untis Datei anzugeben. Dies ist die Datei, welche von Planer in Untis geöffnet wird und alle benötigten Daten für den Stundenplan enthält (siehe \cref{fig:export_untis_step2}). 
@@ -242,18 +240,24 @@ Mithilfe der Teile 4, 5, 6 werden die Veranstaltungen geplant. Dazu werden Veran
 
 \subsubsection{Planungsdatenbanken öffnen}
 Der Knopf \textbf{Aus Datei} im Menüabschnitt \textbf{Datenbank} ermöglicht das Öffnen einer lokalen Planungsdatenbank. 
-Diese muss auf dem System des Benutzers erreichbar sein. Das Öffnen hat den folgenden Ablauf:
-\begin{enumerate} 
-	\item Knopf \textbf{Aus Datei} im Menüabschnitt \textbf{Datenbank} drücken
-	\item Auswählen der lokalen Planungsdatenbank aus dem Dateisystem des Computers 
-	\item Knopf \textbf{Öffnen} drücken
-\end{enumerate}
-\todo{Anordnung hier anpassen, dass das neue Kaptel auf der nächsten Seite beginnt, aber nicht }
-\begin{wrapfigure}{R}{0.35\textwidth}
-	\includegraphics[scale=0.5]{images/planning_tool/before_opening_db.png}
-    \caption{Datenbanken öffnen}
-	\label{fig:before_opening_db}
-\end{wrapfigure}
+
+\noindent % Verhindert Einrückung für das Layout
+\begin{minipage}[t]{0.6\textwidth} % Linke Seite für den Text
+    Diese muss auf dem System des Benutzers erreichbar sein. Das Öffnen hat den folgenden Ablauf:
+    \begin{enumerate} 
+        \item Knopf \textbf{Aus Datei} im Menüabschnitt \textbf{Datenbank} drücken
+        \item Auswählen der lokalen Planungsdatenbank
+        \item Knopf \textbf{Öffnen} drücken
+    \end{enumerate}
+\end{minipage}
+\hfill % Schiebt das Bild ganz nach rechts
+\begin{minipage}[t]{0.35\textwidth} % Rechte Seite für das Bild
+    \vspace{0pt} % Trick zur vertikalen Ausrichtung am oberen Rand
+    \centering
+    \includegraphics[width=\textwidth]{images/planning_tool/before_opening_db.png}
+    \captionof{figure}{Datenbanken öffnen}
+    \label{fig:before_opening_db}
+\end{minipage}
 
 % \paragraph{Web Planungsdatenbank öffnen (VLPTDB)}\label{sec:open-vlptdp}
 % Ebenfalls über den Knopf \textbf{Aus Datei} im Menüabschnitt \textbf{Datenbank} 
@@ -322,16 +326,17 @@ Beim Erstellen einer lokalen Planungsdatenbank werden diese Konflikttypen mit de
 Es gibt die Prioritäten 1-5, wobei 1 die höchste Priorität ist und 5 die niedrigste. 
 Über den Knopf \textbf{Prios verwalten} können diese Prioritäten angepasst werden. 
 Es öffnet sich ein Fenster: Abbildung \ref{fig:plt_conflict_prios}. 
-\begin{wrapfigure}{r}{0.4\textwidth}
-    \centering
-	\caption{Prioritäten zuweisen}
-	\includegraphics[scale=0.7]{images/planning_tool/conflict_prio_dialog.png}
-	\label{fig:plt_conflict_prios}
-\end{wrapfigure}
+% \begin{wrapfigure}{r}{0.4\textwidth}
+%     \centering
+% 	\caption{Prioritäten zuweisen}
+% 	\includegraphics[scale=0.7]{images/planning_tool/conflict_prio_dialog.png}
+% 	\label{fig:plt_conflict_prios}
+% \end{wrapfigure}
 Die Farbanzeige der Konflikte im Planungsfenster richtet sich nach der Konflikt-Prioritäten Zuordnung. 
 Wenn Raumkonflikte die Priorität 1 besitzen und die Farbe für Konflikte der Priorität 1 rot ist, dann werden diese rot angezeigt. 
 Zudem können über den Schalter \textbf{Prio} Konflikte ausgeblendet werden.
-Wenn im Plan nur die Konflikte mit einer Priorität größer als 3 (also Priorität 1 und 2), kann der Schalter aktiviert werden und in dem Eingabefeld eine 2 eingetragen werden.  
+Wenn im Plan nur die Konflikte mit einer Priorität größer als 3 (also Priorität 1 und 2), kann der Schalter aktiviert werden und in dem Eingabefeld eine 2 eingetragen werden. 
+
 
 \paragraph{Eigene Konflikte}
 Es besteht die Möglichkeit im Tool per SQL-Query eigene Konflikte zu definieren. 
@@ -343,36 +348,89 @@ Als Beispiel: \texttt{SELECT * FROM Plan WHERE Raumnr NOT LIKE 'F\%' AND Ort = 1
 Diese Query wählt alle Plan-Einträge aus, deren Raumnummer nicht mit „F“ beginnt (Demnach nicht im F Gebäude geplant wurden), jedoch als Wunschort (Ort) das F Gebäude (Wert 1) angegeben haben.
 Ein solcher Konflikt kann entweder im Konflikt-Menü in Abbildung \ref{fig:plt_conflict_menu} unter \textbf{Eigenen Konflikt hinzufügen} hinzugefügt werden oder in Abbildung \ref{fig:plt_conflicts} über das \textbf{+}. 
 Über das sich öffnende Fenster in Abbildung \ref{fig:plt_add_custom_conflict} kann der Konflikttyp dann eingegeben werden. \\
-\todo{Hier überlegen, ob wir als Beispiel vielleicht doch Raum zu klein nehmen sollten}
+% \begin{figure}[htbp]
+%     \centering
+%     \begin{minipage}{0.5\textwidth}
+%         \centering
+%         \caption{Eigenen Konflikttyp erstellen}
+%         \includegraphics[scale=0.4]{images/planning_tool/add_custom_conflict.png}
+        
+%         \label{fig:plt_add_custom_conflict}
+%     \end{minipage}
+%     \hspace{0.05\textwidth}
+%     \begin{minipage}{0.4\textwidth}
+%         \centering
+%         \caption{Konflikte Menü}
+%         \includegraphics[scale=0.4]{images/planning_tool/conflict_menu.png}
+        
+%         \label{fig:plt_conflict_menu}
+%     \end{minipage}
+% \end{figure}
+
+Die eigenen Konflikte können zusätzlich im Dialog Fenster aus Abbildung \ref{fig:plt_custom_conflicts_manage} aktiviert und deaktiviert werden. 
+So können eigene Konflikte aus der Übersicht genommen werden, ohne dass sie aus der Datenbank gelöscht werden müssen. 
 \begin{figure}[htbp]
     \centering
-    \begin{minipage}{0.5\textwidth}
+    
+    % --- ERSTE REIHE ---
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \caption{Prioritäten zuweisen}
+        \includegraphics[width=\linewidth]{images/planning_tool/conflict_prio_dialog.png}
+        \label{fig:plt_conflict_prios}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
+        \centering
+        \caption{Eigene Konflikte verwalten}
+        \includegraphics[width=\linewidth]{images/planning_tool/pic08}
+        \label{fig:plt_custom_conflicts_manage}
+    \end{minipage}
+    
+    % Abstand zwischen den Zeilen
+    \vspace{1cm} 
+    
+    % --- ZWEITE REIHE ---
+    \begin{minipage}[t]{0.45\textwidth}
         \centering
         \caption{Eigenen Konflikttyp erstellen}
-        \includegraphics[scale=0.4]{images/planning_tool/add_custom_conflict.png}
-        
+        \includegraphics[width=\linewidth]{images/planning_tool/add_custom_conflict.png}
         \label{fig:plt_add_custom_conflict}
     \end{minipage}
-    \hspace{0.05\textwidth}
-    \begin{minipage}{0.4\textwidth}
+    \hfill
+    \begin{minipage}[t]{0.45\textwidth}
         \centering
         \caption{Konflikte Menü}
-        \includegraphics[scale=0.4]{images/planning_tool/conflict_menu.png}
-        
+        \includegraphics[width=\linewidth]{images/planning_tool/conflict_menu.png}
         \label{fig:plt_conflict_menu}
     \end{minipage}
+    
 \end{figure}
-
-Die eigenen Konflikte können zusätzlich Im Dialog Fenster aus Abbildung \ref{fig:plt_custom_conflicts_manage} aktiviert und deaktiviert werden. 
-So können eigene Konflikte aus der Übersicht genommen werden, ohne dass sie aus der Datenbank gelöscht werden müssen. 
-
-\begin{figure}[h]
-    \centering
-    \caption{Eigene Konflikte verwalten}
-    \includegraphics[scale=.55]%{images/planning_tool/manage_custom_conflicts.png}
-    {images/planning_tool/pic08}
-    \label{fig:plt_custom_conflicts_manage}
-\end{figure}
+% \begin{figure}[htbp]
+%     \centering
+%     % Linke Box (ehemals wrapfigure)
+%     \begin{minipage}[t]{0.45\textwidth}
+%         \centering
+%         \caption{Prioritäten zuweisen}
+%         \includegraphics[width=\linewidth]{images/planning_tool/conflict_prio_dialog.png}
+%         \label{fig:plt_conflict_prios}
+%     \end{minipage}
+%     \hfill % Schiebt die Boxen an die Ränder (oder nutze \hspace{0.05\textwidth})
+%     % Rechte Box (ehemals figure)
+%     \begin{minipage}[t]{0.45\textwidth}
+%         \centering
+%         \caption{Eigene Konflikte verwalten}
+%         \includegraphics[width=\linewidth]{images/planning_tool/pic08}
+%         \label{fig:plt_custom_conflicts_manage}
+%     \end{minipage}
+% \end{figure}
+% \begin{figure}[h]
+%     \centering
+%     \caption{Eigene Konflikte verwalten}
+%     \includegraphics[scale=.55]%{images/planning_tool/manage_custom_conflicts.png}
+%     {images/planning_tool/pic08}
+%     \label{fig:plt_custom_conflicts_manage}
+% \end{figure}
 
 %\begin{wrapfigure}{r}{0.4\textwidth}
 %	\caption{Eigene Konflikte verwalten}
@@ -464,7 +522,7 @@ Die Tabelle kann mithilfe eines Filters nach Veranstaltungen gefiltert werden.
 \paragraph{Ungeplante Veranstaltungstabelle}\label{par:unplan_table}
 Die Tabelle 1 in \ref{fig:plt_unplanned} zeigt alle momentan ungeplanten Veranstaltung an, also diejenigen, die keinen Raum, Tag und Uhrzeit haben.
 Dabei repräsentiert eine Zeile der Tabelle exakt einen ungeplante Veranstaltung. 
-Für einen ungeplanten Veranstaltung wird die KursID in der Spalte KursID, der Veranstaltungsteil in der Spalte Teil, der Professor in der Spalte ProfID und die Dauer der Veranstaltung in der Spalte Dauer angezeigt.\\ 
+Für einen ungeplanten Veranstaltung wird die KursID in der Spalte KursID, die codierte Klasse in der Spalte Teil, der Lehrer in der Spalte ProfID und die Dauer der Veranstaltung in der Spalte Dauer angezeigt.\\ 
 Die erste Zeile der Tabelle in Abbildung \ref{fig:plt_unplanned} zeigt zum Beispiel die ungeplante Veranstaltung D L1 in der Q1 gehalten vom Lehrer mit der ProfID JA. 
 Die Veranstaltung dauert zwei Schulstunden.
 \paragraph{Filtern der Ungeplanten Veranstaltungstabelle}
@@ -502,19 +560,28 @@ In einem Stundenplanfenster (primär und sekundär) findet die eigentliche Planu
 
 In der Menüleiste unter Planung befindet sich für das primäre und das sekundäre Stundenplanfenster jeweils eine Menügruppe mit Knöpfen, mit denen das jeweilige Stundenplanfenster manipuliert werden kann. 
 Die Knöpfe, zu sehen in  Abbildung  \ref{fig:plt_menu_plan}, bieten die folgenden Funktionen an: 
-\begin{enumerate}
-	\item blendet das jeweilige Stundenplanfenster aus
-	\item öffnet einen Raum-Stundenplantab
-	\item öffnet einen Professor-Stundenplantab
-	\item öffnet einen Veranstaltung-Stundenplantab
-	\item öffnet einen Studiengang-Stundenplantab
-	\item öffnet einen Filter-Stundenplantab
-\end{enumerate}
-\begin{figure}[h]
-	\centering
-	\caption{Menü Stundenplanfenster}
-	\includegraphics[scale=0.5]{images/planning_tool/menu_planung.png}
-	\label{fig:plt_menu_plan}
+\begin{figure}[htbp]
+    % Linke Seite: Die Aufzählung
+    \begin{minipage}[t]{0.55\textwidth}
+        \vspace{0pt} % Erzwingt Ausrichtung an der Oberkante
+        \begin{enumerate}
+            \item blendet das jeweilige Stundenplanfenster aus
+            \item öffnet einen Raum-Stundenplantab
+            \item öffnet einen Professor-Stundenplantab
+            \item öffnet einen Veranstaltung-Stundenplantab
+            \item öffnet einen Studiengang-Stundenplantab
+            \item öffnet einen Filter-Stundenplantab
+        \end{enumerate}
+    \end{minipage}
+    \hfill
+    % Rechte Seite: Das Bild
+    \begin{minipage}[t]{0.4\textwidth}
+        \vspace{0pt} % Erzwingt Ausrichtung an der Oberkante
+        \centering
+        \includegraphics[width=\linewidth]{images/planning_tool/menu_planung.png}
+        \caption{Menü Stundenplanfenster}
+        \label{fig:plt_menu_plan}
+    \end{minipage}
 \end{figure}
 %\begin{figure}[H]
 %   \centering
@@ -547,7 +614,7 @@ Die Knöpfe, zu sehen in  Abbildung  \ref{fig:plt_menu_plan}, bieten die folgend
 %    \end{minipage}
 %\end{figure}
 
-\begin{wrapfigure}{r}{0.4\textwidth}
+\begin{wrapfigure}{r}{0.3\textwidth}
     \centering
 	\caption{Auswahl Stundenplantab}
 	\includegraphics[scale=0.6]{images/planning_tool/menu_plan_popup.png}
@@ -566,11 +633,22 @@ Die Tabs lassen sich mittels Drag- and Drop-Gesten zwischen dem primären und se
 Dazu muss der gewünschte Tab in der Liste in die Tabliste des anderen Stundeplanfensters mittels Drag- and Drop Geste  gezogen  werden.\\ 
 In Teil 2 von Abbildung \ref{fig:plt_pimary_plan}  werden Informationen über das Objekt des Stundenplans angezeigt, für einen Raum zum Beispiel Raumnummer und Sitzplatzanzahl.\\
 
-\begin{figure}[h]
-      \centering
-		\caption{Aufbau Stundenplanfenster}
-		\includegraphics[scale=0.45]{images/planning_tool/plan_window.png}
-		\label{fig:plt_pimary_plan}
+\begin{figure}[!ht] % Das ! ist entscheidend
+    \centering
+    
+    % --- OBERES BILD ---
+    % Breite auf 90% der Textbreite begrenzen, damit es nicht zu wuchtig wirkt
+    \includegraphics[width=0.9\textwidth]{images/planning_tool/plan_window.png}
+    \caption{Aufbau Stundenplanfenster}
+    \label{fig:plt_pimary_plan}
+    
+    \vspace{0.5cm} % Kleinerer Abstand spart Platz
+    
+    % --- UNTERES BILD ---
+    \includegraphics[width=0.9\textwidth]{images/planning_tool/plan_toolbar.png}
+    \caption{Toolbar Stundenplan}
+    \label{fig:plt_agenda_toolbar}
+    
 \end{figure}
 
 Die Toolbar in  Abbildung \ref{fig:plt_pimary_plan} Teil 3  bietet einige Knöpfe an, um die Darstellung des aktuell angezeigten Stundenplans zu manipulieren. 
@@ -585,13 +663,6 @@ Die Knöpfe, zu sehen in \ref{fig:plt_agenda_toolbar}, bieten die folgenden Funk
 	und \textit{alle Veranstaltungen nebeneinander} (um Screenshots zu machen, auf denen alle VAs zu sehen sind)
 	\item Öffnet den Vollbildmodus für den Stundenplan (maximales horizontales und vertikales Herauszoomen)
 \end{enumerate}
-
-\begin{figure}[h]
-	\centering
-	\caption{Toolbar Stundenplan}
-	\includegraphics[scale=0.6]{images/planning_tool/plan_toolbar.png}
-	\label{fig:plt_agenda_toolbar}
-\end{figure}
 
 Der eigentliche Stundenplan des Objekts ist in  Abbildung \ref{fig:plt_pimary_plan} Teil 4 zu sehen.
 \paragraph{Veranstaltungen im Stundenplan}
@@ -729,7 +800,7 @@ So zu sehen in Abbildung \ref{fig:plt_plan_wunsch_sperr}.
 Um die Planung zu erleichtern, gibt es den Raum „Ohne Raum“.
 Veranstaltungen, die sich in diesem Raum befinden, haben einen Tag und eine Uhrzeit zugewiesen, jedoch keinen Raum. 
 Dieser Raum dient als Zwischenablage für Veranstaltungen, für die schon ein Tag und eine Uhrzeit, aber noch kein Raum geplant ist. 
-\newpage 
+
 
 
 \subsubsection{Übersicht über Daten}
@@ -800,22 +871,33 @@ Dabei ist das Feld \textbf{Kommentar} optional. Der ausgewählte Raum ist dann z
 Durch Klicken auf den Knopf \textbf{Überprüfung} im Menüabschnitt Daten öffnet sich das Überprüfungsfenster. 
 Das Fenster ist in Abbildung \ref{fig:plt_daten_check} zu sehen. Es fungiert als Abschlussüberprüfung vor Abschluss der Phase 4. 
 Die folgenden Informationen werden angezeigt:
-\begin{enumerate}
-	\item alle Konflikte 
-	\item alle ignorierten Konflikte 
-	\item alle Veranstaltungen, die keinen Raum zugewiesen haben
-	\item alle Veranstaltungen, die keinen Raum und keinen Tag und keine Uhrzeit zugewiesen haben
-\end{enumerate}
+
+\noindent % Verhindert Einrückung beim Start der Minipages
+\begin{minipage}[t]{0.6\textwidth} % Linke Seite: 60% Breite für den Text
+    \vspace{0pt} % Zwingt die Liste, oben zu starten (bündig mit Bild)
+    \begin{enumerate}
+        \item alle Konflikte 
+        \item alle ignorierten Konflikte 
+        \item alle Veranstaltungen, die keinen Raum zugewiesen haben
+        \item alle Veranstaltungen, die keinen Raum und keinen Tag und keine Uhrzeit zugewiesen haben
+    \end{enumerate}
+\end{minipage}
+\hfill % Schiebt den rechten Block nach rechts außen
+\begin{minipage}[t]{0.35\textwidth} % Rechte Seite: 35% Breite für das Bild
+    \vspace{0pt} % Zwingt das Bild, oben zu starten
+    \centering
+    % width=\linewidth passt das Bild automatisch an die 35% Breite an
+    \includegraphics[width=\linewidth]{images/planning_tool/daten_check.png}
+    \captionof{figure}{Daten überprüfen}
+    \label{fig:plt_daten_check}
+\end{minipage}
+
+\medskip % Ein kleiner vertikaler Abstand vor dem Weiterlesen
+
 Für die Darstellung der Konflikte, ignorierten Konflikte und Veranstaltungen werden die bereits erklärten Tabellen aus Abschnitt 
 \ref{par:conf_table} (Konflikttabelle) und \ref{par:unplan_table} (Ungeplante Veranstaltungen) verwendet.
 Ein Stundenplan ist erst bereit für die Veröffentlichung, wenn keine Veranstaltungen mehr ohne Raum oder ohne Raum, Tag und Uhrzeit existieren. 
 Der Benutzer kann frei entscheiden, ob er die Phase 4 abschließen möchte, obwohl noch Konflikte zwischen Veranstaltungen existieren.
-\begin{figure}[ht]
-    \centering
-		\caption{Daten überprüfen}
-	\includegraphics[scale=0.4]{images/planning_tool/daten_check.png}
-	\label{fig:plt_daten_check}
-\end{figure}
 
 \subsubsection{Einstellungen}
 Im Menüabschnitt Einstellungen, zu sehen in \ref{fig:plt_menu_settings_overview}, können Einstellungen für das Planungstool vorgenommen werden. 
@@ -824,7 +906,7 @@ Die Einstellungen werden automatisch lokal auf dem Computer gespeichert und beim
 \begin{figure}[h]
     %\centering
 	\caption{Einstellungen Übersicht}
-	\includegraphics[scale=0.6]{images/planning_tool/settings.png}
+	\includegraphics[scale=0.4]{images/planning_tool/settings.png}
 	\label{fig:plt_menu_settings_overview}
 \end{figure}
 \paragraph{Stundenplan}\label{par:settings_time}
@@ -843,39 +925,73 @@ In Abbildung \ref{fig:plt_menu_settings_stundenplan} gehen die Stundepläne von 
 Die Spalten für Samstag und Sonntag werden nicht angezeigt.
 \paragraph{Farben}
 Für die Farben der Rechtecke in einem Stundenplan lässt sich das folgende einstellen (zu sehen in \ref{fig:plt_menu_settings_farben}):
-
-\begin{enumerate}
-	\item Farbe für Konflikte der Priorität 1
-	\item Farbe für Konflikte der Priorität 2
-    \item Farbe für Konflikte der Priorität 3
-    \item Farbe für Konflikte der Priorität 4
-    \item Farbe für Konflikte der Priorität 5
-	\item Farbe für eine Vorlesung
-	\item Farbe für eine Übung
-	\item Farbe für eine Zentralübung
-	\item Farbe für einen importierten Kurs
-	\item Farbe für eine Wunschzeit eines Veranstaltungsteils
-	\item Farbe für eine Sperrzeit eines Professors	
-\end{enumerate}
+\begin{figure}[!ht] % Das ! zwingt LaTeX, die Positionierung strenger durchzusetzen
+    \centering
+    
+    % --- LINKE SEITE: TEXT ---
+    \begin{minipage}[t]{0.55\textwidth} % Etwas breiter für den Text
+        \vspace{0pt} % Wichtig für bündige Ausrichtung oben
+        \begin{enumerate}
+            \item Farbe für Konflikte der Priorität 1
+            \item Farbe für Konflikte der Priorität 2
+            \item Farbe für Konflikte der Priorität 3
+            \item Farbe für Konflikte der Priorität 4
+            \item Farbe für Konflikte der Priorität 5
+            \item Farbe für eine Vorlesung
+            \item Farbe für eine Übung
+            \item Farbe für eine Zentralübung
+            \item Farbe für einen importierten Kurs
+            \item Farbe für eine Wunschzeit eines Veranstaltungsteils
+            \item Farbe für eine Sperrzeit eines Professors 
+        \end{enumerate}
+    \end{minipage}
+    \hfill 
+    % --- RECHTE SEITE: BILDER (UNTEREINANDER) ---
+    \begin{minipage}[t]{0.4\textwidth} % Schmaler, damit Bilder kleiner wirken
+        \vspace{0pt} % Wichtig für bündige Ausrichtung oben
+        \centering
+        \caption{Farbeinstellungen} 
+        
+        % Erstes Unterbild
+        \begin{subfigure}[b]{\linewidth} 
+            \centering
+            % width=0.7\linewidth macht das Bild innerhalb der Spalte kleiner (70%)
+            \includegraphics[width=0.7\linewidth]{images/planning_tool/color_settings.png}
+            \caption{}
+            \label{fig:plt_menu_settings_farben}
+        \end{subfigure}
+        
+        \vspace{0.5cm} % Abstand zwischen den Bildern
+        
+        % Zweites Unterbild (Jetzt darunter)
+        \begin{subfigure}[b]{\linewidth}
+            \centering
+            \includegraphics[width=0.7\linewidth]{images/planning_tool/menu_settings_farben_choose.png}
+            \caption{}
+            \label{fig:plt_menu_settings_farben_choose}
+        \end{subfigure}
+        
+    \end{minipage}
+\end{figure}
 
 Bei Klick auf einen der Knöpfe für die Farben öffnet sich ein Fenster, in dem die jeweilige Farbe frei konfiguriert werden kann. So zu sehen in \ref{fig:plt_menu_settings_farben_choose}.
-\begin{figure}[h]
-\centering
-\caption{Farbeinstellungen} 
-	\begin{subfigure}{0.7\linewidth}
-    \centering
-		\caption{}
-		\includegraphics[scale=0.5]{images/planning_tool/color_settings.png}
-		\label{fig:plt_menu_settings_farben}
-	\end{subfigure}
-	\begin{subfigure}{0.29\linewidth}
-    \centering
-		\caption{}
-		\includegraphics[scale=0.5]{images/planning_tool/menu_settings_farben_choose.png}
-		\label{fig:plt_menu_settings_farben_choose}
-	\end{subfigure}
+% \begin{figure}[h]
+% \centering
+% \caption{Farbeinstellungen} 
+% 	\begin{subfigure}{0.7\linewidth}
+%     \centering
+% 		\caption{}
+% 		\includegraphics[scale=0.5]{images/planning_tool/color_settings.png}
+% 		\label{fig:plt_menu_settings_farben}
+% 	\end{subfigure}
+% 	\begin{subfigure}{0.29\linewidth}
+%     \centering
+% 		\caption{}
+% 		\includegraphics[scale=0.5]{images/planning_tool/menu_settings_farben_choose.png}
+% 		\label{fig:plt_menu_settings_farben_choose}
+% 	\end{subfigure}
     
-\end{figure}
+% \end{figure}
 
 \subsubsection{Weitere Hinweise}
 
