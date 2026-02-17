@@ -159,6 +159,14 @@ Dementsprechend ist es hier wichtig zu wissen, welche Lehrenden welche Veranstal
 Dazu könnte eine neue Relation \texttt{Lehrbefähigungen} erstellt werden, die die Lehrenden mit den Fächern verknüpft, die sie unterrichten können.
 Diese Informationen können dann bei der Stundenplanung berücksichtigt werden, indem zum Beispiel eine Konfliktart erstellt wird, die einen Konflikt anzeigt, wenn eine Veranstaltung von einem Lehrenden unterrichtet wird, der nicht über die entsprechende Lehrbefähigung verfügt.
 
+Die entsprechenden Lehrbefähigungen können der DIF-Datei \texttt{GPU008.TXT} (Lehrbefähigung) entnommen werden.
+Es ist jedoch nicht möglich, diese Informationen direkt nach STULP zu übertragen.
+Grund ist, dass die Fächer, welche die Lehrenden unterrichten können, nicht mit ihrem jeweiligen Fachkürzel gespeichert sind.
+Stattdessen ist der Fachname ausgeschrieben gespeichert.
+Für ein Auslesen in STULP muss aber stattdessen das Fachkürzel gespeichert werden.
+Darüber hinaus gibt es das Problem, dass in der Oberstufe aufgrund des Kurssystems unterschiedliche Kursnamen das gleiche Fach referenzieren.
+Um das Problem zu lösen, kann die Tabelle Lehrerbefähigung so übernommen werden, wie sie ist, und zusätzlich eine zweite Relation eingerichtet werden, welche den ausgeschriebenen Fachnamen alle passenden Kursnamen zuordnet.
+
 \subsection{Umbennung}
 \label{Umbennung}
 
