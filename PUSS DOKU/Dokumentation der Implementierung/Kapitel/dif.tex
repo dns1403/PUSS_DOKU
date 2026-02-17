@@ -41,7 +41,8 @@ Die Datei \texttt{GPU001.TXT} enthält den Stundenplan. Da ein Unterrichtselemen
 
 \paragraph{Schema und Beispiel\-daten}
 
-    \begin{table}[h]
+\paragraph{Erläuterung der Normalformverletzung}
+\begin{table}[H]
         \centering
         \tiny
         \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
@@ -57,8 +58,6 @@ Die Datei \texttt{GPU001.TXT} enthält den Stundenplan. Da ein Unterrichtselemen
         \caption{Schema der Relation Stundenplan (\texttt{GPU001}) mit Normalform-Hinweisen und Beispiel\-daten}
         \label{schema:gpu001_new}
     \end{table}
-
-\paragraph{Erläuterung der Normalformverletzung}
 
 Das Attribut Lehrer hängt nur von den Attributen Unterrichtsnummer, Klasse und Fach ab, nicht aber von Tag und Stunde.
 Wenn ein Fach mehrmals pro Woche unterrichtet wird, bleibt der Lehrer gleich, sodass Tag und Stunde für eine eindeutige Zuordnung nicht erforderlich sind.
