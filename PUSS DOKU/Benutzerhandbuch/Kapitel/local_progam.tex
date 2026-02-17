@@ -63,9 +63,9 @@ Die exportierten Daten können anschließend bei Bedarf auf den Linux-PC verscho
 Der Zeitpunkt und das Vorgehen sind abhängig von der gewählten Export-Variante und werden im jeweiligen Unterkapitel beschrieben.
 
 \subsubsection{Nutzen des Importskripts export\_untis.bat}
-Um das Importskript zu verwenden muss sich der Planer auf einem Computer mit einem Windows System befinden, da das Skript als .bat Datei vorliegt, welche nur auf Windows Systemen ausgeführt werden kann.
+Um das Importskript zu verwenden muss sich der Planer auf einem Computer mit einem Windows System befinden, da das Skript als bat-Datei vorliegt, welche nur auf Windows Systemen ausgeführt werden kann.
 Nach dem Starten des Skripts wird der Planer aufgefordert den Pfad zu der Untis.exe Datei anzugeben (siehe \cref{fig:export_untis_step1}). Hierbei ist es egal, ob der Pfad mit Anführungszeichen oder ohne angegeben wird.
-Im Beispiel in \cref{fig:export_untis_step1} ist der Pfad zur Untis.exe Datei Rot markiert und ohne Anführungszeichen angegeben. Sobald der Pfad eingegeben wurde, muss die Eingabe mit Enter bestätigt werden.
+Im Beispiel in \cref{fig:export_untis_step1} ist der Pfad zum Untis-Executable rot markiert und ohne Anführungszeichen angegeben. Sobald der Pfad eingegeben wurde, muss die Eingabe mit Enter bestätigt werden.
 Nach Bestätigung mit Enter, wird der Planer aufgefordert den Pfad zu der .untis Datei anzugeben. Dies ist die Datei, welche von Planer in Untis geöffnet wird und alle benötigten Daten für den Stundenplan enthält (siehe \cref{fig:export_untis_step2}). 
 Auch hier ist es egal, ob der Pfad mit Anführungszeichen oder ohne angegeben wird. Sobald der Pfad eingegeben wurde, muss die Eingabe mit Enter bestätigt werden (siehe \cref{fig:export_untis_step2}).
 Danach läuft das Skript automatisch durch und führt die benötigten Schritte aus, um die DIF-Dateien zu erstellen und in das Format der lokalen Planungsdatenbank zu übertragen.
@@ -75,14 +75,14 @@ Die beendete Durchführung des Skripts wird mit einer Erfolgsmeldung (siehe \cre
     \begin{subfigure}[b]{0.32\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/export_untis_1.png}
-        \caption{Der Pfad zur Untis.exe Datei ist Rot markiert. Enter drücken, um fortzufahren.}
+        \caption{Der Pfad zum Untis-Executable ist rot markiert. Enter drücken, um fortzufahren.}
         \label{fig:export_untis_step1}
     \end{subfigure}
     \hfill % Fügt flexiblen Abstand zwischen den Bildern ein
     \begin{subfigure}[b]{0.32\textwidth}
         \centering
         \includegraphics[width=\textwidth]{figures/export_untis_2.png}
-        \caption{Der Pfad zur .untis Datei ist Rot markiert. Enter drücken, um fortzufahren.}
+        \caption{Der Pfad zur .untis Datei ist rot markiert. Enter drücken, um fortzufahren.}
         \label{fig:export_untis_step2}
     \end{subfigure}
 	\hfill

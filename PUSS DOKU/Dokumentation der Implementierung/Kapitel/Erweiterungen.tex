@@ -25,10 +25,10 @@ Beispiele in der Unter- und Mittelstufe sind die Religionskurse und die zweite F
 In der Oberstufe sind alle Veranstaltungen davon betroffen.
 
 Die konkreten Veranstaltungskopplungen können der DIF-Datei \texttt{GPU019.TXT} (Unterrichtsfolge) entnommen werden.
-Dort werden jeder Gruppe an parallelen Veranstaltungen die Unterrichtsnummern der betroffenen Veranstaltung zugeordnet.
+Dort werden jeder Gruppe an parallelen Veranstaltungen die Unterrichts\-nummern der betroffenen Veranstaltung zugeordnet.
 Diese Information kann jedoch nicht direkt nach STULP übertragen werden.
 Dazu muss zunächst das Datenbankschmema um eine weitere Relation \texttt{Unterrichtsfolge} erweitert werden.
-Außerdem gibt es in STULP keine Unterrichtsnummer.
+Außerdem gibt es in STULP keine Unterrichts\-nummer.
 Daher muss neben den in der DIF-Relation bereits enthaltenen Spalten \texttt{Fach} und \texttt{Klassen} auch eine Spalte \texttt{Lehrer} mit dem entsprechenden Lehrerkürzel integriert werden.
 Darüber hinaus ist zu beachten, dass die Werte in der Spalte \texttt{Klassen} nicht atomar sind und eine Normalisierung erfolgen sollte.
 Anschließend muss zudem die Kodierung der Klassennamen angepasst werden.
@@ -114,11 +114,11 @@ In STULP wird davon aus gegangen, dass jeder Teil einer Veranstaltung genau einm
 Durch die Verwendung des Veranstaltungsteils als Kodierung für die jeweilige Klasse kommt es jedoch vor, dass der gleiche Veranstaltungsteil der selbe Veranstaltung mehrmals geplant wird, da viele Fächer (Kurse bzw. Veranstaltungen) in einer Klasse mehrmals pro Woche unterrichtet werden.
 Eine mögliche Lösung liegt in einer Anpassung des Mappings.
 Der Veranstaltungsteil könnte um eine weitere durch Punkt getrennte Stelle erweitert werden, die für jede Ansetzung der gleiche Klasse unterschiedlich ist.
-So würde zum Beispiel die erste Deutschstunde in der Klasse "5A" den Veranstaltungsteil "5.1.1" bekommen, die zweite den Veranstaltungsteil "5.1.2".
+So würde zum Beispiel die erste Deutschstunde in der Klasse „5A“ den Veranstaltungsteil „5.1.1“ bekommen, die zweite den Veranstaltungsteil „5.1.2“.
 Alternativ könnten zunächst die beiden Elemente des Veranstaltungsteils zusammengeführt werden.
-So würde zum Beispiel aus "5.1", was die Klasse "5A" repräsentiert "51".
+So würde zum Beispiel aus „5.1“, was die Klasse „5A“ repräsentiert „51“.
 Anschließend müsste für jedes Ansetzen der jeweiligen Veranstaltung in der gleichen Klasse eine fortlaufende Nummer durch einen Punkt getrennt angefügt.
-So würde zum Beispiel die erste Deutschstunde der Klasse "5A" den Veranstaltungsteil "51.1" haben, die zweite den Veranstaltungsteil "51.2".
+So würde zum Beispiel die erste Deutschstunde der Klasse „5A“ den Veranstaltungsteil „51.1“ haben, die zweite den Veranstaltungsteil „51.2“.
 Beide Varianten sind mit der Spezifikation von STULP kompatibel.
 
 \subsection{Bessere Berücksichtigung der Wunschzeiten}

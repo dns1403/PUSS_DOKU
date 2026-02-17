@@ -102,6 +102,7 @@ Diese werden hier semantisch zusammengeführt, um die Studiengänge im Planungst
 Die Spalte \texttt{Name} wird als ID verwendet, da sie die Klassenbezeichnung enthält, die eindeutig ist.
 Die Spalte \texttt{Schulform} wird als Prüfungsordnung interpretiert, da sie die Art der Schule beschreibt (z.B. Gymnasium, Realschule) und den Bildungsgang (z.B. G8, G9).
 Die Spalte \texttt{Schul-Stufe} wird als Semester interpretiert, da sie die Jahrgangsstufe beschreibt.
+Durch den Bindestrich im Spaltennamen muss sie in Backticks (\`{}) gesetzt werden, diese werden leider nicht korrekt dargestellt.
 % \begin{itemize}
 %     \item \textbf{Quelle:} \texttt{dif\_data.Klassen}
 %     \item \textbf{Mapping:} \texttt{Name} $\rightarrow$ \texttt{StudiengangsID}, \texttt{Schulform} $\rightarrow$ \texttt{Pruefungsordnung}, \texttt{Schul-Stufe} $\rightarrow$ \texttt{Semester}.
@@ -113,7 +114,7 @@ SELECT
     '' AS Hauptfach,
     'Ohne' AS Nebenfach,
     Schulform AS Pruefungsordnung,
-    'Schul-Stufe' AS Semester
+    `Schul-Stufe` AS Semester
 FROM dif_data.Klassen;
 \end{sqlbox}
 % \subsection{Transformation: Timeslot (Zeitraster)}
@@ -123,7 +124,7 @@ FROM dif_data.Klassen;
 
 \subsection{Timeslot}
 Die Tabelle \texttt{Timeslot} definiert das globale Zeitraster des Planungstools. Sie generiert für jede an der Schule existierende Kombination aus Wochentag und Uhrzeit eine eindeutige ID.
-Da Untis keine zentrale Tabelle für "gültige Zeitfenster" exportiert, sondern diese implizit durch die Verwendung in Stundenplänen oder Zeitwünschen definiert, konstruieren wir diese Tabelle dynamisch.
+Da Untis keine zentrale Tabelle für „gültige Zeitfenster“ exportiert, sondern diese implizit durch die Verwendung in Stundenplänen oder Zeitwünschen definiert, konstruieren wir diese Tabelle dynamisch.
 
 Hierfür nutzen wir die Tabelle \texttt{dif\_data.Zeitwuensche}, da diese in der Regel das vollständigste Zeitraster abdeckt (da z.B. Sperrungen für den späten Nachmittag eingetragen sein können, auch wenn dort kein Unterricht stattfindet).
 Durch den \texttt{JOIN} mit den Hilfstabellen \texttt{HourGrid} und \texttt{WeekdayMap} werden die internen Untis Codierungen für Stunden und Wochentage in das Format überführt, das wir im Planungstool benötigen.
@@ -206,7 +207,7 @@ FROM (
         -- ... (Komplexe Subquery fuer Wunschzeiten) ...
     FROM dif_data.Stundenplan AS SP
     -- ... (Joins mit Unterricht, HourGrid, WeekdayMap, ClassEncoding) ...
-    GROUP BY SP.Unterrichtsnummer, SP.Fach, SP.Lehrer, SP.Tag, SP.Stunde
+    GROUP BY SP.Unterrichts\-nummer, SP.Fach, SP.Lehrer, SP.Tag, SP.Stunde
 ) AS InnerPlan
 -- OUTER PLAN: Gruppierung zu Bloecken
 GROUP BY KursID, Veranstaltungsteil, Tag, ProfID, Raumnr;
@@ -215,12 +216,12 @@ GROUP BY KursID, Veranstaltungsteil, Tag, ProfID, Raumnr;
 \subsection{Pflicht}
 \label{SQL:Pflicht}
 Die Tabelle \texttt{Pflicht} verknüpft Kurse mit Studiengängen (Klassen) und definiert, ob es sich um Pflichtveranstaltungen handelt. 
-Diese Information ist essenziell für die Konflikterkennung (z.B. "StudiengangSchwer") und das Anzeigen der Kurse im Planungstool, da nur die für die Klassen in Pflicht eingetragenen Kurse im Stundenplan der jeweiligen Klassen angezeigt werden.
+Diese Information ist essenziell für die Konflikterkennung (z.B. „StudiengangSchwer“) und das Anzeigen der Kurse im Planungstool, da nur die für die Klassen in Pflicht eingetragenen Kurse im Stundenplan der jeweiligen Klassen angezeigt werden.
 Die Befüllung erfolgt durch eine \texttt{UNION}-Operation aus zwei Quellen, um sowohl die theoretische Stundentafel als auch die faktische Verplanung abzubilden.
 
 \subsubsection{Quelle 1: Curriculare Vorgaben}
 Der erste Teil der Abfrage bezieht sich auf die Tabelle \texttt{dif\_data.Stundentafel}. Alle hier gelisteten Fächer sind per Definition Pflichtfächer (\texttt{Pflichtfach = 'Ja'}).
-Über die Schulform der Klasse (z.B. "G9-2 Stufe 05" aus \texttt{dif\_data.Klassen}) wird die Verbindung zwischen der Klasse (StudiengangsID) und der Stundentafel hergestellt.
+Über die Schulform der Klasse (z.B. „G9-2 Stufe 05“ aus \texttt{dif\_data.Klassen}) wird die Verbindung zwischen der Klasse (StudiengangsID) und der Stundentafel hergestellt.
 
 \subsubsection{Quelle 2: Faktischer Unterricht}
 Da Schulplanung oft dynamisch ist, existieren häufig Kurse im Stundenplan, die nicht explizit in der Stundentafel stehen (zum Beispiel AGs, Förderunterricht oder kurzfristige Änderungen).
@@ -281,8 +282,6 @@ INSERT INTO ConflictPriorities (ConflictType, Priority)
 VALUES ('StudiengangLeicht', 3)
 INSERT INTO ConflictPriorities (ConflictType, Priority)
 VALUES ('StudiengangSchwer', 1),
-INSERT INTO ConflictPriorities (ConflictType, Priority)
-VALUES ('WunschOrt', 5)
 \end{sqlbox}
 \subsubsection{IgnoredConflicts}
 \begin{sqlbox}{SQL-Implementierung: IgnoredConflict}

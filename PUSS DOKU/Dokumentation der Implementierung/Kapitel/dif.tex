@@ -37,7 +37,7 @@ Sofern auf eine Spalte mehrere der o.~g. Eigenschaften zutreffen, so gilt die fo
 Um dennoch auf einen Blick alle relevanten Spalteneigenschaften auf einen Blick erkennen zu können, werden den Spaltennamen der Primärschlüsselattribute ein \#, den Spaltennamen der Fremdschlüsselattribute ein Pfeil nach oben ($\uparrow$) vorangestellt.
 
 \subsection{\texttt{GPU001} -- Stundenplan}
-Die Datei \texttt{GPU001.TXT} enthält den Stundenplan. Da ein Unterrichtselement (Unterrichtsnummer) für mehrere Klassen gleichzeitig stattfinden kann (z.B. Koppelungen), bildet die Kombination aus Unterrichtsnummer, Klasse und Fach zusammen mit Tag und Stunde den Primärschlüssel.
+Die Datei \texttt{GPU001.TXT} enthält den Stundenplan. Da ein Unterrichtselement (Unterrichts\-nummer) für mehrere Klassen gleichzeitig stattfinden kann (z.B. Koppelungen), bildet die Kombination aus Unterrichts\-nummer, Klasse und Fach zusammen mit Tag und Stunde den Primärschlüssel.
 
 \paragraph{Schema und Beispiel\-daten}
 
@@ -47,7 +47,7 @@ Die Datei \texttt{GPU001.TXT} enthält den Stundenplan. Da ein Unterrichtselemen
         \tiny
         \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
             \hline
-                               & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Unterrichtsnummer} & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Klasse} & \cellcolor[HTML]{F9CB9C} \textbf{$\uparrow$ Lehrer} & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Fach} & \cellcolor[HTML]{B7E1CD} \textbf{$\uparrow$ Raum} & \cellcolor[HTML]{A4C2F4} \textbf{\# Tag} & \cellcolor[HTML]{A4C2F4} \textbf{\# Stunde} \\ \hline\hline
+                               & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Unterrichts\-nummer} & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Klasse} & \cellcolor[HTML]{F9CB9C} \textbf{$\uparrow$ Lehrer} & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Fach} & \cellcolor[HTML]{B7E1CD} \textbf{$\uparrow$ Raum} & \cellcolor[HTML]{A4C2F4} \textbf{\# Tag} & \cellcolor[HTML]{A4C2F4} \textbf{\# Stunde} \\ \hline\hline
             \textbf{Datentyp} & INTEGER & TEXT & TEXT & TEXT & TEXT & INTEGER & INTEGER \\
             \textbf{Constraints} & NN, PK, FK & NN, PK, FK & NN, FK & NN, PK, FK & FK & NN, PK & NN, PK \\
             \textbf{Checks}    & & & & & & $\in \{1..7\}$ & \\ \hline
@@ -59,14 +59,14 @@ Die Datei \texttt{GPU001.TXT} enthält den Stundenplan. Da ein Unterrichtselemen
         \label{schema:gpu001_new}
     \end{table}
 
-Das Attribut Lehrer hängt nur von den Attributen Unterrichtsnummer, Klasse und Fach ab, nicht aber von Tag und Stunde.
+Das Attribut Lehrer hängt nur von den Attributen Unterrichts\-nummer, Klasse und Fach ab, nicht aber von Tag und Stunde.
 Wenn ein Fach mehrmals pro Woche unterrichtet wird, bleibt der Lehrer gleich, sodass Tag und Stunde für eine eindeutige Zuordnung nicht erforderlich sind.
 
 \subsection{\texttt{GPU002} -- Unterricht}
 
 Die Datei \texttt{GPU002.TXT} enthält die Unterrichts-Stammdaten. Sie definiert die grundlegenden Eigenschaften einer Unterrichtseinheit, unabhängig von ihrer zeitlichen Verplanung.
 
-Da ein Unterricht (identifiziert über die Unterrichtsnummer) aus mehreren Zeilen bestehen kann (z.B. bei Klassenkopellungen), ist die Unterrichtsnummer allein nicht eindeutig. Ein Datensatz wird durch die Kombination aus Unterrichtsnummer, Klasse und Lehrer eindeutig bestimmt.
+Da ein Unterricht (identifiziert über die Unterrichts\-nummer) aus mehreren Zeilen bestehen kann (z.B. bei Klassenkopellungen), ist die Unterrichts\-nummer allein nicht eindeutig. Ein Datensatz wird durch die Kombination aus Unterrichts\-nummer, Klasse und Lehrer eindeutig bestimmt.
 
 Im Kontext des Mappings wird diese Datei primär genutzt, um die \textbf{Studentenzahl} (Hörerzahl) für die Berechnung der Raumauslastung zu ermitteln.
 
@@ -78,7 +78,7 @@ Im Kontext des Mappings wird diese Datei primär genutzt, um die \textbf{Student
     \tiny
     \begin{tabular}{|c|c|c|c|c|c|}
         \hline
-                       & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Unterrichtsnummer} & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Klasse} & \cellcolor[HTML]{B7E1CD} \textbf{$\uparrow$ Lehrer} & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Fach} & \textbf{Studentenzahl} \\ \hline\hline
+                       & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Unterrichts\-nummer} & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Klasse} & \cellcolor[HTML]{B7E1CD} \textbf{$\uparrow$ Lehrer} & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Fach} & \textbf{Studentenzahl} \\ \hline\hline
         \textbf{Datentyp} & INTEGER & TEXT & TEXT & TEXT & INTEGER \\
         \textbf{Constraints} & NN, PK & NN, PK, FK & NN, FK & NN, PK, FK &  \\
         \textbf{Checks}    & & & & & $\ge 0$ \\ \hline
@@ -90,14 +90,14 @@ Im Kontext des Mappings wird diese Datei primär genutzt, um die \textbf{Student
     \label{schema:gpu002}
 \end{table}
 \begin{itemize}
-    \item \textbf{Unterrichtsnummer:} Die eindeutige ID der Unterrichtseinheit. Sie dient als Verbindungsschlüssel zum Stundenplan (\texttt{GPU001}).
-    \item \textbf{Klasse \& Lehrer:} Dienen als Fremdschlüssel auf die Dateien \texttt{GPU003} (Klassen) und \texttt{GPU004} (Lehrer). Zusammen mit der Unterrichtsnummer bilden sie den Primärschlüssel dieser Datei.
+    \item \textbf{Unterrichts\-nummer:} Die eindeutige ID der Unterrichtseinheit. Sie dient als Verbindungsschlüssel zum Stundenplan (\texttt{GPU001}).
+    \item \textbf{Klasse \& Lehrer:} Dienen als Fremdschlüssel auf die Dateien \texttt{GPU003} (Klassen) und \texttt{GPU004} (Lehrer). Zusammen mit der Unterrichts\-nummer bilden sie den Primärschlüssel dieser Datei.
     \item \textbf{Studentenzahl:} Gibt an, wie viele Schüler an diesem spezifischen Unterrichtsteil teilnehmen. Dies ist essenziell für die Kapazitätsplanung der Räume im Planungstool.
 \end{itemize}
 \subsection{\texttt{GPU003} -- Klassen}
 Die Datei \texttt{GPU003.TXT} enthält die Stammdaten der Klassen. Im Kontext des Mappings werden diese Daten auf die Entität \texttt{Studiengaenge} abgebildet. Eine Klasse entspricht dabei einer Kohorte oder einem Studiengangs-Jahrgang.
 
-Der eindeutige Identifikator ist der Klassenname. Die Datei liefert zudem wichtige Informationen über die Schulstufe (Semester) und die Schulform (Prüfungsordnung).
+Der Primärschlüssel ist der Klassenname. Die Datei liefert zudem wichtige Informationen über die Schulstufe (Semester) und die Schulform (Prüfungsordnung).
 
 \paragraph{Schema und Beispiel\-daten}
 
@@ -119,7 +119,7 @@ Der eindeutige Identifikator ist der Klassenname. Die Datei liefert zudem wichti
     \label{schema:gpu003}
 \end{table}
 \begin{itemize}
-    \item \textbf{Name:} Das Kürzel der Klasse (z.B. "05A"). Dient als Primärschlüssel und wird im Planungstool zur \texttt{StudiengangsID}.
+    \item \textbf{Name:} Das Kürzel der Klasse (z.B. „05A“). Dient als Primärschlüssel und wird im Planungstool zur \texttt{StudiengangsID}.
     \item \textbf{Schul-Stufe:} Gibt den Jahrgang an (z.B. 5, 6, 12). Dies wird auf das \texttt{Semester} gemappt.
     \item \textbf{Schulform:} Beschreibt den Zweig oder die Prüfungsordnung (z.B. G9-Gymnasium). Dies dient als Verknüpfung zur Stundentafel (\texttt{GPU011}).
 \end{itemize}
@@ -127,7 +127,7 @@ Der eindeutige Identifikator ist der Klassenname. Die Datei liefert zudem wichti
 \subsection{\texttt{GPU004} -- Lehrer}
 Die Datei \texttt{GPU004.TXT} beinhaltet die Lehrer-Stammdaten. Diese werden im Planungstool als \texttt{Professor} interpretiert.
 
-Der Identifikator ist das Lehrerkürzel (\texttt{Name}). Obwohl die Datei viele Attribute für die statistische Auswertung und Abrechnung enthält (z.B. Hohlstunden, Sollarbeitszeit), sind für die Raum- und Zeitplanung im Mapping primär das Kürzel und der Klarname relevant.
+Der Primärschlüssel ist das Lehrerkürzel (\texttt{Name}). Obwohl die Datei viele Attribute für die statistische Auswertung und Abrechnung enthält (z.B. Hohlstunden, Sollarbeitszeit), sind für die Raum- und Zeitplanung im Mapping primär das Kürzel und der Klarname relevant.
 
 \paragraph{Schema und Beispiel\-daten}
 
@@ -150,13 +150,13 @@ Der Identifikator ist das Lehrerkürzel (\texttt{Name}). Obwohl die Datei viele 
 \end{table}
 \begin{itemize}
     \item \textbf{Name:} Das eindeutige Lehrerkürzel. Dient als Primärschlüssel und wird als \texttt{ProfID} verwendet.
-    \item \textbf{Langname, Vorname, Titel:} Dienen der Anzeige im Planungstool (z.B. "Dr. Hans Müller"). Im aktuellen Mapping-Skript wird vereinfachend oft nur das Kürzel verwendet, die Stammdaten stehen hier jedoch für eine Erweiterung bereit.
+    \item \textbf{Langname, Vorname, Titel:} Dienen der Anzeige im Planungstool (z.B. „Dr. Hans Müller“). Im aktuellen Mapping-Skript wird vereinfachend oft nur das Kürzel verwendet, die Stammdaten stehen hier jedoch für eine Erweiterung bereit.
 \end{itemize}
 
 \subsection{\texttt{GPU005} -- Räume}
 Die Datei \texttt{GPU005.TXT} enthält die Stammdaten der Räume. Im Mapping werden diese Daten auf die Entität \texttt{Raum} abgebildet.
 
-Der eindeutige Identifikator ist der Raumname (z.B. Raumnummer). Für die Planung sind insbesondere die Kapazität (Sitzplätze) zur Prüfung von Überfüllung und die Lage-Informationen (Gang 1/2) zur Bestimmung des Gebäudes relevant.
+Der Primärschlüssel ist der Raumname (z.B. Raumnummer). Für die Planung sind insbesondere die Kapazität (Sitzplätze) zur Prüfung von Überfüllung und die Lage-Informationen (Gang 1/2) zur Bestimmung des Gebäudes relevant.
 
 \paragraph{Schema und Beispiel\-daten}
 
@@ -178,7 +178,7 @@ Der eindeutige Identifikator ist der Raumname (z.B. Raumnummer). Für die Planun
     \label{schema:gpu005}
 \end{table}
 \begin{itemize}
-    \item \textbf{Name:} Die eindeutige Bezeichnung des Raumes (z.B. "R101"). Dient als Primärschlüssel und wird im Planungstool zur \texttt{Raumnr}.
+    \item \textbf{Name:} Die eindeutige Bezeichnung des Raumes (z.B. „R101“). Dient als Primärschlüssel und wird im Planungstool zur \texttt{Raumnr}.
     \item \textbf{Kapazität:} Die maximale Anzahl an Personen (Sitzplätze). Dies wird auf \texttt{Sitzplatzzahl} gemappt.
     \item \textbf{Gang 1 / Gang 2:} Diese Felder enthalten oft Informationen über das Gebäude oder das Stockwerk. Im Mapping-Prozess werden diese beiden Felder kombiniert (konkateniert), um das Attribut \texttt{Gebaeude} im Planungstool zu befüllen.
 \end{itemize}
@@ -186,7 +186,7 @@ Der eindeutige Identifikator ist der Raumname (z.B. Raumnummer). Für die Planun
 \subsection{\texttt{GPU006} -- Fächer}
 Die Datei \texttt{GPU006.TXT} enthält die Stammdaten der Unterrichtsfächer. Im Mapping werden diese Daten auf die Entität \texttt{Kurs} abgebildet.
 
-Der eindeutige Identifikator ist das Fachkürzel (Name). Neben der Bezeichnung (Langname) kann hier auch ein fachgebundener Stammraum hinterlegt sein (z.B. Physikraum für Physik-Unterricht), was für die Raumplanung relevant sein kann.
+Der Primärschlüssel ist das Fachkürzel (Name). Neben der Bezeichnung (Langname) kann hier auch ein fachgebundener Stammraum hinterlegt sein (z.B. Physikraum für Physik-Unterricht), was für die Raumplanung relevant sein kann.
 
 \paragraph{Schema und Beispiel\-daten}
 
@@ -208,9 +208,9 @@ Der eindeutige Identifikator ist das Fachkürzel (Name). Neben der Bezeichnung (
     \label{schema:gpu006}
 \end{table}
 \begin{itemize}
-    \item \textbf{Name:} Das eindeutige Kürzel des Faches (z.B. "M" für Mathematik). Dient als Primärschlüssel und wird im Planungstool zur \texttt{KursID}.
+    \item \textbf{Name:} Das eindeutige Kürzel des Faches (z.B. „M“ für Mathematik). Dient als Primärschlüssel und wird im Planungstool zur \texttt{KursID}.
     \item \textbf{Langname:} Die ausgeschriebene Bezeichnung des Faches. Wird auf \texttt{Kursname} und \texttt{KursnameEN} gemappt.
-    \item \textbf{Raum:} Definiert optional einen festen Fachraum. Dies ist ein Fremdschlüssel auf die Datei \texttt{GPU005} (Räume). Auch wenn das aktuelle Mapping-Skript dieses Feld in der Tabelle \texttt{Kurs} noch nicht explizit übernimmt, ist es in den Rohdaten als "wichtig" klassifiziert.
+    \item \textbf{Raum:} Definiert optional einen festen Fachraum. Dies ist ein Fremdschlüssel auf die Datei \texttt{GPU005} (Räume). Auch wenn das aktuelle Mapping-Skript dieses Feld in der Tabelle \texttt{Kurs} noch nicht explizit übernimmt, ist es in den Rohdaten als „wichtig“ klassifiziert.
 \end{itemize}
 
 \subsection{\texttt{GPU011} -- Stundentafel}
@@ -238,13 +238,13 @@ Im Mapping wird diese Datei verwendet, um die Tabelle \texttt{Pflicht} zu generi
     \label{schema:gpu011}
 \end{table}
 \begin{itemize}
-    \item \textbf{Name:} Der Identifikator der Stundentafel (z.B. "G9-05"). Dieser Wert korrespondiert mit dem Feld \texttt{Schulform} in der Datei \texttt{GPU003} (Klassen).
+    \item \textbf{Name:} Der Primärschlüssel der Stundentafel (z.B. „G9-05“). Dieser Wert korrespondiert mit dem Feld \texttt{Schulform} in der Datei \texttt{GPU003} (Klassen).
     \item \textbf{Fach:} Das Kürzel des Unterrichtsfaches. Dies ist ein Fremdschlüssel auf die Datei \texttt{GPU006} (Fächer) und wird im Planungstool zur \texttt{KursID}.
     \item \textbf{Stundenzahl min./max.:} Gibt den vorgesehenen Stundenumfang (Wochenstunden) für das Fach in dieser Stufe an. Obwohl diese Werte im aktuellen Mapping-Skript nicht direkt übertragen werden, sind sie für die Vollständigkeitsprüfung der Planung relevant.
 \end{itemize}
 
 \subsection{\texttt{GPU016} -- Zeitwünsche}
-Die Datei \texttt{GPU016.TXT} enthält die Zeitwünsche und -sperren. Hier können Präferenzen für Lehrer, Klassen, Räume oder Fächer hinterlegt werden (z.B. "Lehrer Müller kann montags in der 1. Stunde nicht").
+Die Datei \texttt{GPU016.TXT} enthält die Zeitwünsche und -sperren. Hier können Präferenzen für Lehrer, Klassen, Räume oder Fächer hinterlegt werden (z.B. „Lehrer Müller kann montags in der 1. Stunde nicht“).
 
 Im Mapping ist diese Datei essenziell für die Berechnung der Spalte \texttt{Wunschzeit} in der Tabelle \texttt{Plan}. Ein Datensatz definiert dabei für eine bestimmte Entität und einen bestimmten Zeitslot (Tag + Stunde) einen Prioritätswert.
 
@@ -277,7 +277,7 @@ Besonderheit: Diese Tabelle verwendet einen \textit{polymorphen Fremdschlüssel}
             \item \texttt{R}: Raum (verweist auf \texttt{GPU005})
             \item \texttt{F}: Fach (verweist auf \texttt{GPU006})
         \end{itemize}
-    \item \textbf{Kurzname des Elements:} Der Identifikator der betroffenen Entität (z.B. Lehrerkürzel oder Raumnummer). Bildet zusammen mit Art, Tag und Stunde den Primärschlüssel.
+    \item \textbf{Kurzname des Elements:} Der Primärschlüssel der betroffenen Entität (z.B. Lehrerkürzel oder Raumnummer). Bildet zusammen mit Art, Tag und Stunde den Primärschlüssel.
     \item \textbf{Zeitwunsch:} Ein numerischer Wert, der die Priorität ausdrückt. Typische Untis-Skala:
         \begin{itemize}
             \item \texttt{-3}: Sperrung (Unterricht unmöglich)
@@ -289,7 +289,7 @@ Besonderheit: Diese Tabelle verwendet einen \textit{polymorphen Fremdschlüssel}
 Die folgenden Relationen existieren nicht als physische DIF-Dateien. Sie werden während des Importprozesses generiert, um proprietäre Untis-Kodierungen (wie numerische Wochentage oder Unterrichtsstunden) in das Format der Zieldatenbank des Planungstools zu übersetzen.
 
 \subsubsection{HourGrid -- Zeitraster}
-Die Tabelle \texttt{HourGrid} definiert das Zeitraster der Schule. Sie bildet die abstrakte "Stunde" aus Untis (1. Stunde, 2. Stunde etc.) auf eine konkrete Startzeit und Dauer ab.
+Die Tabelle \texttt{HourGrid} definiert das Zeitraster der Schule. Sie bildet die abstrakte „Stunde“ aus Untis (1. Stunde, 2. Stunde etc.) auf eine konkrete Startzeit und Dauer ab.
 
 Diese Relation ist notwendig, um in der Zieltabelle \texttt{Timeslot} korrekte Uhrzeiten zu berechnen.
 
@@ -346,7 +346,7 @@ Die Tabelle \texttt{WeekdayMap} dient der Übersetzung der numerischen Wochentag
 \end{itemize}
 
 \subsubsection{ClassEncoding -- Klassenkodierung}
-Die Tabelle \texttt{ClassEncoding} ist eine spezifische Hilfstabelle für das Mapping. Sie ordnet den Untis-Klassennamen (z.B. "05A") einer logischen Veranstaltungsgruppe (Veranstaltungsteil) zu. Dies ermöglicht es, Parallelklassen (05A, 05B etc.) im Planungstool sauber zu trennen oder Oberstufenkurse (Q1, Q2) spezifisch zu mappen.
+Die Tabelle \texttt{ClassEncoding} ist eine spezifische Hilfstabelle für das Mapping. Sie ordnet den Untis-Klassennamen (z.B. „05A“) einer logischen Veranstaltungsgruppe (Veranstaltungsteil) zu. Dies ermöglicht es, Parallelklassen (05A, 05B etc.) im Planungstool sauber zu trennen oder Oberstufenkurse (Q1, Q2) spezifisch zu mappen.
 
 \paragraph{Schema und Beispiel\-daten}
 
@@ -370,5 +370,5 @@ Die Tabelle \texttt{ClassEncoding} ist eine spezifische Hilfstabelle für das Ma
 \end{table}
 \begin{itemize}
     \item \textbf{Klassenname:} Der Name der Klasse wie in \texttt{GPU003} definiert. Dient als Join-Schlüssel.
-    \item \textbf{Veranstaltungsteil:} Ein interner Identifikator für das Planungstool, der hilft, Kurse eindeutig Studiengangs-Instanzen zuzuordnen (z.B. wird die Klasse 05A zum Veranstaltungsteil 5.1).
+    \item \textbf{Veranstaltungsteil:} Ein interner (Teil-)Schlüssel für das Planungstool, der hilft, Kurse eindeutig Studiengangs-Instanzen zuzuordnen (z.B. wird die Klasse 05A zum Veranstaltungsteil 5.1).
 \end{itemize}
