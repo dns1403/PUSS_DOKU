@@ -1,9 +1,9 @@
-\section{Dokumentation der Dif Dateien}
+\section{Dokumentation der DIF-Dateien}
 \label{sec:dif}
-In diesem Kapitel werden die relevanten Dif Dateien beschrieben, die wir für die Datenmigration von Untis in das Planungstool verwendet haben. 
+In diesem Kapitel werden die relevanten DIF-Dateien beschrieben, die wir für die Datenmigration von Untis in das Planungstool verwendet haben. 
 Diese Dateien enthalten die Rohdaten, die aus Untis exportiert wurden, und bilden die Grundlage für die Erstellung der Planungsdatenbank im lokalen Planungstool.
 Diese Dokumentation basiert auf der Dokumentation von Untis\footnote{siehe \url{https://www.untis.at/manual/index.html?ti_allgemeine-schnittstellen.htm}} welche ergänzt und an die Bedürfnisse des im Rahmen dieses Projekts entwickelten Mapping-Skripts angepasst wurde.
-Außerdem kann in dieser Dokumentation eine vollständige Liste aller Dif Dateien gefunden werden, insbesondere auch jene, die wir im folgenden nicht beschreiben.
+Außerdem kann in dieser Dokumentation eine vollständige Liste aller DIF-Dateien gefunden werden, insbesondere auch jene, die wir im folgenden nicht beschreiben.
 
 \subsection{Notationshinweise und Legende}
 Um die Struktur der Datenbanktabellen und deren Relation zu den DIF-Dateien zu verdeutlichen, wird in den folgenden Abschnitten eine einheitliche Notation verwendet. Diese beschreibt sowohl technische Constraints als auch den Grad der Normalisierung.
@@ -17,7 +17,7 @@ Um die Struktur der Datenbanktabellen und deren Relation zu den DIF-Dateien zu v
 \end{itemize}
 
 \paragraph{Farblegende zur Normalisierung und Schlüsselstruktur}
-In Anlehnung an die grafische Analyse der Datenbankstruktur werden folgende farbliche Markierungen in den Tabellenschemata verwendet:
+In Anlehnung an die graphische Analyse der Datenbankstruktur werden folgende farbliche Markierungen in den Tabellenschemata verwendet:
 
 \begin{table}[h]
     \centering
@@ -33,52 +33,60 @@ In Anlehnung an die grafische Analyse der Datenbankstruktur werden folgende farb
 \end{table}
 
 \noindent
-Ein Pfeil ($\uparrow$) vor einem Spaltennamen signalisiert zusätzlich einen Fremdschlüsselbezug in der Implementierung.
-\subsection{GPU001 -- Stundenplan}
-Die Datei \texttt{GPU001.TXT} enthält den Stundenplan. Da ein Unterrichtselement (Unterrichtsnummer) für mehrere Klassen gleichzeitig stattfinden kann (z.B. Koppelungen), bildet die Kombination aus Unterrichtsnummer, Klasse und Fach den Identifikator. 
-\todo{Anderes Wort als Identifikator finden}
+Sofern auf eine Spalte mehrere der o.~g. Eigenschaften zutreffen, so gilt die folgende Rangfolge bei der Farbauswahl: Normalformverletzungen vor Primärschlüssel vor Fremdschlüsseln.
+Um dennoch auf einen Blick alle relevanten Spalteneigenschaften auf einen Blick erkennen zu können, werden den Spaltennamen der Primärschlüsselattribute ein \#, den Spaltennamen der Fremdschlüsselattribute ein ($\uparrow$) vorangestellt.
 
-\paragraph{Schema und Beispieldaten}
+\subsection{\texttt{GPU001} -- Stundenplan}
+Die Datei \texttt{GPU001.TXT} enthält den Stundenplan. Da ein Unterrichtselement (Unterrichtsnummer) für mehrere Klassen gleichzeitig stattfinden kann (z.B. Koppelungen), bildet die Kombination aus Unterrichtsnummer, Klasse und Fach zusammen mit Tag und Stunde den Primärschlüssel.
+
+\paragraph{Schema und Beispiel\-daten}
 
     \begin{table}[h]
         \centering
         \tiny
         \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
             \hline
-                               & \textbf{$\uparrow$ Unterrichtsnummer} & \textbf{$\uparrow$ Klasse} & \textbf{$\uparrow$ Lehrer} & \textbf{$\uparrow$ Fach} & \textbf{$\uparrow$ Raum} & \textbf{Tag} & \textbf{Stunde} & \textbf{Stundenlänge} \\ \hline\hline
+                               & \textbf{\# $\uparrow$ Unterrichtsnummer} & \textbf{\# $\uparrow$ Klasse} & \textbf{$\uparrow$ Lehrer} & \textbf{\# $\uparrow$ Fach} & \textbf{$\uparrow$ Raum} & \textbf{\# Tag} & \textbf{\# Stunde} & \textbf{Stundenlänge} \\ \hline\hline
             \textbf{Data Type} & INTEGER & TEXT & TEXT & TEXT & TEXT & INTEGER & INTEGER & INTEGER \\
-            \textbf{Constraints}& NN, PK & NN, PK & NN & NN, PK & & NN & NN & \\
+            \textbf{Constraints}& NN, PK, FK & NN, PK, FK & NN, FK & NN, PK, FK & FK & NN, PK & NN, PK & \\
             \textbf{Checks}    & & & & & & $\in \{1..7\}$ & & in Minuten \\ \hline
-            \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{F9CB9C} 2. NF & \cellcolor[HTML]{F9CB9C} 2. NF & \cellcolor[HTML]{F9CB9C} 2. NF & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \\ \hline
+            \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{F9CB9C} 2. NF & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{B7E1CD} FK & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \\ \hline
             \textbf{Sample}    & 1 & 07A & SMI & D & B2.16 & 2 & 7 &  \\
                                & 1 & 08A & AML & M & B2.12 & 1 & 4 &  \\ \hline
         \end{tabular}
-        \caption{Schema der Relation Stundenplan (GPU001) mit Normalform-Hinweisen und Beispieldaten}
+        \caption{Schema der Relation Stundenplan (\texttt{GPU001}) mit Normalform-Hinweisen und Beispiel\-daten}
         \label{schema:gpu001_new}
     \end{table}
-\subsection{GPU002 -- Unterricht}
+
+\paragraph{Erläuterung der Normalformverletzung}
+
+Das Attribut Lehrer hängt nur von den Attributen Unterrichtsnummer, Klasse und Fach ab, nicht aber von Tag und Stunde.
+Wenn ein Fach mehrmals pro Woche unterrichtet wird, bleibt der Lehrer gleich, sodass Tag und Stunde für eine eindeutige Zuordnung nicht erforderlich sind.
+
+\subsection{\texttt{GPU002} -- Unterricht}
+
 Die Datei \texttt{GPU002.TXT} enthält die Unterrichts-Stammdaten. Sie definiert die grundlegenden Eigenschaften einer Unterrichtseinheit, unabhängig von ihrer zeitlichen Verplanung.
 
 Da ein Unterricht (identifiziert über die Unterrichtsnummer) aus mehreren Zeilen bestehen kann (z.B. bei Klassenkopellungen), ist die Unterrichtsnummer allein nicht eindeutig. Ein Datensatz wird durch die Kombination aus Unterrichtsnummer, Klasse und Lehrer eindeutig bestimmt.
 
 Im Kontext des Mappings wird diese Datei primär genutzt, um die \textbf{Studentenzahl} (Hörerzahl) für die Berechnung der Raumauslastung zu ermitteln.
 
-\paragraph{Schema und Beispieldaten}
+\paragraph{Schema und Beispiel\-daten}
 
 \begin{table}[h]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|c|c|c|}
         \hline
-                       & \textbf{$\uparrow$ Unterrichtsnummer} & \textbf{$\uparrow$ Klasse} & \textbf{$\uparrow$ Lehrer} & \textbf{$\uparrow$ Fach} & \textbf{Studentenzahl} \\ \hline\hline
+                       & \textbf{\# $\uparrow$ Unterrichtsnummer} & \textbf{\# $\uparrow$ Klasse} & \textbf{$\uparrow$ Lehrer} & \textbf{\# $\uparrow$ Fach} & \textbf{Studentenzahl} \\ \hline\hline
         \textbf{Data Type} & INTEGER & TEXT & TEXT & TEXT & INTEGER \\
-        \textbf{Constraints}& NN, PK & NN, PK & NN & NN, PK &  \\
+        \textbf{Constraints}& NN, PK & NN, PK, FK & NN, FK & NN, PK, FK &  \\
         \textbf{Checks}    & & & & & $\ge 0$ \\ \hline
-        \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK / \cellcolor[HTML]{B7E1CD} FK & \cellcolor[HTML]{A4C2F4} PK / \cellcolor[HTML]{B7E1CD} FK & \cellcolor[HTML]{B7E1CD} FK & \\ \hline
+        \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{B7E1CD} FK & \cellcolor[HTML]{A4C2F4} PK & \\ \hline
         \textbf{Sample}    & 1 & 07A & SMI & D & 24 \\
                            & 1 & 07B & MUE & D & 26 \\ \hline
     \end{tabular}
-    \caption{Schema der Relation Unterricht (GPU002) mit Normalform-Hinweisen und Beispieldaten}
+    \caption{Schema der Relation Unterricht (\texttt{GPU002}) mit Normalform-Hinweisen und Beispiel\-daten}
     \label{schema:gpu002}
 \end{table}
 
@@ -89,27 +97,27 @@ Im Kontext des Mappings wird diese Datei primär genutzt, um die \textbf{Student
     \item \textbf{Studentenzahl:} Gibt an, wie viele Schüler an diesem spezifischen Unterrichtsteil teilnehmen. Dies ist essenziell für die Kapazitätsplanung der Räume im Planungstool.
 \end{itemize}
 \todo{Fix dafür finden, dass die Tabellen nicht an der richtigen Stelle angezeigt werden}
-\subsection{GPU003 -- Klassen}
+\subsection{\texttt{GPU003} -- Klassen}
 Die Datei \texttt{GPU003.TXT} enthält die Stammdaten der Klassen. Im Kontext des Mappings werden diese Daten auf die Entität \texttt{Studiengaenge} abgebildet. Eine Klasse entspricht dabei einer Kohorte oder einem Studiengangs-Jahrgang.
 
 Der eindeutige Identifikator ist der Klassenname. Die Datei liefert zudem wichtige Informationen über die Schulstufe (Semester) und die Schulform (Prüfungsordnung).
 
-\paragraph{Schema und Beispieldaten}
+\paragraph{Schema und Beispiel\-daten}
 
 \begin{table}[h]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|c|c|}
         \hline
-                       & \textbf{$\uparrow$ Name} & \textbf{Langname} & \textbf{Schul-Stufe} & \textbf{Schulform} \\ \hline\hline
+                       & \textbf{\# Name} & \textbf{Langname} & \textbf{Schul-Stufe} & \textbf{$\uparrow$ Schulform} \\ \hline\hline
         \textbf{Data Type} & TEXT & TEXT & INTEGER & TEXT \\
-        \textbf{Constraints}& NN, PK & & NN & NN \\
+        \textbf{Constraints}& NN, PK & & NN & NN, FK \\
         \textbf{Checks}    & & & $>0$ & \\ \hline
         \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & & & \cellcolor[HTML]{B7E1CD} FK \\ \hline
         \textbf{Sample}    & 05A & Klasse 5A & 5 & G9 \\
                            & Q1 & Qualifikationsphase 1 & 11 & G8 \\ \hline
     \end{tabular}
-    \caption{Schema der Relation Klassen (GPU003) mit Normalform-Hinweisen und Beispieldaten}
+    \caption{Schema der Relation Klassen (\texttt{GPU003}) mit Normalform-Hinweisen und Beispiel\-daten}
     \label{schema:gpu003}
 \end{table}
 
@@ -120,19 +128,19 @@ Der eindeutige Identifikator ist der Klassenname. Die Datei liefert zudem wichti
     \item \textbf{Schulform:} Beschreibt den Zweig oder die Prüfungsordnung (z.B. G9-Gymnasium). Dies dient als Verknüpfung zur Stundentafel (\texttt{GPU011}).
 \end{itemize}
 
-\subsection{GPU004 -- Lehrer}
+\subsection{\texttt{GPU004} -- Lehrer}
 Die Datei \texttt{GPU004.TXT} beinhaltet die Lehrer-Stammdaten. Diese werden im Planungstool als \texttt{Professor} interpretiert.
 
 Der Identifikator ist das Lehrerkürzel (\texttt{Name}). Obwohl die Datei viele Attribute für die statistische Auswertung und Abrechnung enthält (z.B. Hohlstunden, Sollarbeitszeit), sind für die Raum- und Zeitplanung im Mapping primär das Kürzel und der Klarname relevant.
 
-\paragraph{Schema und Beispieldaten}
+\paragraph{Schema und Beispiel\-daten}
 
 \begin{table}[h]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|c|c|}
         \hline
-                       & \textbf{$\uparrow$ Name} & \textbf{Langname} & \textbf{Vorname} & \textbf{Titel} \\ \hline\hline
+                       & \textbf{\# Name} & \textbf{Langname} & \textbf{Vorname} & \textbf{Titel} \\ \hline\hline
         \textbf{Data Type} & TEXT & TEXT & TEXT & TEXT \\
         \textbf{Constraints}& NN, PK & NN & & \\
         \textbf{Checks}    & max. 5 Zeichen & & & \\ \hline
@@ -140,7 +148,7 @@ Der Identifikator ist das Lehrerkürzel (\texttt{Name}). Obwohl die Datei viele 
         \textbf{Sample}    & MUE & Müller & Hans & Dr. \\
                            & SMI & Schmidt & Anna & \\ \hline
     \end{tabular}
-    \caption{Schema der Relation Lehrer (GPU004) mit Normalform-Hinweisen und Beispieldaten}
+    \caption{Schema der Relation Lehrer (\texttt{GPU004}) mit Normalform-Hinweisen und Beispiel\-daten}
     \label{schema:gpu004}
 \end{table}
 
@@ -149,19 +157,20 @@ Der Identifikator ist das Lehrerkürzel (\texttt{Name}). Obwohl die Datei viele 
     \item \textbf{Name:} Das eindeutige Lehrerkürzel. Dient als Primärschlüssel und wird als \texttt{ProfID} verwendet.
     \item \textbf{Langname, Vorname, Titel:} Dienen der Anzeige im Planungstool (z.B. "Dr. Hans Müller"). Im aktuellen Mapping-Skript wird vereinfachend oft nur das Kürzel verwendet, die Stammdaten stehen hier jedoch für eine Erweiterung bereit.
 \end{itemize}
-\subsection{GPU005 -- Räume}
+
+\subsection{\texttt{GPU005} -- Räume}
 Die Datei \texttt{GPU005.TXT} enthält die Stammdaten der Räume. Im Mapping werden diese Daten auf die Entität \texttt{Raum} abgebildet.
 
 Der eindeutige Identifikator ist der Raumname (z.B. Raumnummer). Für die Planung sind insbesondere die Kapazität (Sitzplätze) zur Prüfung von Überfüllung und die Lage-Informationen (Gang 1/2) zur Bestimmung des Gebäudes relevant.
 
-\paragraph{Schema und Beispieldaten}
+\paragraph{Schema und Beispiel\-daten}
 
 \begin{table}[h]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|c|c|c|}
         \hline
-                       & \textbf{$\uparrow$ Name} & \textbf{Langname} & \textbf{Kapazität} & \textbf{Gang 1} & \textbf{Gang 2} \\ \hline\hline
+                       & \textbf{\# Name} & \textbf{Langname} & \textbf{Kapazität} & \textbf{Gang 1} & \textbf{Gang 2} \\ \hline\hline
         \textbf{Data Type} & TEXT & TEXT & INTEGER & TEXT & TEXT \\
         \textbf{Constraints}& NN, PK & & & & \\
         \textbf{Checks}    & & & $\ge 0$ & & \\ \hline
@@ -169,7 +178,7 @@ Der eindeutige Identifikator ist der Raumname (z.B. Raumnummer). Für die Planun
         \textbf{Sample}    & B2.16 & Bio 1 & 32 & Bau B & 2. OG \\
                            & TH1 & Turnhalle & 99 & Sport & \\ \hline
     \end{tabular}
-    \caption{Schema der Relation Räume (GPU005) mit Normalform-Hinweisen und Beispieldaten}
+    \caption{Schema der Relation Räume (\texttt{GPU005}) mit Normalform-Hinweisen und Beispiel\-daten}
     \label{schema:gpu005}
 \end{table}
 
@@ -179,27 +188,28 @@ Der eindeutige Identifikator ist der Raumname (z.B. Raumnummer). Für die Planun
     \item \textbf{Kapazität:} Die maximale Anzahl an Personen (Sitzplätze). Dies wird auf \texttt{Sitzplatzzahl} gemappt.
     \item \textbf{Gang 1 / Gang 2:} Diese Felder enthalten oft Informationen über das Gebäude oder das Stockwerk. Im Mapping-Prozess werden diese beiden Felder kombiniert (konkateniert), um das Attribut \texttt{Gebaeude} im Planungstool zu befüllen.
 \end{itemize}
-\subsection{GPU006 -- Fächer}
+
+\subsection{\texttt{GPU006} -- Fächer}
 Die Datei \texttt{GPU006.TXT} enthält die Stammdaten der Unterrichtsfächer. Im Mapping werden diese Daten auf die Entität \texttt{Kurs} abgebildet.
 
 Der eindeutige Identifikator ist das Fachkürzel (Name). Neben der Bezeichnung (Langname) kann hier auch ein fachgebundener Stammraum hinterlegt sein (z.B. Physik-Saal für Physik-Unterricht), was für die Raumplanung relevant sein kann.
 
-\paragraph{Schema und Beispieldaten}
+\paragraph{Schema und Beispiel\-daten}
 
 \begin{table}[h]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|c|}
         \hline
-                       & \textbf{$\uparrow$ Name} & \textbf{Langname} & \textbf{$\uparrow$ Raum} \\ \hline\hline
+                       & \textbf{\# Name} & \textbf{Langname} & \textbf{$\uparrow$ Raum} \\ \hline\hline
         \textbf{Data Type} & TEXT & TEXT & TEXT \\
-        \textbf{Constraints}& NN, PK & NN & \\
+        \textbf{Constraints}& NN, PK & NN & FK \\
         \textbf{Checks}    & max. 10 Zeichen & & \\ \hline
         \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & & \cellcolor[HTML]{B7E1CD} FK \\ \hline
         \textbf{Sample}    & D & Deutsch & \\
                            & PH & Physik & PH1 \\ \hline
     \end{tabular}
-    \caption{Schema der Relation Fächer (GPU006) mit Normalform-Hinweisen und Beispieldaten}
+    \caption{Schema der Relation Fächer (\texttt{GPU006}) mit Normalform-Hinweisen und Beispiel\-daten}
     \label{schema:gpu006}
 \end{table}
 
@@ -209,27 +219,28 @@ Der eindeutige Identifikator ist das Fachkürzel (Name). Neben der Bezeichnung (
     \item \textbf{Langname:} Die ausgeschriebene Bezeichnung des Faches. Wird auf \texttt{Kursname} und \texttt{KursnameEN} gemappt.
     \item \textbf{Raum:} Definiert optional einen festen Fachraum. Dies ist ein Fremdschlüssel auf die Datei \texttt{GPU005} (Räume). Auch wenn das aktuelle Mapping-Skript dieses Feld in der Tabelle \texttt{Kurs} noch nicht explizit übernimmt, ist es in den Rohdaten als "wichtig" klassifiziert.
 \end{itemize}
-\subsection{GPU011 -- Stundentafel}
+
+\subsection{\texttt{GPU011} -- Stundentafel}
 Die Datei \texttt{GPU011.TXT} enthält die Definitionen der Stundentafeln. Eine Stundentafel legt fest, welche Fächer in welchem Jahrgang und in welchem Zweig (Schulform) unterrichtet werden müssen.
 
 Im Mapping wird diese Datei verwendet, um die Tabelle \texttt{Pflicht} zu generieren. Durch den Abgleich des Stundentafel-Namens mit der Schulform einer Klasse kann ermittelt werden, welche Kurse für einen Studiengang obligatorisch sind.
 
-\paragraph{Schema und Beispieldaten}
+\paragraph{Schema und Beispiel\-daten}
 
 \begin{table}[h]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|c|c|c|}
         \hline
-                       & \textbf{$\uparrow$ Name} & \textbf{Langname} & \textbf{$\uparrow$ Fach} & \textbf{Stundenzahl min.} & \textbf{Stundenzahl max.} \\ \hline\hline
+                       & \textbf{\# Name} & \textbf{Langname} & \textbf{\# $\uparrow$ Fach} & \textbf{Stundenzahl min.} & \textbf{Stundenzahl max.} \\ \hline\hline
         \textbf{Data Type} & TEXT & TEXT & TEXT & INTEGER & INTEGER \\
-        \textbf{Constraints}& NN, PK & NN & NN, PK & & \\
+        \textbf{Constraints}& NN, PK & NN & NN, PK, FK & & \\
         \textbf{Checks}    & & & & $\ge 0$ & $\ge 0$ \\ \hline
-        \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & & \cellcolor[HTML]{B7E1CD} FK & & \\ \hline
+        \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & & \cellcolor[HTML]{A4C2F4} PK & & \\ \hline
         \textbf{Sample}    & G9-05 & Gymnasium G9 Stufe 5 & D & 4 & 5 \\
                            & G9-05 & Gymnasium G9 Stufe 5 & M & 4 & 4 \\ \hline
     \end{tabular}
-    \caption{Schema der Relation Stundentafel (GPU011) mit Normalform-Hinweisen und Beispieldaten}
+    \caption{Schema der Relation Stundentafel (\texttt{GPU011}) mit Normalform-Hinweisen und Beispiel\-daten}
     \label{schema:gpu011}
 \end{table}
 
@@ -239,29 +250,30 @@ Im Mapping wird diese Datei verwendet, um die Tabelle \texttt{Pflicht} zu generi
     \item \textbf{Fach:} Das Kürzel des Unterrichtsfaches. Dies ist ein Fremdschlüssel auf die Datei \texttt{GPU006} (Fächer) und wird im Planungstool zur \texttt{KursID}.
     \item \textbf{Stundenzahl min./max.:} Gibt den vorgesehenen Stundenumfang (Wochenstunden) für das Fach in dieser Stufe an. Obwohl diese Werte im aktuellen Mapping-Skript nicht direkt übertragen werden, sind sie für die Vollständigkeitsprüfung der Planung relevant.
 \end{itemize}
-\subsection{GPU016 -- Zeitwünsche}
+
+\subsection{\texttt{GPU016} -- Zeitwünsche}
 Die Datei \texttt{GPU016.TXT} enthält die Zeitwünsche und -sperren. Hier können Präferenzen für Lehrer, Klassen, Räume oder Fächer hinterlegt werden (z.B. "Lehrer Müller kann montags in der 1. Stunde nicht").
 
 Im Mapping ist diese Datei essenziell für die Berechnung der Spalte \texttt{Wunschzeit} in der Tabelle \texttt{Plan}. Ein Datensatz definiert dabei für eine bestimmte Entität und einen bestimmten Zeitschlitz (Tag + Stunde) einen Prioritätswert.
 
 Besonderheit: Diese Tabelle verwendet einen \textit{polymorphen Fremdschlüssel}. Das Feld \texttt{Kurzname} verweist je nach Inhalt des Feldes \texttt{Art} auf unterschiedliche Stammdatentabellen (Lehrer, Klassen, Räume oder Fächer).
 
-\paragraph{Schema und Beispieldaten}
+\paragraph{Schema und Beispiel\-daten}
 
 \begin{table}[h]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|c|c|c|}
         \hline
-                       & \textbf{Art} & \textbf{$\uparrow$ Kurzname} & \textbf{Tag} & \textbf{Stunde} & \textbf{Zeitwunsch} \\ \hline\hline
+                       & \textbf{\# Art} & \textbf{\# $\uparrow$ Kurzname} & \textbf{\# Tag} & \textbf{\# Stunde} & \textbf{Zeitwunsch} \\ \hline\hline
         \textbf{Data Type} & TEXT & TEXT & INTEGER & INTEGER & INTEGER \\
-        \textbf{Constraints}& NN, PK & NN, PK & NN, PK & NN, PK & NN \\
+        \textbf{Constraints}& NN, PK & NN, PK, FK & NN, PK & NN, PK & NN \\
         \textbf{Checks}    & $\in \{L, K, R, F\}$ & & $\in \{1..7\}$ & $>0$ & $\in \{-3..3\}$ \\ \hline
-        \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK / \cellcolor[HTML]{B7E1CD} FK & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \\ \hline
+        \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \\ \hline
         \textbf{Sample}    & L & SMI & 1 & 1 & -3 \\
                            & R & B2.16 & 5 & 7 & 1 \\ \hline
     \end{tabular}
-    \caption{Schema der Relation Zeitwünsche (GPU016) mit Normalform-Hinweisen und Beispieldaten}
+    \caption{Schema der Relation Zeitwünsche (\texttt{GPU016}) mit Normalform-Hinweisen und Beispiel\-daten}
     \label{schema:gpu016}
 \end{table}
 
@@ -269,10 +281,10 @@ Besonderheit: Diese Tabelle verwendet einen \textit{polymorphen Fremdschlüssel}
 \begin{itemize}
     \item \textbf{Art des Elements:} Unterscheidet, auf welche Entität sich der Wunsch bezieht:
         \begin{itemize}
-            \item \texttt{L}: Lehrer (verweist auf GPU004)
-            \item \texttt{K}: Klasse (verweist auf GPU003)
-            \item \texttt{R}: Raum (verweist auf GPU005)
-            \item \texttt{F}: Fach (verweist auf GPU006)
+            \item \texttt{L}: Lehrer (verweist auf \texttt{GPU004})
+            \item \texttt{K}: Klasse (verweist auf \texttt{GPU003})
+            \item \texttt{R}: Raum (verweist auf \texttt{GPU005})
+            \item \texttt{F}: Fach (verweist auf \texttt{GPU006})
         \end{itemize}
     \item \textbf{Kurzname des Elements:} Der Identifikator der betroffenen Entität (z.B. Lehrerkürzel oder Raumnummer). Bildet zusammen mit Art, Tag und Stunde den Primärschlüssel.
     \item \textbf{Zeitwunsch:} Ein numerischer Wert, der die Priorität ausdrückt. Typische Untis-Skala:
@@ -290,14 +302,14 @@ Die Tabelle \texttt{HourGrid} definiert das Zeitraster der Schule. Sie bildet di
 
 Diese Relation ist notwendig, um in der Zieltabelle \texttt{Timeslot} korrekte Uhrzeiten zu berechnen.
 
-\paragraph{Schema und Beispieldaten}
+\paragraph{Schema und Beispiel\-daten}
 
 \begin{table}[h]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|c|}
         \hline
-                       & \textbf{Hour} & \textbf{Time} & \textbf{Duration} \\ \hline\hline
+                       & \textbf{\# Hour} & \textbf{Time} & \textbf{Duration} \\ \hline\hline
         \textbf{Data Type} & INTEGER & INTEGER & INTEGER \\
         \textbf{Constraints}& NN, PK & NN & NN \\
         \textbf{Checks}    & $>0$ & $\in \{0..23\}$ & $>0$ \\ \hline
@@ -319,14 +331,14 @@ Diese Relation ist notwendig, um in der Zieltabelle \texttt{Timeslot} korrekte U
 \subsubsection{WeekdayMap -- Wochentage}
 Die Tabelle \texttt{WeekdayMap} dient der Übersetzung der numerischen Wochentags-Repräsentation aus Untis in lesbare Textformate für das Planungstool.
 
-\paragraph{Schema und Beispieldaten}
+\paragraph{Schema und Beispiel\-daten}
 
 \begin{table}[h]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|}
         \hline
-                       & \textbf{DIFTag} & \textbf{Weekday} \\ \hline\hline
+                       & \textbf{\# DIFTag} & \textbf{Weekday} \\ \hline\hline
         \textbf{Data Type} & INTEGER & TEXT \\
         \textbf{Constraints}& NN, PK & NN, U \\
         \textbf{Checks}    & $\in \{1..7\}$ & \\ \hline
@@ -347,14 +359,14 @@ Die Tabelle \texttt{WeekdayMap} dient der Übersetzung der numerischen Wochentag
 \subsubsection{ClassEncoding -- Klassenkodierung}
 Die Tabelle \texttt{ClassEncoding} ist eine spezifische Hilfstabelle für das Mapping. Sie ordnet den Untis-Klassennamen (z.B. "05A") einer logischen Veranstaltungsgruppe (Veranstaltungsteil) zu. Dies ermöglicht es, Parallelklassen (05A, 05B etc.) im Planungstool sauber zu trennen oder Oberstufenkurse (Q1, Q2) spezifisch zu mappen.
 
-\paragraph{Schema und Beispieldaten}
+\paragraph{Schema und Beispiel\-daten}
 
 \begin{table}[h]
     \centering
     \tiny
     \begin{tabular}{|c|c|c|}
         \hline
-                       & \textbf{Klassenname} & \textbf{Veranstaltungsteil} \\ \hline\hline
+                       & \textbf{\# Klassenname} & \textbf{Veranstaltungsteil} \\ \hline\hline
         \textbf{Data Type} & TEXT & TEXT \\
         \textbf{Constraints}& NN, PK & NN \\
         \textbf{Checks}    & & \\ \hline
