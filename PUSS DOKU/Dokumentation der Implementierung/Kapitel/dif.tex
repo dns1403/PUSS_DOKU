@@ -34,7 +34,7 @@ In Anlehnung an die graphische Analyse der Datenbankstruktur werden folgende far
 
 \noindent
 Sofern auf eine Spalte mehrere der o.~g. Eigenschaften zutreffen, so gilt die folgende Rangfolge bei der Farbauswahl: Normalformverletzungen vor Primärschlüssel vor Fremdschlüsseln.
-Um dennoch auf einen Blick alle relevanten Spalteneigenschaften auf einen Blick erkennen zu können, werden den Spaltennamen der Primärschlüsselattribute ein \#, den Spaltennamen der Fremdschlüsselattribute ein ($\uparrow$) vorangestellt.
+Um dennoch auf einen Blick alle relevanten Spalteneigenschaften auf einen Blick erkennen zu können, werden den Spaltennamen der Primärschlüsselattribute ein \#, den Spaltennamen der Fremdschlüsselattribute ein Pfeil nach oben $\uparrow$) vorangestellt.
 
 \subsection{\texttt{GPU001} -- Stundenplan}
 Die Datei \texttt{GPU001.TXT} enthält den Stundenplan. Da ein Unterrichtselement (Unterrichtsnummer) für mehrere Klassen gleichzeitig stattfinden kann (z.B. Koppelungen), bildet die Kombination aus Unterrichtsnummer, Klasse und Fach zusammen mit Tag und Stunde den Primärschlüssel.
@@ -46,13 +46,13 @@ Die Datei \texttt{GPU001.TXT} enthält den Stundenplan. Da ein Unterrichtselemen
         \tiny
         \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
             \hline
-                               & \textbf{\# $\uparrow$ Unterrichtsnummer} & \textbf{\# $\uparrow$ Klasse} & \textbf{$\uparrow$ Lehrer} & \textbf{\# $\uparrow$ Fach} & \textbf{$\uparrow$ Raum} & \textbf{\# Tag} & \textbf{\# Stunde} & \textbf{Stundenlänge} \\ \hline\hline
-            \textbf{Data Type} & INTEGER & TEXT & TEXT & TEXT & TEXT & INTEGER & INTEGER & INTEGER \\
-            \textbf{Constraints}& NN, PK, FK & NN, PK, FK & NN, FK & NN, PK, FK & FK & NN, PK & NN, PK & \\
-            \textbf{Checks}    & & & & & & $\in \{1..7\}$ & & in Minuten \\ \hline
-            \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{F9CB9C} 2. NF & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{B7E1CD} FK & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \\ \hline
-            \textbf{Sample}    & 1 & 07A & SMI & D & B2.16 & 2 & 7 &  \\
-                               & 1 & 08A & AML & M & B2.12 & 1 & 4 &  \\ \hline
+                               & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Unterrichtsnummer} & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Klasse} & \cellcolor[HTML]{F9CB9C} \textbf{$\uparrow$ Lehrer} & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Fach} & \cellcolor[HTML]{B7E1CD} \textbf{$\uparrow$ Raum} & \cellcolor[HTML]{A4C2F4} \textbf{\# Tag} & \cellcolor[HTML]{A4C2F4} \textbf{\# Stunde} \\ \hline\hline
+            \textbf{Data Type} & INTEGER & TEXT & TEXT & TEXT & TEXT & INTEGER & INTEGER \\
+            \textbf{Constraints} & NN, PK, FK & NN, PK, FK & NN, FK & NN, PK, FK & FK & NN, PK & NN, PK \\
+            \textbf{Checks}    & & & & & & $\in \{1..7\}$ & \\ \hline
+            \textbf{verletzte NF} & & & 2. NF & & & & \\ \hline
+            \textbf{Sample}    & 1 & 07A & SMI & D & B2.16 & 2 & 7 \\
+                               & 1 & 08A & AML & M & B2.12 & 1 & 4 \\ \hline
         \end{tabular}
         \caption{Schema der Relation Stundenplan (\texttt{GPU001}) mit Normalform-Hinweisen und Beispiel\-daten}
         \label{schema:gpu001_new}
@@ -78,11 +78,11 @@ Im Kontext des Mappings wird diese Datei primär genutzt, um die \textbf{Student
     \tiny
     \begin{tabular}{|c|c|c|c|c|c|}
         \hline
-                       & \textbf{\# $\uparrow$ Unterrichtsnummer} & \textbf{\# $\uparrow$ Klasse} & \textbf{$\uparrow$ Lehrer} & \textbf{\# $\uparrow$ Fach} & \textbf{Studentenzahl} \\ \hline\hline
+                       & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Unterrichtsnummer} & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Klasse} & \cellcolor[HTML]{B7E1CD} \textbf{$\uparrow$ Lehrer} & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Fach} & \textbf{Studentenzahl} \\ \hline\hline
         \textbf{Data Type} & INTEGER & TEXT & TEXT & TEXT & INTEGER \\
-        \textbf{Constraints}& NN, PK & NN, PK, FK & NN, FK & NN, PK, FK &  \\
+        \textbf{Constraints} & NN, PK & NN, PK, FK & NN, FK & NN, PK, FK &  \\
         \textbf{Checks}    & & & & & $\ge 0$ \\ \hline
-        \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{B7E1CD} FK & \cellcolor[HTML]{A4C2F4} PK & \\ \hline
+        \textbf{verletzte NF} & & & & & \\ \hline
         \textbf{Sample}    & 1 & 07A & SMI & D & 24 \\
                            & 1 & 07B & MUE & D & 26 \\ \hline
     \end{tabular}
@@ -109,11 +109,11 @@ Der eindeutige Identifikator ist der Klassenname. Die Datei liefert zudem wichti
     \tiny
     \begin{tabular}{|c|c|c|c|c|}
         \hline
-                       & \textbf{\# Name} & \textbf{Langname} & \textbf{Schul-Stufe} & \textbf{$\uparrow$ Schulform} \\ \hline\hline
+                       & \cellcolor[HTML]{A4C2F4} \textbf{\# Name} & \textbf{Langname} & \textbf{Schul-Stufe} & \cellcolor[HTML]{B7E1CD} \textbf{$\uparrow$ Schulform} \\ \hline\hline
         \textbf{Data Type} & TEXT & TEXT & INTEGER & TEXT \\
-        \textbf{Constraints}& NN, PK & & NN & NN, FK \\
+        \textbf{Constraints} & NN, PK & & NN & NN, FK \\
         \textbf{Checks}    & & & $>0$ & \\ \hline
-        \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & & & \cellcolor[HTML]{B7E1CD} FK \\ \hline
+        \textbf{verletzte NF} & & & & \\ \hline
         \textbf{Sample}    & 05A & Klasse 5A & 5 & G9 \\
                            & Q1 & Qualifikationsphase 1 & 11 & G8 \\ \hline
     \end{tabular}
@@ -140,11 +140,11 @@ Der Identifikator ist das Lehrerkürzel (\texttt{Name}). Obwohl die Datei viele 
     \tiny
     \begin{tabular}{|c|c|c|c|c|}
         \hline
-                       & \textbf{\# Name} & \textbf{Langname} & \textbf{Vorname} & \textbf{Titel} \\ \hline\hline
+                       & \cellcolor[HTML]{A4C2F4} \textbf{\# Name} & \textbf{Langname} & \textbf{Vorname} & \textbf{Titel} \\ \hline\hline
         \textbf{Data Type} & TEXT & TEXT & TEXT & TEXT \\
-        \textbf{Constraints}& NN, PK & NN & & \\
+        \textbf{Constraints} & NN, PK & NN & & \\
         \textbf{Checks}    & max. 5 Zeichen & & & \\ \hline
-        \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & & & \\ \hline
+        \textbf{verletzte NF} & & & & \\ \hline
         \textbf{Sample}    & MUE & Müller & Hans & Dr. \\
                            & SMI & Schmidt & Anna & \\ \hline
     \end{tabular}
@@ -170,11 +170,11 @@ Der eindeutige Identifikator ist der Raumname (z.B. Raumnummer). Für die Planun
     \tiny
     \begin{tabular}{|c|c|c|c|c|c|}
         \hline
-                       & \textbf{\# Name} & \textbf{Langname} & \textbf{Kapazität} & \textbf{Gang 1} & \textbf{Gang 2} \\ \hline\hline
+                       & \cellcolor[HTML]{A4C2F4} \textbf{\# Name} & \textbf{Langname} & \textbf{Kapazität} & \textbf{Gang 1} & \textbf{Gang 2} \\ \hline\hline
         \textbf{Data Type} & TEXT & TEXT & INTEGER & TEXT & TEXT \\
-        \textbf{Constraints}& NN, PK & & & & \\
+        \textbf{Constraints} & NN, PK & & & & \\
         \textbf{Checks}    & & & $\ge 0$ & & \\ \hline
-        \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & & & & \\ \hline
+        \textbf{verletzte NF} & & & & & \\ \hline
         \textbf{Sample}    & B2.16 & Bio 1 & 32 & Bau B & 2. OG \\
                            & TH1 & Turnhalle & 99 & Sport & \\ \hline
     \end{tabular}
@@ -201,11 +201,11 @@ Der eindeutige Identifikator ist das Fachkürzel (Name). Neben der Bezeichnung (
     \tiny
     \begin{tabular}{|c|c|c|c|}
         \hline
-                       & \textbf{\# Name} & \textbf{Langname} & \textbf{$\uparrow$ Raum} \\ \hline\hline
+                       & \cellcolor[HTML]{A4C2F4} \textbf{\# Name} & \textbf{Langname} & \cellcolor[HTML]{B7E1CD} \textbf{$\uparrow$ Raum} \\ \hline\hline
         \textbf{Data Type} & TEXT & TEXT & TEXT \\
-        \textbf{Constraints}& NN, PK & NN & FK \\
+        \textbf{Constraints} & NN, PK & NN & FK \\
         \textbf{Checks}    & max. 10 Zeichen & & \\ \hline
-        \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & & \cellcolor[HTML]{B7E1CD} FK \\ \hline
+        \textbf{verletzte NF} & & & \\ \hline
         \textbf{Sample}    & D & Deutsch & \\
                            & PH & Physik & PH1 \\ \hline
     \end{tabular}
@@ -232,11 +232,11 @@ Im Mapping wird diese Datei verwendet, um die Tabelle \texttt{Pflicht} zu generi
     \tiny
     \begin{tabular}{|c|c|c|c|c|c|}
         \hline
-                       & \textbf{\# Name} & \textbf{Langname} & \textbf{\# $\uparrow$ Fach} & \textbf{Stundenzahl min.} & \textbf{Stundenzahl max.} \\ \hline\hline
+                       & \cellcolor[HTML]{A4C2F4} \textbf{\# Name} & \textbf{Langname} & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Fach} & \textbf{Stundenzahl min.} & \textbf{Stundenzahl max.} \\ \hline\hline
         \textbf{Data Type} & TEXT & TEXT & TEXT & INTEGER & INTEGER \\
-        \textbf{Constraints}& NN, PK & NN & NN, PK, FK & & \\
+        \textbf{Constraints} & NN, PK & NN & NN, PK, FK & & \\
         \textbf{Checks}    & & & & $\ge 0$ & $\ge 0$ \\ \hline
-        \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & & \cellcolor[HTML]{A4C2F4} PK & & \\ \hline
+        \textbf{verletzte NF} & & & & & \\ \hline
         \textbf{Sample}    & G9-05 & Gymnasium G9 Stufe 5 & D & 4 & 5 \\
                            & G9-05 & Gymnasium G9 Stufe 5 & M & 4 & 4 \\ \hline
     \end{tabular}
@@ -265,11 +265,11 @@ Besonderheit: Diese Tabelle verwendet einen \textit{polymorphen Fremdschlüssel}
     \tiny
     \begin{tabular}{|c|c|c|c|c|c|}
         \hline
-                       & \textbf{\# Art} & \textbf{\# $\uparrow$ Kurzname} & \textbf{\# Tag} & \textbf{\# Stunde} & \textbf{Zeitwunsch} \\ \hline\hline
+                       & \cellcolor[HTML]{A4C2F4} \textbf{\# Art} & \cellcolor[HTML]{A4C2F4} \textbf{\# $\uparrow$ Kurzname} & \cellcolor[HTML]{A4C2F4} \textbf{\# Tag} & \cellcolor[HTML]{A4C2F4} \textbf{\# Stunde} & \textbf{Zeitwunsch} \\ \hline\hline
         \textbf{Data Type} & TEXT & TEXT & INTEGER & INTEGER & INTEGER \\
-        \textbf{Constraints}& NN, PK & NN, PK, FK & NN, PK & NN, PK & NN \\
+        \textbf{Constraints} & NN, PK & NN, PK, FK & NN, PK & NN, PK & NN \\
         \textbf{Checks}    & $\in \{L, K, R, F\}$ & & $\in \{1..7\}$ & $>0$ & $\in \{-3..3\}$ \\ \hline
-        \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \cellcolor[HTML]{A4C2F4} PK & \\ \hline
+        \textbf{verletzte NF} & & & & & \\ \hline
         \textbf{Sample}    & L & SMI & 1 & 1 & -3 \\
                            & R & B2.16 & 5 & 7 & 1 \\ \hline
     \end{tabular}
@@ -309,11 +309,11 @@ Diese Relation ist notwendig, um in der Zieltabelle \texttt{Timeslot} korrekte U
     \tiny
     \begin{tabular}{|c|c|c|c|}
         \hline
-                       & \textbf{\# Hour} & \textbf{Time} & \textbf{Duration} \\ \hline\hline
+                       & \cellcolor[HTML]{A4C2F4} \textbf{\# Hour} & \textbf{Time} & \textbf{Duration} \\ \hline\hline
         \textbf{Data Type} & INTEGER & INTEGER & INTEGER \\
-        \textbf{Constraints}& NN, PK & NN & NN \\
+        \textbf{Constraints} & NN, PK & NN & NN \\
         \textbf{Checks}    & $>0$ & $\in \{0..23\}$ & $>0$ \\ \hline
-        \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & & \\ \hline
+        \textbf{verletzte NF} & & & \\ \hline
         \textbf{Sample}    & 1 & 8 & 1 \\
                            & 2 & 9 & 1 \\ \hline
     \end{tabular}
@@ -338,11 +338,11 @@ Die Tabelle \texttt{WeekdayMap} dient der Übersetzung der numerischen Wochentag
     \tiny
     \begin{tabular}{|c|c|c|}
         \hline
-                       & \textbf{\# DIFTag} & \textbf{Weekday} \\ \hline\hline
+                       & \cellcolor[HTML]{A4C2F4} \textbf{\# DIFTag} & \textbf{Weekday} \\ \hline\hline
         \textbf{Data Type} & INTEGER & TEXT \\
-        \textbf{Constraints}& NN, PK & NN, U \\
+        \textbf{Constraints} & NN, PK & NN, U \\
         \textbf{Checks}    & $\in \{1..7\}$ & \\ \hline
-        \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & \\ \hline
+        \textbf{verletzte NF} & & \\ \hline
         \textbf{Sample}    & 1 & Montag \\
                            & 2 & Dienstag \\ \hline
     \end{tabular}
@@ -366,11 +366,11 @@ Die Tabelle \texttt{ClassEncoding} ist eine spezifische Hilfstabelle für das Ma
     \tiny
     \begin{tabular}{|c|c|c|}
         \hline
-                       & \textbf{\# Klassenname} & \textbf{Veranstaltungsteil} \\ \hline\hline
+                       & \cellcolor[HTML]{A4C2F4} \textbf{\# Klassenname} & \textbf{Veranstaltungsteil} \\ \hline\hline
         \textbf{Data Type} & TEXT & TEXT \\
-        \textbf{Constraints}& NN, PK & NN \\
+        \textbf{Constraints} & NN, PK & NN \\
         \textbf{Checks}    & & \\ \hline
-        \textbf{Notation}  & \cellcolor[HTML]{A4C2F4} PK & \\ \hline
+        \textbf{verletzte NF} & & \\ \hline
         \textbf{Sample}    & 05A & 5.1 \\
                            & 05B & 5.2 \\
                            & Q1 & 12 \\ \hline
