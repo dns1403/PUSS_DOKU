@@ -207,7 +207,7 @@ FROM (
         -- ... (Komplexe Subquery fuer Wunschzeiten) ...
     FROM dif_data.Stundenplan AS SP
     -- ... (Joins mit Unterricht, HourGrid, WeekdayMap, ClassEncoding) ...
-    GROUP BY SP.Unterrichts\-nummer, SP.Fach, SP.Lehrer, SP.Tag, SP.Stunde
+    GROUP BY SP.Unterrichtsnummer, SP.Fach, SP.Lehrer, SP.Tag, SP.Stunde
 ) AS InnerPlan
 -- OUTER PLAN: Gruppierung zu Bloecken
 GROUP BY KursID, Veranstaltungsteil, Tag, ProfID, Raumnr;
