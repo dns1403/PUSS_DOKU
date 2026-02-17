@@ -24,9 +24,9 @@ In Anlehnung an die graphische Analyse der Datenbankstruktur werden folgende far
     \begin{tabular}{|l|l|l|}
         \hline
         \textbf{Farbe} & \textbf{Bezeichnung} & \textbf{Beschreibung} \\ \hline
-        \cellcolor[HTML]{A4C2F4} Blau & Primärschlüssel (PK) & Kennzeichnet Felder, die den Datensatz eindeutig identifizieren. \\ \hline
+        \cellcolor[HTML]{A4C2F4} Blau & Primärschlüssel (PK) & Felder, die den Datensatz eindeutig identifizieren. \\ \hline
         \cellcolor[HTML]{F9CB9C} Orange & Verletzung 2. NF & Felder, die funktional von einem Teil des Schlüssels abhängen. \\ \hline
-        \cellcolor[HTML]{B7E1CD} Grün & Fremdschlüssel (FK) & Verweis auf Stammdaten einer anderen DIF-Datei (z.B. Lehrer-ID). \\ \hline
+        \cellcolor[HTML]{B7E1CD} Grün & Fremdschlüssel (FK) & Felder, die auf Daten einer anderen DIF-Datei verweisen. \\ \hline
     \end{tabular}
     \caption{Legende der verwendeten Notationsfarben}
     \label{tab:legende_notation}
@@ -34,7 +34,7 @@ In Anlehnung an die graphische Analyse der Datenbankstruktur werden folgende far
 
 \noindent
 Sofern auf eine Spalte mehrere der o.~g. Eigenschaften zutreffen, so gilt die folgende Rangfolge bei der Farbauswahl: Normalformverletzungen vor Primärschlüssel vor Fremdschlüsseln.
-Um dennoch auf einen Blick alle relevanten Spalteneigenschaften auf einen Blick erkennen zu können, werden den Spaltennamen der Primärschlüsselattribute ein \#, den Spaltennamen der Fremdschlüsselattribute ein Pfeil nach oben $\uparrow$) vorangestellt.
+Um dennoch auf einen Blick alle relevanten Spalteneigenschaften auf einen Blick erkennen zu können, werden den Spaltennamen der Primärschlüsselattribute ein \#, den Spaltennamen der Fremdschlüsselattribute ein Pfeil nach oben ($\uparrow$) vorangestellt.
 
 \subsection{\texttt{GPU001} -- Stundenplan}
 Die Datei \texttt{GPU001.TXT} enthält den Stundenplan. Da ein Unterrichtselement (Unterrichtsnummer) für mehrere Klassen gleichzeitig stattfinden kann (z.B. Koppelungen), bildet die Kombination aus Unterrichtsnummer, Klasse und Fach zusammen mit Tag und Stunde den Primärschlüssel.
