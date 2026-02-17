@@ -101,7 +101,7 @@ In Untis gibt es die Spalten \texttt{Name}, \texttt{Schulform} und \texttt{Schul
 Diese werden hier semantisch zusammengeführt, um die Studiengänge im Planungstool abzubilden.
 Die Spalte \texttt{Name} wird als ID verwendet, da sie die Klassenbezeichnung enthält, die eindeutig ist.
 Die Spalte \texttt{Schulform} wird als Prüfungsordnung interpretiert, da sie die Art der Schule beschreibt (z.B. Gymnasium, Realschule) und den Bildungsgang (z.B. G8, G9).
-Die Spalte \texttt{Schul-Stufe} wird als Semester interpretiert, da sie die Jahrgangsstufe beschreibt, was im Planungstool als Semester abgebildet wird.
+Die Spalte \texttt{Schul-Stufe} wird als Semester interpretiert, da sie die Jahrgangsstufe beschreibt.
 % \begin{itemize}
 %     \item \textbf{Quelle:} \texttt{dif\_data.Klassen}
 %     \item \textbf{Mapping:} \texttt{Name} $\rightarrow$ \texttt{StudiengangsID}, \texttt{Schulform} $\rightarrow$ \texttt{Pruefungsordnung}, \texttt{Schul-Stufe} $\rightarrow$ \texttt{Semester}.
@@ -113,7 +113,7 @@ SELECT
     '' AS Hauptfach,
     'Ohne' AS Nebenfach,
     Schulform AS Pruefungsordnung,
-    `Schul-Stufe` AS Semester
+    'Schul-Stufe' AS Semester
 FROM dif_data.Klassen;
 \end{sqlbox}
 % \subsection{Transformation: Timeslot (Zeitraster)}
@@ -121,12 +121,12 @@ FROM dif_data.Klassen;
 % Die verwendeten Informationen stammen aus der \texttt{GPU016}-Datei (siehe Tabelle \ref{schema:gpu016}), die die Zeitwünsche der Lehrkräfte enthält, sowie aus den Hilfstabellen \texttt{HourGrid} und \texttt{WeekdayMap}, die die Stundenraster und Wochentage abbilden.
 % \todo{Zu Ende schrieben}
 
-\subsection{Zeitfenster (Timeslot)}
+\subsection{Timeslot}
 Die Tabelle \texttt{Timeslot} definiert das globale Zeitraster des Planungstools. Sie generiert für jede an der Schule existierende Kombination aus Wochentag und Uhrzeit eine eindeutige ID.
 Da Untis keine zentrale Tabelle für "gültige Zeitfenster" exportiert, sondern diese implizit durch die Verwendung in Stundenplänen oder Zeitwünschen definiert, konstruieren wir diese Tabelle dynamisch.
 
 Hierfür nutzen wir die Tabelle \texttt{dif\_data.Zeitwuensche}, da diese in der Regel das vollständigste Zeitraster abdeckt (da z.B. Sperrungen für den späten Nachmittag eingetragen sein können, auch wenn dort kein Unterricht stattfindet).
-Durch den \texttt{JOIN} mit den Hilfstabellen \texttt{HourGrid} und \texttt{WeekdayMap} werden die internen Untis-Codes (z.B. Tag 1, Stunde 1) in lesbare Werte (Montag, 08:00 Uhr, 45 Min) übersetzt.
+Durch den \texttt{JOIN} mit den Hilfstabellen \texttt{HourGrid} und \texttt{WeekdayMap} werden die internen Untis Codierungen für Stunden und Wochentage in das Format überführt, das wir im Planungstool benötigen.
 Die SQL-Fensterfunktion \texttt{ROW\_NUMBER()} erzeugt dabei einen fortlaufenden Primärschlüssel.
 
 \begin{sqlbox}{SQL-Implementierung: Timeslot}
@@ -149,8 +149,8 @@ FROM
         dif_data.WeekdayMap AS WM ON ZW.Tag = WM.DIFTag)
     AS TS;
 \end{sqlbox}
-
-\subsection{Planungsdaten (Plan)}
+\todo{Keyword Problem lösen: Time und Hour sind in der SQL-Implementierung als Spaltennamen verwendet, was zu Konflikten mit reservierten SQL-Keywords führt.}
+\subsection{Plan}
 Die Tabelle \texttt{Plan} repräsentiert den aktuellen Ist-Zustand des Stundenplans.
 Die Transformation ist hierbei die anspruchsvollste des gesamten ETL-Prozesses, da die Datenstruktur von Untis (atomare Einzelstunden pro Klasse) fundamental von der des Planungstools (zusammenhängende Blöcke pro Veranstaltung) abweicht.
 Um die Logik wartbar und verständlich zu halten, erfolgt die Transformation mittels einer verschachtelten Abfrage (Nested Query) in zwei logischen Schritten: der Vorverarbeitung (\texttt{InnerPlan}) und der Aggregation (\texttt{OuterPlan}).
@@ -160,12 +160,17 @@ In der inneren Abfrage (\texttt{InnerPlan}) werden die Rohdaten aus dem \texttt{
 Zwei Aspekte sind hierbei besonders hervorzuheben:
 
 \begin{enumerate}
-    \item \textbf{Behandlung von \_Kursen:} Klassenübergreifende Kurse (z.B. Religion, Wahlpflicht) sind in Untis oft durch ein führendes Unterstrich-Zeichen im Fachkürzel markiert (z.B. \texttt{\_REL}). Würde man hier das reguläre Mapping anwenden, entstünden für jede teilnehmende Klasse separate Einträge. Das Skript erkennt dies und erzwingt für solche Fächer den \texttt{Veranstaltungsteil} '1'.
+    \item \textbf{Behandlung von \_Kursen:} In Untis werden AGs und andere außerunterrichtliche Veranstaltungen oft mit einem führenden Unterstrich im Fachkürzel markiert (z.B. \texttt{\_Theater}). 
+    Diese sind in der Regel nicht klassenbezogen, sondern für alle Schüler einer Jahrgangsstufe oder sogar der gesamten Schule zugänglich.
+    Dadurch würden für diese Veranstaltungen mit der regulären Gruppierung jeweils ein Eintrag pro Klasse in Plan entstehen, was die Planung unnötig verkompliziert, da bei einer Verschiebung des Kurses für jede Klasse eine Anpassung notwendig wäre.
+    Um dies zu vermeiden, werden alle Fächer, die mit einem Unterstrich beginnen zu einer einzigen Veranstaltung zusammengefasst, die von den betroffenen Klassen gemeinsam besucht wird (siehe Pflicht \ref{SQL:Pflicht} für die Implementierung der Logik zum belegen von \_Kursen).
     \item \textbf{Berechnung der Wunschzeit:} Die Spalte \texttt{Wunschzeit} wird durch eine korrelierte Unterabfrage ermittelt. Diese prüft, ob für den Lehrer, den Raum oder das Fach an diesem spezifischen Zeitslot eine Priorität in der Tabelle \texttt{Zeitwuensche} hinterlegt ist.
 \end{enumerate}
 
 \subsubsection{Schritt 2: Aggregation von Zeitblöcken (Outer Query)}
-Die äußere Abfrage gruppiert die vorverarbeiteten Datensätze. Während Untis eine Doppelstunde als zwei separate Zeilen speichert (z.B. 1. Stunde und 2. Stunde), benötigt das Planungstool einen einzigen Eintrag mit addierter Dauer.
+Die äußere Abfrage gruppiert die vorverarbeiteten Datensätze. Während Untis eine Doppelstunde als zwei separate Zeilen speichert.
+Zum Beispiel wird eine Doppelstunde Deutsch von 8:00-9:30 in zwei Zeilen mit jeweils 45 Minuten Dauer dargestellt.
+Um eine bessere Übersicht und Handhabung im Planungstool zu ermöglichen, werden diese Zeilen hier zu einem einzigen Eintrag mit einer Dauer zusammengefasst.
 Die Aggregationslogik gestaltet sich wie folgt:
 \begin{itemize}
     \item \textbf{Startzeit:} \texttt{MIN(Time)} ermittelt den Beginn des Blocks.
@@ -208,13 +213,15 @@ FROM (
 GROUP BY KursID, Veranstaltungsteil, Tag, ProfID, Raumnr;
 \end{sqlbox}
 
-\subsection{Pflichtbindungen (Pflicht)}
-Die Tabelle \texttt{Pflicht} verknüpft Kurse mit Studiengängen (Klassen) und definiert, ob es sich um Pflichtveranstaltungen handelt. Diese Information ist essenziell für die Konflikterkennung (z.B. "StudiengangSchwer").
+\subsection{Pflicht}
+\label{SQL:Pflicht}
+Die Tabelle \texttt{Pflicht} verknüpft Kurse mit Studiengängen (Klassen) und definiert, ob es sich um Pflichtveranstaltungen handelt. 
+Diese Information ist essenziell für die Konflikterkennung (z.B. "StudiengangSchwer") und das Anzeigen der Kurse im Planungstool, da nur die für die Klassen in Pflicht eingetragenen Kurse im Stundenplan der jeweiligen Klassen angezeigt werden.
 Die Befüllung erfolgt durch eine \texttt{UNION}-Operation aus zwei Quellen, um sowohl die theoretische Stundentafel als auch die faktische Verplanung abzubilden.
 
 \subsubsection{Quelle 1: Curriculare Vorgaben}
 Der erste Teil der Abfrage bezieht sich auf die Tabelle \texttt{dif\_data.Stundentafel}. Alle hier gelisteten Fächer sind per Definition Pflichtfächer (\texttt{Pflichtfach = 'Ja'}).
-Über die Schulform der Klasse (z.B. "G9" aus \texttt{dif\_data.Klassen}) wird die Verbindung zwischen der Klasse (StudiengangsID) und der Stundentafel hergestellt.
+Über die Schulform der Klasse (z.B. "G9-2 Stufe 05" aus \texttt{dif\_data.Klassen}) wird die Verbindung zwischen der Klasse (StudiengangsID) und der Stundentafel hergestellt.
 
 \subsubsection{Quelle 2: Faktischer Unterricht}
 Da Schulplanung oft dynamisch ist, existieren häufig Kurse im Stundenplan, die nicht explizit in der Stundentafel stehen (z.B. AGs, Förderunterricht oder kurzfristige Änderungen).
