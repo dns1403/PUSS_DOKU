@@ -13,10 +13,10 @@ Die resultierenden Unterschiede werden wir im Folgenden kurz zusammenfassen, und
 	\item \textbf{Studiengang}: Dies entspricht dem Begriff \textbf{Klasse} an der Schule.
 	\item \textbf{Semester (eines Studiengangs)}: Dies entspricht dem Begriff \textbf{Jahrgang} der zum Studiengang gehörigen Klasse.
 	\item \textbf{Nebenfach(NF)}: Dies haben wir nicht verwendet, da an der Schule keine Nebenfächer existieren. Es ist standardmäßig auf „Ohne“ gesetzt.
-	\item \textbf{Prüfungsordnung(PO)}: Dieses wird beim übernehmen eines Stundenplans aus Untis auf die Schulform und Jahrgang bei der zum Studiengang gehörigen Klasse gesetzt. 
+	\item \textbf{Prüfungsordnung(PO)}: Dieses wird beim Übernehmen eines Stundenplans aus Untis auf die Schulform und Jahrgang bei der zum Studiengang gehörigen Klasse gesetzt. 
 	Bei keinem bestehenden Stundenplan kann dies ignoriert werden und muss nicht gesetzt werden.
 	\item \textbf{Veranstaltungsteil} Dies ist wohl die größte Abweichung in der Terminologie. Da es keine Veranstaltungsteile an der Schule gibt, haben wir diesen Begriff zweckentfremdet, um die Zuordnung von Kursen zu Klassen zu ermöglichen.
-	Dabei ist der VeranstaltungsteilID eine koodierte Klasse zugeordnet. Dabei haben wir folgende Kodierung verwendet:
+	Dabei ist der VeranstaltungsteilID eine kodierte Klasse zugeordnet. Dabei haben wir folgende Kodierung verwendet:
 \end{itemize}
 \begin{tabular}{|l|l|p{6cm}|l|}
 	\hline
@@ -37,11 +37,11 @@ Das Planungstool wird als jar-Datei mit dem Namen Planungstool.jar ausgeliefert.
 Eine manuelle Installation ist nicht nötig. 
 Die jar-Dateien können in einem beliebigen Ordner platziert werden.
 Es wird empfohlen, alle Dateien, die während der Planung benötigt oder erzeugt werden, in demselben Ordner wie die jar-Datei zu speichern. 
-Auf Windows kann die jeweilige jar-Dateien  mittels eines Doppelklicks ausgeführt werden.
+Auf Windows kann die jeweilige jar-Datei  mittels eines Doppelklicks ausgeführt werden.
 Auf Linux sollte das jeweilige Programm über die Kommandozeile mittels folgendem Befehl ausgeführt werden:
 
 \begin{verbatim}
-    java -jar Planunungstool.jar
+    java -jar Planungstool.jar
 \end{verbatim}
 
 \subsection{Übertragung eines bestehenden Stundenplans von Untis in das lokale Planungstool}
@@ -64,7 +64,7 @@ Der Zeitpunkt und das Vorgehen sind abhängig von der gewählten Export-Variante
 
 \subsubsection{Nutzen des Importskripts export\_untis.bat}
 Um das Importskript zu verwenden muss sich der Planer auf einem Computer mit einem Windows System befinden, da das Skript als bat-Datei vorliegt, welche nur auf Windows Systemen ausgeführt werden kann.
-Nach dem Starten des Skripts wird der Planer aufgefordert den Pfad zu der Untis.exe Datei anzugeben (siehe \cref{fig:export_untis_step1}). Hierbei ist es egal, ob der Pfad mit Anführungszeichen oder ohne angegeben wird.
+Nach dem Starten des Skripts wird der Planer aufgefordert, den Pfad zu der Untis.exe Datei anzugeben (siehe \cref{fig:export_untis_step1}). Hierbei ist es egal, ob der Pfad mit Anführungszeichen oder ohne angegeben wird.
 Im Beispiel in \cref{fig:export_untis_step1} ist der Pfad zum Untis-Executable rot markiert und ohne Anführungszeichen angegeben. Sobald der Pfad eingegeben wurde, muss die Eingabe mit Enter bestätigt werden.
 Nach Bestätigung mit Enter, wird der Planer aufgefordert den Pfad zu der .untis Datei anzugeben. Dies ist die Datei, welche von Planer in Untis geöffnet wird und alle benötigten Daten für den Stundenplan enthält (siehe \cref{fig:export_untis_step2}). 
 Auch hier ist es egal, ob der Pfad mit Anführungszeichen oder ohne angegeben wird. Sobald der Pfad eingegeben wurde, muss die Eingabe mit Enter bestätigt werden (siehe \cref{fig:export_untis_step2}).
@@ -94,7 +94,7 @@ Die beendete Durchführung des Skripts wird mit einer Erfolgsmeldung (siehe \cre
     \end{subfigure}
     \label{fig:untis_export}
 \end{figure}
-Die Resultierende lokale Planungsdatenbank wird im selben Ordner wie das Importskript unter dem Namen \textbf{STULP.db} erstellt.
+Die resultierende lokale Planungsdatenbank wird im selben Ordner wie das Importskript unter dem Namen \textbf{STULP.db} erstellt.
 Diese Datei kann sowohl unter Windows als auch unter Linux im lokalen Planungstool geöffnet werden und der importierte Stundenplan kann bearbeitet werden.
 
 \subsubsection{Manueller Export aus Untis}
@@ -292,12 +292,12 @@ In Teil 3 von Abbildung \ref{fig:plt_overview} werden alle momentan existierende
 Die Tabelle kann mithilfe eines Filters nach Veranstaltung und Typ des Konflikts gefiltert werden. 
 Das Planungswerkzeug ermöglicht es, existierende Konflikte zu ignorieren. 
 Für den Planer bedeutet das, dass diese Konflikte nicht mehr in der Tabelle und Stundenplan angezeigt werden.
-\paragraph{Konfliktabelle}\label{par:conf_table}
+\paragraph{Konflikttabelle}\label{par:conf_table}
 Die Tabelle 1 in Abbildung \ref{fig:plt_conflicts} zeigt alle momentan existierenden nicht ignorierten Konflikte an. 
 Dabei repräsentiert eine Zeile der Tabelle exakt einen Konflikt zwischen zwei Veranstaltungen.
-Für einen Konflikt werden jeweils die KursID in der Spalte KursID und die Koodierte KursID als Veranstaltungsteil in der Spalte Teil der beteiligten Veranstaltungsteile angezeigt.
+Für einen Konflikt werden jeweils die KursID in der Spalte KursID und die kodierte KursID als Veranstaltungsteil in der Spalte Teil der beteiligten Veranstaltungsteile angezeigt.
 Zusätzlich wird in der Spalte Konflikt das Konfliktobjekt angezeigt. 
-Dieses Konfliktobjekt ist entweder ein Lehrer, ein Raum oder ein Klasse.
+Dieses Konfliktobjekt ist entweder ein Lehrer, ein Raum oder eine Klasse.
 Die erste Zeile der Tabelle in Abbildung \ref{fig:plt_conflicts} Teil 1 zeigt zum Beispiel den Konflikt zwischen der Veranstaltung  \textit{Chemie in der 10A} und der Veranstaltung \textit{Chemie in der 10B} an. 
 Der Konflikt ist ein Raumkonflikt für den Raum mit der Raumnummer \textit{B2.03}.
 Mittels der Konflikttabelle können angezeigte Konflikte ignoriert werden. 
@@ -313,7 +313,7 @@ Die Konflikttabelle zeigt dann nur Konflikte an, die zu dieser Veranstaltung geh
 Mittels des Konflikttypfilters kann ein Konflikttyp ausgewählt werden. 
 Die Konflikttabelle zeigt dann nur Konflikte an, die den ausgewählten Konflikttyp haben.
 Falls beide Filter aktiv sind, werden in der Konflikttabelle nur die Konflikte angezeigt, die beiden Filtern genügen.\\
-Ein Filter ist aktiv, sobald der Kippschalter des Filters sich in der rechten Stellung befindet und eine gültige Eingabe für den Wert des Filter ausgewählt wird. 
+Ein Filter ist aktiv, sobald der Kippschalter des Filters sich in der rechten Stellung befindet und eine gültige Eingabe für den Wert des Filters ausgewählt wird. 
 Ein Filter ist deaktiviert, sobald sich der Kippschalter des Filters in der linken Stellung befindet. 
 Durch Klicken auf den Kippschalter kann die Stellung verändert werden. 
 In \ref{fig:plt_conflicts} ist zum Beispiel der Veranstaltungsfilter deaktiviert und es wird nicht nach einer speziellen Veranstaltung gefiltert. 
@@ -335,7 +335,7 @@ Es öffnet sich ein Fenster: Abbildung \ref{fig:plt_conflict_prios}.
 Die Farbanzeige der Konflikte im Planungsfenster richtet sich nach der Konflikt-Prioritäten Zuordnung. 
 Wenn Raumkonflikte die Priorität 1 besitzen und die Farbe für Konflikte der Priorität 1 rot ist, dann werden diese rot angezeigt. 
 Zudem können über den Schalter \textbf{Prio} Konflikte ausgeblendet werden.
-Wenn im Plan nur die Konflikte mit einer Priorität größer als 3 (also Priorität 1 und 2), kann der Schalter aktiviert werden und in dem Eingabefeld eine 2 eingetragen werden. 
+Wenn im Plan nur die Konflikte mit einer Priorität größer als 3 (also Priorität 1 und 2) angezeigt werden sollen, kann der Schalter aktiviert werden und in dem Eingabefeld eine 2 eingetragen werden. 
 
 
 \paragraph{Eigene Konflikte}
@@ -440,7 +440,7 @@ So können eigene Konflikte aus der Übersicht genommen werden, ohne dass sie au
 
 \paragraph{Verwaltung der ignorierten Konflikte}
 
-Im Menü-abschnitt Konflikte können ignorierte Konflikte verwaltet werden. 
+Im Menüabschnitt Konflikte können ignorierte Konflikte verwaltet werden. 
 Durch das Drücken des Knopfes \textbf{Zurücksetzen} im Menüabschnitt Konflikte werden alle ignorierten Konflikte zu nicht-ignorierten Konflikten. 
 Eine Verwaltung der Konflikte ist mittels eines Dialogs, der durch Drücken des Knopfes Verwalten im Konflikt-Menüabschnitt geöffnet wird, möglich.\\
 %\begin{wrapfigure}{r}{0.4\textwidth}
@@ -486,7 +486,7 @@ Die Veränderungen können mittels \textbf{Annehmen} gespeichert oder \textbf{Ab
 %	\label{fig:plt_unplanned}
 %\end{wrapfigure}
 
-\paragraph{Unwiederufliches Ignorieren von Konflikten mittels Konfigurationsdatei}
+\paragraph{Unwiderrufliches Ignorieren von Konflikten mittels Konfigurationsdatei}
 
 Es gibt auch die Möglichkeit, Konflikte durch Einträge in der Konfigurationsdatei \texttt{IgnoredConflicts.json} unwiederruflich zu ignorieren.
 Eine Beispieldatei wurde mit der Software ausgeliefert.
@@ -513,7 +513,7 @@ Das Element \texttt{ParalleleKurse} besteht aus Listen (paralleler) Kurse, bei d
 
 Dieses Element enthält eine Liste von Listen.
 Jede der enthaltenen Listen besteht aus genau zwei Unterlisten, von denen die erste Veranstaltungsteile und die zweite immer genau zwei Kurse enthält.
-Pro Eintrag gilt, dass alle Konflikte zwischen den beiden Kursen ignoriert werden, sofern sie den gleichen Veranstaltungsteil haben, und der Veranstaltungsteil in der zugehörigen Veranstatltungsteilliste ist.
+Pro Eintrag gilt, dass alle Konflikte zwischen den beiden Kursen ignoriert werden, sofern sie den gleichen Veranstaltungsteil haben, und der Veranstaltungsteil in der zugehörigen Veranstaltungsteilliste ist.
 
 \subsubsection{Ungeplante Veranstaltungen}
 In Teil 4 von Abbildung \ref{fig:plt_overview} werden alle momentan ungeplanten Veranstaltungen in einer Tabelle angezeigt. 
@@ -521,8 +521,8 @@ Die Tabelle kann mithilfe eines Filters nach Veranstaltungen gefiltert werden.
 
 \paragraph{Ungeplante Veranstaltungstabelle}\label{par:unplan_table}
 Die Tabelle 1 in \ref{fig:plt_unplanned} zeigt alle momentan ungeplanten Veranstaltung an, also diejenigen, die keinen Raum, Tag und Uhrzeit haben.
-Dabei repräsentiert eine Zeile der Tabelle exakt einen ungeplante Veranstaltung. 
-Für einen ungeplanten Veranstaltung wird die KursID in der Spalte KursID, die codierte Klasse in der Spalte Teil, der Lehrer in der Spalte ProfID und die Dauer der Veranstaltung in der Spalte Dauer angezeigt.\\ 
+Dabei repräsentiert eine Zeile der Tabelle exakt eine ungeplante Veranstaltung. 
+Für eine ungeplanten Veranstaltung wird die KursID in der Spalte KursID, die codierte Klasse in der Spalte Teil, der Lehrer in der Spalte ProfID und die Dauer der Veranstaltung in der Spalte Dauer angezeigt.\\ 
 Die erste Zeile der Tabelle in Abbildung \ref{fig:plt_unplanned} zeigt zum Beispiel die ungeplante Veranstaltung D L1 in der Q1 gehalten vom Lehrer mit der ProfID JA. 
 Die Veranstaltung dauert zwei Schulstunden.
 \paragraph{Filtern der Ungeplanten Veranstaltungstabelle}
@@ -539,7 +539,7 @@ In \ref{fig:plt_unplanned} ist zum Beispiel der Veranstaltungsfilter aktiv und e
 \subsubsection{Planen von Veranstaltungen}
 Das Planen von Veranstaltungen wird mittels des primären und sekundären Stundenplanfensters und der ungeplanten Veranstaltungstabelle durchgeführt. 
 Dazu können die Elemente der Stundenpläne und der ungeplanten Veranstaltungstabelle mittels Drag- and Drop-Gesten zwischen den Stundenplänen und innerhalb eines Stundenplans verschoben werden. 
-Dabei werden die, durch die Verschiebung entstanden Änderungen an Raum und Zeit der Veranstaltung, gespeichert. 
+Dabei werden die, durch die Verschiebung entstandenen Änderungen an Raum und Zeit der Veranstaltung, gespeichert. 
 Das Verschieben einer Veranstaltung zu der ungeplanten Veranstaltungstabelle entfernt die Zeit und den Raum der Veranstaltung. Dieser ist somit ungeplant.
 
 \paragraph{Stundenplantypen}\label{par:agenda_types}
@@ -667,11 +667,11 @@ Die Knöpfe, zu sehen in \ref{fig:plt_agenda_toolbar}, bieten die folgenden Funk
 Der eigentliche Stundenplan des Objekts ist in  Abbildung \ref{fig:plt_pimary_plan} Teil 4 zu sehen.
 \paragraph{Veranstaltungen im Stundenplan}
 In einem Stundenplan werden je nach Stundenplantyp die jeweiligen Veranstaltungen angezeigt. 
-Ein Veranstaltung wird mithilfe eines Rechtecks an der von Tag und Uhrzeit bestimmten Stelle im Stundenplan angezeigt. 
+Eine Veranstaltung wird mithilfe eines Rechtecks an der von Tag und Uhrzeit bestimmten Stelle im Stundenplan angezeigt. 
 Die folgenden Informationen werden im Rechteck für einen Veranstaltung in Abbildung \ref{fig:plt_single} angezeigt:
 
 \begin{enumerate}
-	\item KursID und Nummer der Veranstaltung
+	\item KursID und Nummer die Veranstaltung
 	\item Raum, in dem die Veranstaltung stattfindet
 	\item ProfID des Lehrers, der die Veranstaltung hält
 	\item Klassen, zu denen die Veranstaltung gehört. Falls der Veranstaltung zu mehr als einem Klasse gehört, 
@@ -706,16 +706,16 @@ Die folgenden Informationen werden im Rechteck für einen Veranstaltung in Abbil
 \end{figure}
 
 Je nach Veranstaltungsart wird das Rechteck mit einer anderen Farbe ausgefüllt. 
-Wenn für Raum, Lehrer oder ein der Klassen ein Konflikt vorliegt wird dieser farbig hinterlegt. 
+Wenn für Raum, Lehrer oder einer der Klassen ein Konflikt vorliegt wird dieser farbig hinterlegt. 
 Standardmäßig  wird  rot für einen schweren und gelb für einen leichten Konflikt genutzt.
 Das Rechteck in Abbildung \ref{fig:plt_single_conflict} visualisiert somit die folgenden Informationen über die Veranstaltung. 
-Die Veranstaltung \textit{D 9.4} findet im Raum \textit{B1.12} statt, wir von dem Lehrer mit der ProfID \textit{AM} gehalten und gehört zu der Klasse \textit{09D}.
+Die Veranstaltung \textit{D 9.4} findet im Raum \textit{B1.12} statt, wird von dem Lehrer mit der ProfID \textit{AM} gehalten und gehört zu der Klasse \textit{09D}.
 Zudem existiert für die Veranstaltung ein leichter Studiengangskonflikt.
 Wenn mehrere Veranstaltungsteile einer Zelle des Stundenplans zugeordnet sind, werden diese nebeneinander angezeigt. So zu sehen in \ref{fig:plt_multiple}. \\
 
 Die Start- und Endzeit des Stundenplans kann frei konfiguriert werden. Mehr dazu in \autoref{par:settings_time}. 
 Daher kann es passieren, dass Veranstaltungen nur teilweise oder gar nicht angezeigt werden. 
-Falls ein Veranstaltung nur partiell angezeigt wird, erscheint ein Warndreieck im zugehörigen Rechteck. 
+Falls eine Veranstaltung nur partiell angezeigt wird, erscheint ein Warndreieck im zugehörigen Rechteck. 
 Zudem erscheint ein rotes Warndreieck in der linken oberen Ecke des Stundenplans, falls ein Veranstaltung existiert die nur partiell oder gar nicht angezeigt wird. 
 Beide Indikatoren sind in \autoref{fig:plt_agenda_indicator} zu sehen. 
 Der Veranstaltungsteil \textit{M 9.4} geht von 8 bis 10 Uhr.
