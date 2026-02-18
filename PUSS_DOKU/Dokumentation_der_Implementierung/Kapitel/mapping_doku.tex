@@ -128,7 +128,7 @@ Da Untis keine zentrale Tabelle für „gültige Zeitfenster“ exportiert, sond
 
 Hierfür nutzen wir die Tabelle \texttt{dif\_data.Zeitwuensche}, da diese in der Regel das vollständigste Zeitraster abdeckt (da z.B. Sperrungen für den späten Nachmittag eingetragen sein können, auch wenn dort kein Unterricht stattfindet).
 Durch den \texttt{JOIN} mit den Hilfstabellen \texttt{HourGrid} und \texttt{WeekdayMap} werden die internen Untis Codierungen für Stunden und Wochentage in das Format überführt, das wir im Planungstool benötigen.
-Die SQL-Funktion \texttt{ROW\_NUMBER()} erzeugt dabei einen fortlaufenden Primärschlüssel.\footnote{In in der SQL Implementierung sind Time und Hour markiert, da es diese auch als SQL Keywords gibt. Wir meinen hier die Spaltennamen, aus den Hilfstabellen, die wir für die Konstruktion des Zeitrasters benötigen.}
+Die SQL-Funktion \texttt{ROW\_NUMBER()} erzeugt dabei einen fortlaufenden Primärschlüssel.\footnote{In der SQL Implementierung sind Time und Hour markiert, da es diese auch als SQL Keywords gibt. Wir meinen hier die Spaltennamen, aus den Hilfstabellen, die wir für die Konstruktion des Zeitrasters benötigen.}
 
 \begin{sqlbox}{SQL-Implementierung: Timeslot}
 CREATE TABLE Timeslot AS

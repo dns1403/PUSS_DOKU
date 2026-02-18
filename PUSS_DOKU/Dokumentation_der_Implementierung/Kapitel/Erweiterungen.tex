@@ -7,7 +7,7 @@ Für das Planungstool sind folgende Erweiterungen vorstellbar, deren mögliche U
 
     \item Festlegung von jederzeit parallelen Lehrveranstaltungen
 
-    \item Schwere Studiengangskonflichte bei Wahlpflichtveranstaltungen
+    \item Schwere Studiengangskonflikte bei Wahlpflichtveranstaltungen
 
     \item Automatisches Ignorieren zulässiger Konflikte
 
@@ -77,9 +77,9 @@ Im folgenden beschreiben wir einige mögliche Lösungsansätze.
 \label{Konflikte_durch_parallele_Lehrveranstaltungen}
 
 Dieser Fall ist aktuell durch Einträge in der Konfigurationsdatei \texttt{IgnoredConflicts.json} lösbar.
-Dort müssen manuell alle jederzeit parallelen Veranstaktungen eingetragen werden.
+Dort müssen manuell alle jederzeit parallelen Veranstaltungen eingetragen werden.
 Sofern die jederzeit parallelen Veranstaltungen jedoch in der STULP-Datenbank gespeichert würden, ist dies nicht mehr erforderlich.
-Dann kann die Konfliktüberprüfung entsprechend angepasst werden, sodass nur Paare von Veranstaltungen berücksichtig werden, die nicht parallel liegen dürfen.
+Dann kann die Konfliktüberprüfung entsprechend angepasst werden, sodass nur Paare von Veranstaltungen berücksichtigt werden, die nicht parallel liegen dürfen.
 Alternativ würde dieser Fall auch abgedeckt werden, wenn die jederzeit parallelen Veranstaltungen wie in Kapitel~\ref{parallele_Lehrveranstaltungen} beschrieben in der STULP-Datenbank gespeichert würden und die Konfliktüberprüfung entsprechend angepasst wird.
 
 \subsubsection{Konflikte durch zweiwöchigen Nachmittagsunterricht}
@@ -93,7 +93,7 @@ Das setzt allerdings die Annahme voraus, dass der Stundenplan korrekt ist, da di
 Es könnte auch sein, dass mindestens eine der Veranstaltungen wöchentlich stattfinden muss, um auf die nötige Anzahl an Wochenstunden zu kommen.
 Darüber hinaus ist die Startwoche dann zufällig gesetzt und könnte falsch sein.
 
-\subsubsection{Konflikte durch halbjährlich alternierende Lehrveranstaltugen}
+\subsubsection{Konflikte durch halbjährlich alternierende Lehrveranstaltungen}
 \label{Konflikte_durch_halbjährlich_alternierende_Lehrveranstaltungen}
 
 In der Schule gibt es einige Veranstaltungen, die innerhalb eines Jahrgangs nur eine Stunde pro Woche unterricht werden müssen.
@@ -114,14 +114,14 @@ Diese Informationen können dann bei der Konfliktüberprüfung ausgelesen und be
 Unter der Annahme, dass der eingelesene Stundenplan korrekt ist, können im Zuge des Mappings auch alle Studiengangskonflikte berechnet und in der Relation \texttt{IgnoredConflict} eingetragen werden.
 Die Konflikte werden dann in STULP nicht mehr angezeigt, aber sollten sie doch relevant sein, kann das Ignorieren in STULP jederzeit rückgängig gemacht werden.
 Mit der aktuellen Modellierung lässt sich diese Variante allerdings nicht realisieren.
-In STULP wird davon aus gegangen, dass jeder Teil einer Veranstaltung genau einmal geplant wird, weshalb in der Relation \texttt{IgnoredConflict} keine Zeitinformationen gespeichert sind.
-Durch die Verwendung des Veranstaltungsteils als Kodierung für die jeweilige Klasse kommt es jedoch vor, dass der gleiche Veranstaltungsteil der selbe Veranstaltung mehrmals geplant wird, da viele Fächer (Kurse bzw. Veranstaltungen) in einer Klasse mehrmals pro Woche unterrichtet werden.
+In STULP wird davon ausgegangen, dass jeder Teil einer Veranstaltung genau einmal geplant wird, weshalb in der Relation \texttt{IgnoredConflict} keine Zeitinformationen gespeichert sind.
+Durch die Verwendung des Veranstaltungsteils als Kodierung für die jeweilige Klasse kommt es jedoch vor, dass der gleiche Veranstaltungsteil der selben Veranstaltung mehrmals geplant wird, da viele Fächer (Kurse bzw. Veranstaltungen) in einer Klasse mehrmals pro Woche unterrichtet werden.
 Eine mögliche Lösung liegt in einer Anpassung des Mappings.
-Der Veranstaltungsteil könnte um eine weitere durch Punkt getrennte Stelle erweitert werden, die für jede Ansetzung der gleiche Klasse unterschiedlich ist.
+Der Veranstaltungsteil könnte um eine weitere durch Punkt getrennte Stelle erweitert werden, die für jede Ansetzung der gleichen Klasse unterschiedlich ist.
 So würde zum Beispiel die erste Deutschstunde in der Klasse „5A“ den Veranstaltungsteil „5.1.1“ bekommen, die zweite den Veranstaltungsteil „5.1.2“.
 Alternativ könnten zunächst die beiden Elemente des Veranstaltungsteils zusammengeführt werden.
 So würde zum Beispiel aus „5.1“, was die Klasse „5A“ repräsentiert „51“.
-Anschließend müsste für jedes Ansetzen der jeweiligen Veranstaltung in der gleichen Klasse eine fortlaufende Nummer durch einen Punkt getrennt angefügt.
+Anschließend müsste für jedes Ansetzen der jeweiligen Veranstaltung in der gleichen Klasse eine fortlaufende Nummer durch einen Punkt getrennt angefügt werden.
 So würde zum Beispiel die erste Deutschstunde der Klasse „5A“ den Veranstaltungsteil „51.1“ haben, die zweite den Veranstaltungsteil „51.2“.
 Beide Varianten sind mit der Spezifikation von STULP kompatibel.
 
@@ -141,13 +141,13 @@ Damit können dann für jede Art und jede Priorität Wunschzeitkonflikte erstell
 Dabei ist allerdings zu beachten, dass die Kodierung der Klassennamen gemäß der verwendeten Modellierung angepasst werden muss.
 
 Übernimmt man die DIF-Relation \texttt{Zeitwünsche} unter Berücksichtigung der beschriebenen Anpassungen und erstellt entsprechende Konflikttypen, kann überlegt werden auf eine Auflistung der Wunschzeiten bei den Planeinträgen zu verzichten.
-Möchte man diese dennoch für jeden Eintrag angezeigt werden, muss jeder Eintrag in der Relation \texttt{Zeitwünsche} mit einem eindeutigen numerischen Index versehen werden, damit er in der Relation \texttt{Plan} wie bisher referenziert werden kann.
+Möchte man diese dennoch für jeden Eintrag angezeigt bekommen, muss jeder Eintrag in der Relation \texttt{Zeitwünsche} mit einem eindeutigen numerischen Index versehen werden, damit er in der Relation \texttt{Plan} wie bisher referenziert werden kann.
 
 \subsection{Normalisierungen im Schulkontext}
 \label{Normalisierungen_im_Schulkontext}
 
-Das Schema der STULP-Datenbank ist mit dem Ziel entwickelt worden, im Universitätskontext normalisiert zu sehen.
-Im Schulkontext entsteht jedoch bei mit der aktuellen Modellierung bei der Relation \texttt{Plan} eine Verletzung der zweiten Normalform.
+Das Schema der STULP-Datenbank ist mit dem Ziel entwickelt worden, im Universitätskontext normalisiert zu sein.
+Im Schulkontext entsteht jedoch mit der aktuellen Modellierung bei der Relation \texttt{Plan} eine Verletzung der zweiten Normalform.
 Der gleiche Veranstaltungsteil kann für die selbe Veranstaltung mehrmals geplant werden, da er dazu verwendet wird die Klasse zu repräsentieren, und eine Veranstaltung innerhalb einer Klasse mehrmals geplant werden kann, wenn sie an unterschiedlichen Tagen gelehrt werden soll.
 Das führt dazu, dass im Schulkontext auch die Attribute \texttt{Tag} und \texttt{Stunde} Teil des Primärschlüssels sein müssen.
 Gleichzeitig hängt aber das Attribut \texttt{Professor} weiterhin nur vom Veranstaltungsteil und von der Veranstaltung ab, denn das gleiche Fach wird in der selben Klasse nicht von unterschiedlichen Lehrern gelehrt.
