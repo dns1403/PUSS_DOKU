@@ -17,7 +17,7 @@ Für das Planungstool sind folgende Erweiterungen vorstellbar, deren mögliche U
 
     \item Hinzufügen von Lehrbefähigungen
 
-    \item Umbennenungen
+    \item Umbenennungen
 
 \end{itemize}
 
@@ -170,10 +170,10 @@ Für ein Auslesen in STULP muss aber stattdessen das Fachkürzel gespeichert wer
 Darüber hinaus gibt es das Problem, dass in der Oberstufe aufgrund des Kurssystems unterschiedliche Kursnamen das gleiche Fach referenzieren.
 Um das Problem zu lösen, kann die Tabelle Lehrerbefähigung so übernommen werden, wie sie ist, und zusätzlich eine zweite Relation eingerichtet werden, welche den ausgeschriebenen Fachnamen alle passenden Kursnamen zuordnet.
 
-\subsection{Umbennungen}
-\label{Umbennungen}
+\subsection{Umbenennungen}
+\label{Umbenenungen}
 
 Eine weitere mögliche Erweiterung besteht darin, die Namen der Relationen und Attribute an den Schulkontext anzupassen.
 So könnte Beispielsweise die Relation \texttt{Professor} in \texttt{Lehrer} umbenannt werden, die Relation \texttt{Studiengänge} in \texttt{Klassen} und so weiter.
-Was auch mögliche wäre, ist eine Umbennung von Attributen in der GUI, sodass die Datenbank weiterhin die gleiche Spezifikation hat, aber in der GUI die Namen der Relationen und Attribute an den Schulkontext angepasst werden.
+Was auch mögliche wäre, ist eine Umbenennungen von Attributen in der GUI, sodass die Datenbank weiterhin die gleiche Spezifikation hat, aber in der GUI die Namen der Relationen und Attribute an den Schulkontext angepasst werden.
 Wir haben uns jedoch bewusst gegen eine solche Änderung entschieden, da die aktuellen Namen der Relationen und Attribute bereits in der Spezifikation von STULP festgelegt sind und eine Änderung die Kompatibilität mit späteren Versionen von STULP beeinträchtigen könnte.
