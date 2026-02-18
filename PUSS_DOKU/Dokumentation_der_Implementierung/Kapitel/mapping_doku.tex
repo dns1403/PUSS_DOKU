@@ -292,8 +292,7 @@ Veranstaltungsteil1 TEXT NOT NULL,
 Veranstaltungsteil2 TEXT NOT NULL,
 Type TEXT NOT NULL,
 Heavy INTEGER NOT NULL CHECK (Heavy IN (0, 1)),
-StudiengangsID TEXT NOT NULL,
-      
+StudiengangsID TEXT NOT NULL,      
 PRIMARY KEY (KursID1, KursID2, Veranstaltungsteil1, Veranstaltungsteil2, Type, Heavy, StudiengangsID));
 \end{sqlbox}
 \subsubsection{CustomConflicts}
@@ -301,7 +300,6 @@ PRIMARY KEY (KursID1, KursID2, Veranstaltungsteil1, Veranstaltungsteil2, Type, H
 CREATE TABLE CustomConflicts (
 ConflictType TEXT NOT NULL PRIMARY KEY,
 Query TEXT NOT NULL,
-Active INTEGER NOT NULL CHECK (Active IN (0, 1)),
-        
+Active INTEGER NOT NULL CHECK (Active IN (0, 1)),        
 FOREIGN KEY (ConflictType) REFERENCES ConflictPriorities (ConflictType));
 \end{sqlbox}

@@ -2,5 +2,4 @@ CREATE TABLE CustomConflicts (
 ConflictType TEXT NOT NULL PRIMARY KEY,
 Query TEXT NOT NULL,
 Active INTEGER NOT NULL CHECK (Active IN (0, 1)),
-
 FOREIGN KEY (ConflictType) REFERENCES ConflictPriorities (ConflictType));
