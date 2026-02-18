@@ -41,7 +41,8 @@ Die Datei \texttt{GPU001.TXT} enthält den Stundenplan. Da ein Unterrichtselemen
 
 \paragraph{Schema und Beispiel\-daten}
 
-\paragraph{Erläuterung der Normalformverletzung}
+\paragraph{Erläuterung der relevanten Felder}
+
 \begin{table}[H]
         \centering
         \tiny
@@ -58,6 +59,15 @@ Die Datei \texttt{GPU001.TXT} enthält den Stundenplan. Da ein Unterrichtselemen
         \caption{Schema der Relation Stundenplan (\texttt{GPU001}) mit Normalform-Hinweisen und Beispiel\-daten}
         \label{schema:gpu001_new}
     \end{table}
+
+\begin{itemize}
+    \item \textbf{Unterrichts\-nummer:} Die eindeutige ID der Unterrichtseinheit. Sie dient als Fremdschlüssel auf die Relation Unterricht (\texttt{GPU002}).
+    \item \textbf{Klasse \& Lehrer:} Dienen als Fremdschlüssel auf die Relationen Klassen (\texttt{GPU003}) und Lehrer (\texttt{GPU004}). Zusammen mit der Unterrichts\-nummer, dem Tag und der Stunde bilden sie den Primärschlüssel dieser Datei.
+    \item \textbf{Raum}: Dient als Fremdschlüssel auf die Relation Räume (\texttt{GPU005}) und steht für den Raum, in dem die Veranstaltung stattfindet.
+    \item \textbf{Tag \& Stunde:} Legen fest, an welchem Tag und in welcher Stunde die Unterrichtseinheit stattfindet.
+\end{itemize}
+
+\paragraph{Erläuterung der Normalformverletzung}
 
 Das Attribut Lehrer hängt nur von den Attributen Unterrichts\-nummer, Klasse und Fach ab, nicht aber von Tag und Stunde.
 Wenn ein Fach mehrmals pro Woche unterrichtet wird, bleibt der Lehrer gleich, sodass Tag und Stunde für eine eindeutige Zuordnung nicht erforderlich sind.
@@ -90,10 +100,11 @@ Im Kontext des Mappings wird diese Datei primär genutzt, um die \textbf{Student
     \label{schema:gpu002}
 \end{table}
 \begin{itemize}
-    \item \textbf{Unterrichts\-nummer:} Die eindeutige ID der Unterrichtseinheit. Sie dient als Verbindungsschlüssel zum Stundenplan (\texttt{GPU001}).
-    \item \textbf{Klasse \& Lehrer:} Dienen als Fremdschlüssel auf die Dateien \texttt{GPU003} (Klassen) und \texttt{GPU004} (Lehrer). Zusammen mit der Unterrichts\-nummer bilden sie den Primärschlüssel dieser Datei.
+    \item \textbf{Unterrichts\-nummer:} Identifiziert eindeutige Kombinationen aus Klasse(n), Lehrer(n) und Fächer(n).
+    \item \textbf{Klasse \& Lehrer:} Dienen als Fremdschlüssel auf die Relationen Klassen (\texttt{GPU003}) und Lehrer (\texttt{GPU004}). Zusammen mit der Unterrichts\-nummer bilden sie den Primärschlüssel dieser Datei.
     \item \textbf{Studentenzahl:} Gibt an, wie viele Schüler an diesem spezifischen Unterrichtsteil teilnehmen. Dies ist essenziell für die Kapazitätsplanung der Räume im Planungstool.
 \end{itemize}
+
 \subsection{\texttt{GPU003} -- Klassen}
 Die Datei \texttt{GPU003.TXT} enthält die Stammdaten der Klassen. Im Kontext des Mappings werden diese Daten auf die Entität \texttt{Studiengaenge} abgebildet. Eine Klasse entspricht dabei einer Kohorte oder einem Studiengangs-Jahrgang.
 
@@ -210,7 +221,7 @@ Der Primärschlüssel ist das Fachkürzel (Name). Neben der Bezeichnung (Langnam
 \begin{itemize}
     \item \textbf{Name:} Das eindeutige Kürzel des Faches (z.B. „M“ für Mathematik). Dient als Primärschlüssel und wird im Planungstool zur \texttt{KursID}.
     \item \textbf{Langname:} Die ausgeschriebene Bezeichnung des Faches. Wird auf \texttt{Kursname} und \texttt{KursnameEN} gemappt.
-    \item \textbf{Raum:} Definiert optional einen festen Fachraum. Dies ist ein Fremdschlüssel auf die Datei \texttt{GPU005} (Räume). Auch wenn das aktuelle Mapping-Skript dieses Feld in der Tabelle \texttt{Kurs} noch nicht explizit übernimmt, ist es in den Rohdaten als „wichtig“ klassifiziert.
+    \item \textbf{Raum:} Definiert optional einen festen Fachraum. Dies ist ein Fremdschlüssel auf die Relation Räume (\texttt{GPU005}). Auch wenn das aktuelle Mapping-Skript dieses Feld in der Tabelle \texttt{Kurs} noch nicht explizit übernimmt, ist es in den Rohdaten als „wichtig“ klassifiziert.
 \end{itemize}
 
 \subsection{\texttt{GPU011} -- Stundentafel}
